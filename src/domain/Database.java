@@ -1,21 +1,39 @@
 package domain;
 
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
 public class Database {
 	
-	private static final String AWS_USERNAME = "root";
-	private static final String AWS_PASSWORD = "rootpass";
-	private static final String AWS_DB = "sensors.cguux3hin2bh.eu-west-1.rds.amazonaws.com:5432/data";
+	private String AWS_USERNAME;
+	private String AWS_PASSWORD;
+	private String AWS_DB;
 	
 	private Connection connect;
 	private Statement st;
+	
+	private Properties prop;
 
 	public Database() {
+		loadProperties();
 		connect();
 		createTable();
+	}
+	
+	private void loadProperties() {
+		prop = new Properties();
+		try {
+			InputStream is = new FileInputStream("database.properties");
+			prop.load(is);
+			AWS_USERNAME = prop.getProperty("aws_username");
+			AWS_PASSWORD = prop.getProperty("aws_password");
+			AWS_DB = prop.getProperty("aws_db");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void connect() {

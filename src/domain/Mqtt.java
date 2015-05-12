@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.eclipse.paho.client.mqttv3.*;
 
-import com.google.gson.Gson;
 
 public class Mqtt extends Thread {
 	
@@ -60,11 +59,14 @@ public class Mqtt extends Thread {
 		
 		//ids = uts.readSOIdsFromFile();
 		ids = awsdb.queryIds();
-		
+		String soID = null;
 		for (int i = 0; i < ids.size(); ++i) {
 			topic = APIKEY + "/" + ids.get(i) + "/streams/weather/updates";
 			try {
 				client.subscribe(topic, 0);
+				
+				soID = uts.extractIdFromTopic(topic);
+				
 				System.out.println("Subscribed to SO " + uts.extractIdFromTopic(topic));
 			} catch (MqttException e) {
 				e.printStackTrace();
@@ -75,11 +77,8 @@ public class Mqtt extends Thread {
 		 * Data retrieval example
 		 */
 		
-		
-		String soID = "1430724029329555f30663fa94befb2df057033c390cc";
 		String data = awsdb.getDatafile(soID);
 		System.out.println(data);
-		
 	}
 	
 	
