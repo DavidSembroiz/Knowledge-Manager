@@ -1,17 +1,21 @@
 package domain;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.eclipse.paho.client.mqttv3.*;
 
 
 public class Mqtt extends Thread {
 	
-	private static final String ADDRESS = "tcp://api.servioticy.com:1883";
-	private static final String USERNAME = "compose";
-	private static final String PASSWORD = "shines";
-	private static final String APIKEY = "Y2VlMTBkYjEtNDVjNi00N2E5LTk0YjEtMzBmOTI0NTUzMzg1YjU2YmE5NzUtOTEyZC00M2FmLWE0MGEtMzJiZjcwNWFkMDg0";
-	static final String CLIENTID = "knowledgeManager";
+	private String ADDRESS;
+	private String USERNAME;
+	private String PASSWORD;
+	private String APIKEY;
+	private String CLIENTID = "knowledgeManager";
 	private MqttConnectOptions connOpts;
 	private MqttClient client;
 	private MqttCb callback;
@@ -19,13 +23,30 @@ public class Mqtt extends Thread {
 	private String topic;
 	private Utils uts;
 	private Database awsdb;
+	private Properties prop;
 
 	public Mqtt(Database awsdb) {
 		ids = new ArrayList<String>();
 		uts = new Utils();
 		this.awsdb = awsdb;
+		loadProperties();
 		connect();
 		subscribe();
+	}
+	
+	private void loadProperties() {
+		prop = new Properties();
+		try {
+			InputStream is = new FileInputStream("manager.properties");
+			prop.load(is);
+			ADDRESS = prop.getProperty("so_address");
+			USERNAME = prop.getProperty("so_username");
+			PASSWORD = prop.getProperty("so_password");
+			APIKEY = prop.getProperty("so_apikey");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

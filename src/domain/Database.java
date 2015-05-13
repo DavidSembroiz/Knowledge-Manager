@@ -2,8 +2,7 @@ package domain;
 
 import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Properties;
+import java.util.*;
 
 public class Database {
 	
@@ -25,7 +24,7 @@ public class Database {
 	private void loadProperties() {
 		prop = new Properties();
 		try {
-			InputStream is = new FileInputStream("database.properties");
+			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
 			AWS_USERNAME = prop.getProperty("aws_username");
 			AWS_PASSWORD = prop.getProperty("aws_password");
