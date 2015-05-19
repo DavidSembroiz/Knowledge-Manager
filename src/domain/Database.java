@@ -10,15 +10,20 @@ public class Database {
 	private String AWS_PASSWORD;
 	private String AWS_DB;
 	
-	private Connection connect;
+	private Connection connect, connectListener;
 	private Statement st;
 	
 	private Properties prop;
-
+	
+	
 	public Database() {
 		loadProperties();
 		connect();
 		createTable();
+	}
+	
+	public Connection getConnectionListener() {
+		return connectListener;
 	}
 	
 	private void loadProperties() {
@@ -42,6 +47,8 @@ public class Database {
 			props.setProperty("user", AWS_USERNAME);
 			props.setProperty("password", AWS_PASSWORD);
 			connect = DriverManager.getConnection("jdbc:postgresql://" + AWS_DB, props);
+			connectListener = DriverManager.getConnection("jdbc:postgresql://" + AWS_DB, props);
+			System.out.println("Connected to AWS RDS");
 		} catch (ClassNotFoundException|SQLException e) {
 			e.printStackTrace();
 		}

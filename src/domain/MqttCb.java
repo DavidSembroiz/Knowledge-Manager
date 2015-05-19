@@ -14,6 +14,7 @@ public class MqttCb implements MqttCallback {
 
 	@Override
 	public void connectionLost(Throwable arg0) {
+		System.out.println(arg0.getMessage());
 		System.out.println("Connection lost!");
 		System.exit(-1);
 	}
@@ -36,8 +37,8 @@ public class MqttCb implements MqttCallback {
 		 * 
 		 */
 		
-		String data = awsdb.getDatafile(soID);
-		System.out.println(data);
+		/*String data = awsdb.getDatafile(soID);
+		System.out.println(data);*/
 		
 		
 		System.out.println("-------------------------------------------------");

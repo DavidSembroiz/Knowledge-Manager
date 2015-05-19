@@ -5,8 +5,7 @@ public class Main {
 		
 	public static void main(String[] args) {
 		
-		Database awsdb = new Database();
-		Mqtt m = new Mqtt(awsdb);
+		Mqtt m = new Mqtt();
 		m.start();
 		
 	}

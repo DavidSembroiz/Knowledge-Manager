@@ -25,10 +25,11 @@ public class Mqtt extends Thread {
 	private Database awsdb;
 	private Properties prop;
 
-	public Mqtt(Database awsdb) {
+	public Mqtt() {
 		ids = new ArrayList<String>();
 		uts = new Utils();
-		this.awsdb = awsdb;
+		awsdb = new Database();
+		new DBListener(this, awsdb.getConnectionListener());
 		loadProperties();
 		connect();
 		subscribe();
@@ -55,7 +56,7 @@ public class Mqtt extends Thread {
 	 */
 	private void connect() {
 		connOpts = new MqttConnectOptions();
-		connOpts.setCleanSession(true);
+		connOpts.setCleanSession(false);
 		connOpts.setUserName(USERNAME);
 		connOpts.setPassword(PASSWORD.toCharArray());
 		try {
@@ -63,7 +64,7 @@ public class Mqtt extends Thread {
 			callback = new MqttCb(uts, awsdb);
 			client.setCallback(callback);
 			client.connect(connOpts);
-			System.out.println("Connected");
+			System.out.println("Connected to ServIoTicy");
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -73,33 +74,22 @@ public class Mqtt extends Thread {
 	/**
 	 * Subscribes to all the sensor ID availables
 	 * 
-	 * TODO Read sensor IDs from Cloud Database
+	 * 
 	 * TODO change topic string depending on data model
 	 */
-	private void subscribe() {
+	public void subscribe() {
 		
-		//ids = uts.readSOIdsFromFile();
 		ids = awsdb.queryIds();
-		String soID = null;
 		for (int i = 0; i < ids.size(); ++i) {
 			topic = APIKEY + "/" + ids.get(i) + "/streams/weather/updates";
 			try {
 				client.subscribe(topic, 0);
-				
-				soID = uts.extractIdFromTopic(topic);
 				
 				System.out.println("Subscribed to SO " + uts.extractIdFromTopic(topic));
 			} catch (MqttException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		/**
-		 * Data retrieval example
-		 */
-		
-		String data = awsdb.getDatafile(soID);
-		System.out.println(data);
 	}
 	
 	
