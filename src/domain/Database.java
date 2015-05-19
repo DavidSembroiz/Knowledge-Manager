@@ -59,9 +59,10 @@ public class Database {
 			st = connect.createStatement();
 			String create = "CREATE TABLE IF NOT EXISTS ids ("
 					  	  + "servioticy_id varchar(50) primary key,"
-					  	  + "model json,"
-					  	  + "datafile json,"
-					  	  + "location varchar(100));";
+					  	  + "model varchar(30),"
+					  	  //+ "datafile json,"
+					  	  + "location varchar(100),"
+					  	  + "created timestamp default current_timestamp(2));";
 			st.executeUpdate(create);
 		} catch (SQLException e) {
 			e.printStackTrace();

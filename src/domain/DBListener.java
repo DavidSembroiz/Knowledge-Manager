@@ -1,6 +1,7 @@
 package domain;
 
 import java.sql.*;
+
 import org.postgresql.*;
 
 public class DBListener extends Thread {
@@ -26,18 +27,18 @@ public class DBListener extends Thread {
 	public void run() {
 		while(true) {
 			try {
-				/*Statement st = conn.createStatement();
+				Statement st = conn.createStatement();
 				ResultSet rs = st.executeQuery("SELECT 1");
 				rs.close();
-				st.close();*/
+				st.close();
 				PGNotification nots[] = pgconn.getNotifications();
 				if (nots != null) {
 					for (int i = 0; i < nots.length; ++i)
 					System.out.println("Notification received " + nots[i].getName());
 					callback.subscribe();
 				}
-				
-			} catch(SQLException e) {}
+				Thread.sleep(15000);
+			} catch(SQLException | InterruptedException e) {}
 		}
 	}
 }
