@@ -11,6 +11,8 @@ import org.eclipse.paho.client.mqttv3.*;
 
 public class Mqtt extends Thread {
 	
+	private static final int QUERY_ALL = -1;
+	
 	private String ADDRESS;
 	private String USERNAME;
 	private String PASSWORD;
@@ -32,7 +34,7 @@ public class Mqtt extends Thread {
 		new DBListener(this, awsdb.getConnectionListener());
 		loadProperties();
 		connect();
-		subscribe();
+		subscribe(QUERY_ALL);
 	}
 	
 	private void loadProperties() {
@@ -76,10 +78,11 @@ public class Mqtt extends Thread {
 	 * 
 	 * 
 	 * TODO change topic string depending on data model
+	 * @param n 
 	 */
-	public void subscribe() {
+	public void subscribe(int n) {
 		
-		ids = awsdb.queryIds();
+		ids = awsdb.queryIds(n);
 		for (int i = 0; i < ids.size(); ++i) {
 			topic = APIKEY + "/" + ids.get(i) + "/streams/weather/updates";
 			try {

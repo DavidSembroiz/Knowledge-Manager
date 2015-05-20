@@ -69,12 +69,12 @@ public class Database {
 		}
 	}
 
-	public ArrayList<String> queryIds() {
+	public ArrayList<String> queryIds(int n) {
 		ArrayList<String> ret = new ArrayList<String>();
 		try {
-			
 			st = connect.createStatement();
-			String readIds = "SELECT servioticy_id FROM ids";
+			String readIds = "SELECT servioticy_id FROM ids ORDER BY created DESC";
+			if (n > 0) readIds += " LIMIT " + n;
 			ResultSet rs = st.executeQuery(readIds);
 			while(rs.next()) {
 				ret.add(rs.getString("servioticy_id"));

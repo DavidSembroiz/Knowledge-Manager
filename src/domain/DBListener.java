@@ -32,11 +32,12 @@ public class DBListener extends Thread {
 				rs.close();
 				st.close();
 				PGNotification nots[] = pgconn.getNotifications();
-				if (nots != null) {
+				/*if (nots != null) {
 					for (int i = 0; i < nots.length; ++i)
 					System.out.println("Notification received " + nots[i].getName());
 					callback.subscribe();
-				}
+				}*/
+				if (nots != null) callback.subscribe(nots.length);
 				Thread.sleep(15000);
 			} catch(SQLException | InterruptedException e) {}
 		}
