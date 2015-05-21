@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="C:/Users/David/Dropbox/DAC/workspace/KnowledgeManager/lib/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/David/Dropbox/DAC/workspace/KnowledgeManager/lib/postgresql-9.4-1201.jdbc41.jar"/>
 	<classpathentry kind="lib" path="C:/Users/David/Dropbox/DAC/workspace/KnowledgeManager/lib/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/David/Dropbox/DAC/workspace/KnowledgeManager/lib/weka.jar"/>
+	<classpathentry kind="lib" path="C:/Users/David/Dropbox/DAC/workspace/KnowledgeManager/lib/easyrules-core-2.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
