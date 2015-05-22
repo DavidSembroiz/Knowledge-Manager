@@ -94,8 +94,8 @@ public class Mqtt extends Thread {
 	public void subscribe(int n) {
 		
 		ids = awsdb.queryIds(n);
-		for (int i = 0; i < ids.size(); ++i) {
-			topic = APIKEY + "/" + ids.get(i) + "/streams/weather/updates";
+		for (String id : ids) {
+			topic = APIKEY + "/" + id + "/streams/weather/updates";
 			try {
 				client.subscribe(topic, 0);
 				

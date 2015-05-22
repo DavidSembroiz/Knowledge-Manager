@@ -1,17 +1,19 @@
 package iot;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import domain.*;
+import domain.DBListener;
+import domain.Database;
+import domain.Mqtt;
+import domain.Utils;
 
 public class Manager {
-	
-	private static final int NOT_FOUND = -1;
 	
 	private ArrayList<Room> rooms;
 	private Mqtt mqtt;
 	private Utils uts;
 	private Database awsdb;
+	
 	
 	public Manager() {
 		rooms = new ArrayList<Room>();
@@ -30,18 +32,18 @@ public class Manager {
 		
 		ArrayList<String> types = uts.getTypesFromMessage(message);
 		ArrayList<Sensor> sens = new ArrayList<Sensor>();
-		for (int i = 0; i < types.size(); ++i) {
-			Sensor s = r.getSensor(soID, types.get(i));
-			s.setValue(uts.getValueFromType(message, types.get(i)));
+		for (String type : types) {
+			Sensor s = r.getSensor(soID, type);
+			s.setValue(uts.getValueFromType(message, type));
 			sens.add(s);
 		}
 		printRooms();
 	}
 	
 	public Room getRoom(String location) {
-		int pos = roomExists(location);
-		if (pos >= 0) return rooms.get(pos);
-		return registerRoom(location);
+		Room r = roomExists(location);
+		if (r == null) r = registerRoom(location);
+		return r;
 	}
 	
 	
@@ -51,11 +53,11 @@ public class Manager {
 		return r;
 	}
 	
-	private int roomExists(String location) {
-		for (int i = 0; i < rooms.size(); ++i) {
-			if (rooms.get(i).getLocation().equals(location)) return i;
+	private Room roomExists(String location) {
+		for (Room r : rooms) {
+			if (r.getLocation().equals(location)) return r;
 		}
-		return NOT_FOUND;
+		return null;
 	}
 	
 	private void printRooms() {
@@ -71,5 +73,4 @@ public class Manager {
 			}
 		}
 	}
-
 }
