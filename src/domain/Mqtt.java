@@ -1,5 +1,7 @@
 package domain;
 
+import iot.Manager;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +9,14 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.eclipse.paho.client.mqttv3.*;
+
+/**
+ * 
+ * @author David
+ *
+ *TODO utils might not be necessary
+ *
+ */
 
 
 public class Mqtt extends Thread {
@@ -26,12 +36,13 @@ public class Mqtt extends Thread {
 	private Utils uts;
 	private Database awsdb;
 	private Properties prop;
+	private Manager manager;
 
-	public Mqtt() {
+	public Mqtt(Manager m, Utils u, Database awsdb) {
 		ids = new ArrayList<String>();
-		uts = new Utils();
-		awsdb = new Database();
-		new DBListener(this, awsdb.getConnectionListener());
+		uts = u;
+		this.awsdb = awsdb;
+		this.manager = m;
 		loadProperties();
 		connect();
 		subscribe(QUERY_ALL);
@@ -63,7 +74,7 @@ public class Mqtt extends Thread {
 		connOpts.setPassword(PASSWORD.toCharArray());
 		try {
 			client = new MqttClient(ADDRESS, CLIENTID);
-			callback = new MqttCb(uts, awsdb);
+			callback = new MqttCb(manager);
 			client.setCallback(callback);
 			client.connect(connOpts);
 			System.out.println("Connected to ServIoTicy");

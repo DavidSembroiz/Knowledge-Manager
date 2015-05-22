@@ -99,4 +99,16 @@ public class Database {
 		}
 		return null;
 	}
+	
+	public String getLocation(String soID) {
+		try {
+			st = connect.createStatement();
+			String get = "SELECT location FROM ids WHERE servioticy_id = '" + soID + "'";
+			ResultSet rs = st.executeQuery(get);
+			if (rs.next()) return rs.getString("location");
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

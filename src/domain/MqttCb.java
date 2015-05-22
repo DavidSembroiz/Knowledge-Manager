@@ -1,15 +1,23 @@
 package domain;
 
+import iot.Manager;
+
 import org.eclipse.paho.client.mqttv3.*;
+
+/**
+ * 
+ * @author David
+ * 
+ * TODO utils might not be necessary
+ *
+ */
 
 public class MqttCb implements MqttCallback {
 	
-	private Utils uts;
-	private Database awsdb;
+	private Manager manager;
 	
-	public MqttCb(Utils uts, Database awsdb) {
-		this.uts = uts;
-		this.awsdb = awsdb;
+	public MqttCb(Manager m) {
+		this.manager = m;
 	}
 
 	@Override
@@ -27,7 +35,8 @@ public class MqttCb implements MqttCallback {
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		
-		String soID = uts.extractIdFromTopic(topic);
+		//String soID = uts.extractIdFromTopic(topic);
+		String mess = new String(message.getPayload());
 		
 		/**
 		 * With the obtained ID, it is possible to query the database to extract
@@ -43,9 +52,11 @@ public class MqttCb implements MqttCallback {
 		
 		System.out.println("-------------------------------------------------");
 		System.out.println("| Topic: " + topic);
-		System.out.println("| Message: " + new String(message.getPayload()));
+		System.out.println("| Message: " + mess);
 		System.out.println("-------------------------------------------------");
 		
-		uts.parseJSON(soID, message);
+		manager.manageMessage(topic, mess);
+		
+		//uts.parseJSON(soID, message);
 	}
 }
