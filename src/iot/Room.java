@@ -1,28 +1,20 @@
 package iot;
 
-import java.util.*;
-import rules.*;
+import java.util.ArrayList;
 
-import org.easyrules.api.Rule;
-import org.easyrules.api.RulesEngine;
-
-import static org.easyrules.core.RulesEngineBuilder.aNewRulesEngine;
+import rules.RuleManager;
 
 public class Room {
 	
-	private static final int NOT_FOUND = -1;
 	
 	private String location;
 	private ArrayList<Sensor> sensors;
-	private RulesEngine rulesEngine;
-	private ArrayList<Object> unregistered;
+	private RuleManager ruleManager;
 	
 	public Room(String location) {
 		this.location = location;
 		sensors = new ArrayList<Sensor>();
-		rulesEngine = aNewRulesEngine().build();
-		unregistered = new ArrayList<Object>();
-		unregistered.add(new SwitchOffLight(null));
+		this.ruleManager = new RuleManager();
 	}
 
 	public String getLocation() {
@@ -51,20 +43,18 @@ public class Room {
 	private Sensor registerSensor(String soID, String type) {
 		Sensor s = new Sensor(soID, type);
 		sensors.add(s);
-		checkRules();
+		ruleManager.registerRules(s);
 		return s;
-	}
-	
-	private void checkRules() {
-		for (Object o : unregistered) {
-			
-		}
 	}
 
 	public Sensor getSensor(String soID, String type) {
 		Sensor s = sensorExists(soID, type); 
 		if (s == null) s = registerSensor(soID, type);
 		return s;
+	}
+
+	public void fireRules() {
+		ruleManager.fireRules();
 	}
 	
 }

@@ -8,27 +8,35 @@ import iot.Sensor;
 
 @Rule(name = "Switch off light")
 public class SwitchOffLight {
-
+	
 	private Sensor luminosity;
 	
-	public SwitchOffLight(Sensor s) {
-		this.luminosity = s;
+	//TODO change to an actual actuator
+	//private String actuator;
+	
+	public SwitchOffLight() {
 	}
 	
-	public ArrayList<String> getNecessaryTypes() {
+	public ArrayList<String> getNecessarySensors() {
 		ArrayList<String> ret = new ArrayList<String>();
-		ret.add("luminosity");
+		if (luminosity == null) ret.add("luminosity");
 		return ret;
+	}
+	
+	public void setSensor(String ruleSens, Sensor s) {
+		if (ruleSens.equals("luminosity")) {
+			luminosity = s;
+		}
 	}
 	
 	@Condition
 	public boolean checkLuminosity() {
 		int val = Integer.parseInt(luminosity.getValue());
-		return val > 500;
+		return val > 300;
 	}
 	
 	@Action(order = 1)
 	public void switchOffLight() throws Exception {
-		//Trigger actuator
+		System.out.println("Switch off light triggered");
 	}
 }

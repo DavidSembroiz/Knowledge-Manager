@@ -22,6 +22,8 @@ public class Manager {
 		mqtt = new Mqtt(this, uts, awsdb);
 		mqtt.start();
 		new DBListener(mqtt, awsdb.getConnectionListener());
+		//manageMessage("asdasdsa/1432288139512153dd1f071164edca16fb7772ea3e5e9",
+		//		      "{\"lastUpdate\":1432544883339,\"channels\":{\"luminosity\":{\"current-value\":627}}}");
 	}
 	
 	public void manageMessage(String topic, String message) {
@@ -31,12 +33,12 @@ public class Manager {
 		Room r = getRoom(location);
 		
 		ArrayList<String> types = uts.getTypesFromMessage(message);
-		ArrayList<Sensor> sens = new ArrayList<Sensor>();
 		for (String type : types) {
 			Sensor s = r.getSensor(soID, type);
 			s.setValue(uts.getValueFromType(message, type));
-			sens.add(s);
 		}
+		
+		r.fireRules();
 		printRooms();
 	}
 	
@@ -71,6 +73,8 @@ public class Manager {
 				System.out.println("----- Type " + s.getType());
 				System.out.println("----- Value " + s.getValue());
 			}
+			
+			
 		}
 	}
 }
