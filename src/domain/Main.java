@@ -10,8 +10,5 @@ public class Main {
 		
 		new Manager();
 		
-		/*Mqtt m = new Mqtt();
-		m.start();*/
-		
 	}
 }
