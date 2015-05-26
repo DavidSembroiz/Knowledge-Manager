@@ -27,7 +27,7 @@ public class Mqtt extends Thread {
 	private String USERNAME;
 	private String PASSWORD;
 	private String APIKEY;
-	private String CLIENTID = "knowledgeManager";
+	private String CLIENTID;
 	private MqttConnectOptions connOpts;
 	private MqttClient client;
 	private MqttCb callback;
@@ -57,6 +57,7 @@ public class Mqtt extends Thread {
 			USERNAME = prop.getProperty("so_username");
 			PASSWORD = prop.getProperty("so_password");
 			APIKEY = prop.getProperty("so_apikey");
+			CLIENTID = prop.getProperty("so_clientid");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -77,7 +78,7 @@ public class Mqtt extends Thread {
 			callback = new MqttCb(manager);
 			client.setCallback(callback);
 			client.connect(connOpts);
-			System.out.println("Connected to ServIoTicy");
+			if (client.isConnected()) System.out.println("Connected to ServIoTicy");
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(-1);

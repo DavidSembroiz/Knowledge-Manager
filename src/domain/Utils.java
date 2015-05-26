@@ -7,29 +7,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 public class Utils {
 
-	
-	public void parseJSON(String soID, String message) {
-		
-		JSONParser parser = new JSONParser();
-		try {
-			JSONObject obj = (JSONObject) parser.parse(message);
-			JSONObject channels = (JSONObject) obj.get("channels");
-			Set<String> s = channels.keySet();
-			for (Iterator<String> it = s.iterator(); it.hasNext();) {
-				String t = it.next();
-				System.out.println(t);
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	/**
 	 * Gets the soID from a topic string
@@ -68,9 +50,9 @@ public class Utils {
 		try {
 			JSONObject obj = (JSONObject) parser.parse(message);
 			JSONObject channels = (JSONObject) obj.get("channels");
-			Set<String> s = channels.keySet();
-			for (Iterator<String> it = s.iterator(); it.hasNext();) {
-				ret.add(it.next());
+			Set<?> s = channels.keySet();
+			for (Iterator<?> it = s.iterator(); it.hasNext();) {
+				ret.add((String)it.next());
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
