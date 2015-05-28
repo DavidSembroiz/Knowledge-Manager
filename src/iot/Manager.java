@@ -22,14 +22,13 @@ public class Manager {
 		mqtt = new Mqtt(this, uts, awsdb);
 		mqtt.start();
 		new DBListener(mqtt, awsdb.getConnectionListener());
-		//manageMessage("asdasdsa/1432288139512153dd1f071164edca16fb7772ea3e5e9",
+		//manageMessage("asdasdsa/14327239449541c367ba3e9e94a588a3b231b7a9420c4",
 		//		      "{\"lastUpdate\":1432544883339,\"channels\":{\"luminosity\":{\"current-value\":627}}}");
+		//System.out.println(awsdb.getLocation("1432793965159aabb8cd05bd740b3b87bcaf8dfd36c0e"));
+
 	}
 	
-	public void manageMessage(String topic, String message) {
-		String soID = uts.extractIdFromTopic(topic);
-		String location = awsdb.getLocation(soID);
-		
+	private void processMessage(String topic, String message, String location, String soID) {
 		Room r = getRoom(location);
 		
 		ArrayList<String> types = uts.getTypesFromMessage(message);
@@ -37,9 +36,20 @@ public class Manager {
 			Sensor s = r.getSensor(soID, type);
 			s.setValue(uts.getValueFromType(message, type));
 		}
-		
 		r.fireRules();
 		printRooms();
+	}
+	
+	public void manageMessage(String topic, String message) {
+		String soID = uts.extractIdFromTopic(topic);
+		String location = awsdb.getLocation(soID);
+		if (location != null) processMessage(topic, message, location, soID);
+		else {
+			/**
+			 * TODO create Queue System
+			 */
+			System.out.println("Unable to query room number, message queued");
+		}
 	}
 	
 	public Room getRoom(String location) {
@@ -73,8 +83,6 @@ public class Manager {
 				System.out.println("----- Type " + s.getType());
 				System.out.println("----- Value " + s.getValue());
 			}
-			
-			
 		}
 	}
 }

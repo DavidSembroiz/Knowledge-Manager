@@ -29,34 +29,21 @@ public class MqttCb implements MqttCallback {
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken arg0) {
-		// Not necessary, no publications will be performed
+		/**
+		 * No publications will be performed
+		 */
 	}
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		
-		//String soID = uts.extractIdFromTopic(topic);
 		String mess = new String(message.getPayload());
-		
-		/**
-		 * With the obtained ID, it is possible to query the database to extract
-		 * the location and data model.
-		 * 
-		 * TODO location allows us to create a new Sensor instance and define it
-		 * 
-		 */
-		
-		/*String data = awsdb.getDatafile(soID);
-		System.out.println(data);*/
-		
-		
+	
 		System.out.println("-------------------------------------------------");
 		System.out.println("| Topic: " + topic);
 		System.out.println("| Message: " + mess);
 		System.out.println("-------------------------------------------------");
 		
 		manager.manageMessage(topic, mess);
-		
-		//uts.parseJSON(soID, message);
 	}
 }

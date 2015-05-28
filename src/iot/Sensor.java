@@ -34,6 +34,5 @@ public class Sensor {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-	
+	}	
 }
