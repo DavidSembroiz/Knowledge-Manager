@@ -73,4 +73,32 @@ public class Utils {
 		}
 		return null;
 	}
+
+
+	public String addToJSON(String soID, String type, String sensors) {
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject obj = (JSONObject) parser.parse(sensors);
+			obj.put(type, soID);
+			return obj.toString();
+		} catch(ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	public String getIdFromType(String s, String sensors) {
+		String res = null;
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject obj = (JSONObject) parser.parse(sensors);
+			System.out.println(s);
+			res = obj.get(s).toString();
+			
+		} catch(ParseException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
 }

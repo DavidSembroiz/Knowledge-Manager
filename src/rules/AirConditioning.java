@@ -11,7 +11,6 @@ public class AirConditioning {
 	
 	private Sensor temperature;
 	private Sensor humidity;
-	private Sensor position;
 	
 	//TODO change to an actual actuator
 	//private String actuator;
@@ -25,7 +24,6 @@ public class AirConditioning {
 		ArrayList<String> ret = new ArrayList<String>();
 		if (temperature == null) ret.add("temperature");
 		if (humidity == null) ret.add("humidity");
-		if (position == null) ret.add("position");
 		return ret;
 	}
 	
@@ -46,11 +44,12 @@ public class AirConditioning {
 			action = "cool";
 			return true;
 		}
-		return false;
+		return true;
 	}
 	
 	@Action(order = 1)
 	public void apply() throws Exception {
+		action = "heat";
 		if (action.equals("heat")) {
 			System.out.println("AC System activated to heat the room");
 		}

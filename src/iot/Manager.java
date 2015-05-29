@@ -18,12 +18,14 @@ public class Manager {
 	public Manager() {
 		rooms = new ArrayList<Room>();
 		uts = new Utils();
-		awsdb = new Database();
+		awsdb = new Database(uts);
 		mqtt = new Mqtt(this, uts, awsdb);
 		mqtt.start();
 		new DBListener(mqtt, awsdb.getConnectionListener());
-		//manageMessage("asdasdsa/14327239449541c367ba3e9e94a588a3b231b7a9420c4",
-		//		      "{\"lastUpdate\":1432544883339,\"channels\":{\"luminosity\":{\"current-value\":627}}}");
+		//manageMessage("APIKEY/1432886373366b5e4e17edce5439c946e88a701ac5df7",
+		//		      "{\"lastUpdate\":1432544883339,\"channels\":{\"humidity\":{\"current-value\":627},\"temperature\":{\"current-value\":22},\"luminosity\":{\"current-value\":22}}}");
+		//manageMessage("APIKEY/1432886373366b5e4e17edce5439c946e88a701ac5df7",
+		//		      "{\"lastUpdate\":1432544883339,\"channels\":{\"humidity\":{\"current-value\":627},\"temperature\":{\"current-value\":22},\"luminosity\":{\"current-value\":22}}}");
 		//System.out.println(awsdb.getLocation("1432793965159aabb8cd05bd740b3b87bcaf8dfd36c0e"));
 
 	}
@@ -46,7 +48,7 @@ public class Manager {
 		if (location != null) processMessage(topic, message, location, soID);
 		else {
 			/**
-			 * TODO create Queue System
+			 * TODO Unable to query database, handle messages
 			 */
 			System.out.println("Unable to query room number, message queued");
 		}
@@ -60,7 +62,7 @@ public class Manager {
 	
 	
 	private Room registerRoom(String location) {
-		Room r = new Room(location);
+		Room r = new Room(location, awsdb, uts);
 		rooms.add(r);
 		return r;
 	}
