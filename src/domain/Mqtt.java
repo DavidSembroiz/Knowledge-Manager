@@ -19,7 +19,7 @@ import org.eclipse.paho.client.mqttv3.*;
  */
 
 
-public class Mqtt extends Thread {
+public class Mqtt {
 	
 	private static final int QUERY_ALL = -1;
 	
@@ -70,7 +70,7 @@ public class Mqtt extends Thread {
 	 */
 	private void connect() {
 		connOpts = new MqttConnectOptions();
-		connOpts.setCleanSession(false);
+		connOpts.setCleanSession(true);
 		connOpts.setUserName(USERNAME);
 		connOpts.setPassword(PASSWORD.toCharArray());
 		try {
@@ -93,12 +93,12 @@ public class Mqtt extends Thread {
 	 * @param n 
 	 */
 	public void subscribe(int n) {
-		
 		ids = awsdb.queryIds(n);
 		for (String id : ids) {
 			topic = APIKEY + "/" + id + "/streams/weather/updates";
+			System.out.println(topic);
 			try {
-				client.subscribe(topic, 0);
+				client.subscribe(topic);
 				
 				System.out.println("Subscribed to SO " + uts.extractIdFromTopic(topic));
 			} catch (MqttException e) {
@@ -112,11 +112,14 @@ public class Mqtt extends Thread {
 	 * Main loop to maintain the listener running for receiving updates
 	 * 
 	 */
-	public void run() {
+	/*public void run() {
 		while(true) {
 			// Maintain class open for receive updated messages
+			if (!client.isConnected()) {
+				System.out.println("Client disconnected");
+			}
 		}
-	}
+	}*/
 	
 	
 	/**

@@ -20,13 +20,7 @@ public class Manager {
 		uts = new Utils();
 		awsdb = new Database(uts);
 		mqtt = new Mqtt(this, uts, awsdb);
-		mqtt.start();
 		new DBListener(mqtt, awsdb.getConnectionListener());
-		//manageMessage("APIKEY/1432886373366b5e4e17edce5439c946e88a701ac5df7",
-		//		      "{\"lastUpdate\":1432544883339,\"channels\":{\"humidity\":{\"current-value\":627},\"temperature\":{\"current-value\":22},\"luminosity\":{\"current-value\":22}}}");
-		//manageMessage("APIKEY/1432886373366b5e4e17edce5439c946e88a701ac5df7",
-		//		      "{\"lastUpdate\":1432544883339,\"channels\":{\"humidity\":{\"current-value\":627},\"temperature\":{\"current-value\":22},\"luminosity\":{\"current-value\":22}}}");
-		//System.out.println(awsdb.getLocation("1432793965159aabb8cd05bd740b3b87bcaf8dfd36c0e"));
 
 	}
 	
