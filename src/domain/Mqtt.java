@@ -96,7 +96,6 @@ public class Mqtt {
 		ids = awsdb.queryIds(n);
 		for (String id : ids) {
 			topic = APIKEY + "/" + id + "/streams/weather/updates";
-			System.out.println(topic);
 			try {
 				client.subscribe(topic);
 				
@@ -106,20 +105,6 @@ public class Mqtt {
 			}
 		}
 	}
-	
-	
-	/**
-	 * Main loop to maintain the listener running for receiving updates
-	 * 
-	 */
-	/*public void run() {
-		while(true) {
-			// Maintain class open for receive updated messages
-			if (!client.isConnected()) {
-				System.out.println("Client disconnected");
-			}
-		}
-	}*/
 	
 	
 	/**

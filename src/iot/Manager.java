@@ -21,7 +21,6 @@ public class Manager {
 		awsdb = new Database(uts);
 		mqtt = new Mqtt(this, uts, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
-
 	}
 	
 	private void processMessage(String topic, String message, String location, String soID) {

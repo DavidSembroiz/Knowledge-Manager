@@ -30,6 +30,7 @@ public class Database {
 		loadPoolSource();
 		createIdTable();
 		createAssociationsTable();
+		initialiseCounters();
 	}
 	
 	public Connection getConnectionListener() {
@@ -230,5 +231,31 @@ public class Database {
 			closeConnection(c);
 		}
 		return rules;
+	}
+	
+	private void initialiseCounters() {
+		
+		Map<String, Integer> rules = new HashMap<String, Integer>();
+		
+		rules.put("AirConditioning", 2);
+		rules.put("CloseDoor", 2);
+		rules.put("SwitchOffLight", 1);
+		
+		c = null;
+		try {
+			c = poolSource.getConnection();
+			pst = c.prepareStatement("UPDATE associations SET sensors = ?, registrations_left = ? WHERE rule = ?");
+			
+			for (Map.Entry<String, Integer> entry : rules.entrySet()) {
+				pst.setString(1, "{}");
+				pst.setInt(2, entry.getValue());
+				pst.setString(3, entry.getKey());
+				pst.executeUpdate();
+			}
+		} catch(SQLException e) {
+				e.printStackTrace();
+		} finally {
+			closeConnection(c);
+		}
 	}
 }

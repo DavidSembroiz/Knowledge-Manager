@@ -18,6 +18,7 @@ public class AirConditioning {
 	private String action;
 	
 	public AirConditioning() {
+		action = "";
 	}
 	
 	public ArrayList<String> getNecessarySensors() {
@@ -44,17 +45,19 @@ public class AirConditioning {
 			action = "cool";
 			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	@Action(order = 1)
 	public void apply() throws Exception {
-		action = "heat";
 		if (action.equals("heat")) {
 			System.out.println("AC System activated to heat the room");
 		}
 		else if (action.equals("cool")) {
 			System.out.println("AC System activated to cool the room");
+		}
+		else {
+			System.out.println("Temperature inside the thresholds");
 		}
 	}
 }

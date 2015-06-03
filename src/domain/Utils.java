@@ -75,10 +75,10 @@ public class Utils {
 	}
 
 
-	public String addToJSON(String soID, String type, String sensors) {
+	public String addToJSON(String soID, String type, String json) {
 		JSONParser parser = new JSONParser();
 		try {
-			JSONObject obj = (JSONObject) parser.parse(sensors);
+			JSONObject obj = (JSONObject) parser.parse(json);
 			obj.put(type, soID);
 			return obj.toString();
 		} catch(ParseException e) {
