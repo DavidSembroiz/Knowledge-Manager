@@ -8,8 +8,6 @@ import org.eclipse.paho.client.mqttv3.*;
  * 
  * @author David
  * 
- * TODO utils might not be necessary
- *
  */
 
 public class MqttCb implements MqttCallback {

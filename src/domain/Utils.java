@@ -93,7 +93,6 @@ public class Utils {
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject obj = (JSONObject) parser.parse(sensors);
-			System.out.println(s);
 			res = obj.get(s).toString();
 			
 		} catch(ParseException e) {
