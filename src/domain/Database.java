@@ -22,19 +22,22 @@ public class Database {
 	
 	private Properties prop;
 	private PGPoolingDataSource poolSource;
+	private Map<String, Integer> ruleAssociations;
 	
 	
 	public Database(Utils uts) {
 		this.uts = uts;
+		ruleAssociations = new HashMap<String, Integer>();
 		loadProperties();
 		loadPoolSource();
 		createIdTable();
 		createAssociationsTable();
+		fillRelations();
 		initialiseCounters();
 	}
 	
 	public Connection getConnectionListener() {
-		Connection c = null;
+		c = null;
 		try {
 			c = poolSource.getConnection();
 		} catch (SQLException e) {
@@ -108,6 +111,7 @@ public class Database {
 					  	  + "sensors varchar(200),"
 					  	  + "rule varchar(50),"
 					  	  + "registrations_left integer,"
+					  	  + "state varchar(20),"
 					  	  + "PRIMARY KEY(location, actuator));";
 			st.executeUpdate(create);
 		} catch (SQLException e) {
@@ -198,8 +202,43 @@ public class Database {
 					pst.executeUpdate();
 				}
 			}
+			else {
+				System.out.println("Rule not found, adding it...");
+				insertNewAssociationRule(location, actuator, soID, type);
+			}
 		} catch(SQLException e) {
 				e.printStackTrace();
+		} finally {
+			closeConnection(c);
+		}
+	}
+	
+	private void insertNewAssociationRule(String location, String actuator, String soID, String type) {
+		c = null;
+		String rule = uts.getRuleByActuator(ruleAssociations, actuator);
+		/**
+		 * Unable to find the rule
+		 */
+		if (rule == null) return;
+		/**
+		 * Rule found, insert can be done
+		 */
+		try {
+			c = poolSource.getConnection();
+			pst = c.prepareStatement("INSERT INTO associations VALUES(?,?,?,?,?,?)");
+			pst.setString(1, location);
+			pst.setString(2, actuator);
+			
+			String json = uts.addToJSON(soID, type, "{}");
+			pst.setString(3, json);
+			pst.setString(4, rule);
+			
+			int regs = uts.getRegsByActuator(ruleAssociations, actuator);
+			pst.setInt(5, regs - 1);
+			pst.setString(6, "undefined");
+			pst.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
 		} finally {
 			closeConnection(c);
 		}
@@ -214,6 +253,7 @@ public class Database {
 			pst.setString(1, location);
 			ResultSet rs = pst.executeQuery();
 			String actuator = null, sensors = null, rule = null;
+			
 			while (rs.next()) {
 				actuator = rs.getString("actuator");
 				sensors = rs.getString("sensors");
@@ -234,22 +274,17 @@ public class Database {
 	}
 	
 	private void initialiseCounters() {
-		
-		Map<String, Integer> rules = new HashMap<String, Integer>();
-		
-		rules.put("AirConditioning", 2);
-		rules.put("CloseDoor", 2);
-		rules.put("SwitchOffLight", 1);
-		
 		c = null;
 		try {
 			c = poolSource.getConnection();
-			pst = c.prepareStatement("UPDATE associations SET sensors = ?, registrations_left = ? WHERE rule = ?");
+			pst = c.prepareStatement("UPDATE associations SET sensors = ?, registrations_left = ?, state = ? WHERE rule = ?");
 			
-			for (Map.Entry<String, Integer> entry : rules.entrySet()) {
+			for (Map.Entry<String, Integer> entry : ruleAssociations.entrySet()) {
 				pst.setString(1, "{}");
 				pst.setInt(2, entry.getValue());
-				pst.setString(3, entry.getKey());
+				pst.setString(3, "undefined");
+				String rule = entry.getKey().split("/")[1];
+				pst.setString(4, rule);
 				pst.executeUpdate();
 			}
 		} catch(SQLException e) {
@@ -257,5 +292,11 @@ public class Database {
 		} finally {
 			closeConnection(c);
 		}
+	}
+	
+	private void fillRelations() {
+		ruleAssociations.put("actuator1/AirConditioning", 2);
+		ruleAssociations.put("actuator3/CloseDoor", 2);
+		ruleAssociations.put("actuator2/SwitchOffLight", 1);
 	}
 }

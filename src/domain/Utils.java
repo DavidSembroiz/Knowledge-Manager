@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.simple.JSONObject;
@@ -100,4 +101,28 @@ public class Utils {
 		}
 		return res;
 	}
+
+
+	public String getRuleByActuator(Map<String, Integer> ruleAssociations, String actuator) {
+		for (Map.Entry<String, Integer> entry : ruleAssociations.entrySet()) {
+			String[] n = entry.getKey().split("/");
+			if (actuator.equals(n[0])) {
+				return n[1];
+			}
+		}
+		return null;
+	}
+
+
+	public int getRegsByActuator(Map<String, Integer> ruleAssociations, String actuator) {
+		for (Map.Entry<String, Integer> entry : ruleAssociations.entrySet()) {
+			String[] n = entry.getKey().split("/");
+			if (actuator.equals(n[0])) {
+				return entry.getValue();
+			}
+		}
+		return -1;
+	}
+	
+	
 }
