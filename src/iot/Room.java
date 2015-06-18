@@ -11,7 +11,6 @@ public class Room {
 	
 	private String location;
 	private ArrayList<Sensor> sensors;
-	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
 	private Database awsdb;
 	
@@ -19,7 +18,6 @@ public class Room {
 		this.location = location;
 		this.awsdb = awsdb;
 		sensors = new ArrayList<Sensor>();
-		actuators = new ArrayList<Actuator>();
 		this.ruleManager = new RuleManager(this, uts);
 	}
 
