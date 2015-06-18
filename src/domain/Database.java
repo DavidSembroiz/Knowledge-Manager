@@ -127,10 +127,9 @@ public class Database {
 		c = null;
 		try {
 			c = poolSource.getConnection();
-			st = c.createStatement();
-			String readIds = "SELECT servioticy_id FROM ids ORDER BY created DESC";
-			if (n > 0) readIds += " LIMIT " + n;
-			ResultSet rs = st.executeQuery(readIds);
+			pst = c.prepareStatement("SELECT servioticy_id FROM ids ORDER BY created DESC LIMIT ?");
+			pst.setInt(1, n);
+			ResultSet rs = pst.executeQuery();
 			while(rs.next()) {
 				ret.add(rs.getString("servioticy_id"));
 			}
@@ -168,7 +167,7 @@ public class Database {
 			pst = c.prepareStatement("SELECT associations FROM ids WHERE servioticy_id = ?");
 			pst.setString(1, soID);
 			ResultSet rs = pst.executeQuery();
-			if (rs.next()) {
+			if (rs.next() && rs.getString("associations") != null) {
 				associations = rs.getString("associations").split(",");
 				for (String s : associations) {
 					String t = s.split("/")[0];
@@ -177,7 +176,7 @@ public class Database {
 				}
 			}
 		} catch(SQLException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			closeConnection(c);
 		}

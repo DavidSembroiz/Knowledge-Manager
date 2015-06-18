@@ -21,7 +21,7 @@ import org.eclipse.paho.client.mqttv3.*;
 
 public class Mqtt {
 	
-	private static final int QUERY_ALL = -1;
+	private static final int QUERY_ALL = 99999999;
 	
 	private String ADDRESS;
 	private String USERNAME;

@@ -21,6 +21,7 @@ public class RuleManager {
 		rulesEngine = aNewRulesEngine().build();
 	}
 	
+	
 	public void registerRules(ArrayList<RuleDAO> rules) {
 		for (RuleDAO rule : rules) {
 			if (rule.getRuleName().equals("AirConditioning")) {

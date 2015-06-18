@@ -26,7 +26,6 @@ public class Manager {
 	private void processMessage(String topic, String message, String location, String soID) {
 		Room r = getRoom(location);
 		
-		
 		ArrayList<String> types = uts.getTypesFromMessage(message);
 		for (String type : types) {
 			Sensor s = r.getSensor(soID, type);

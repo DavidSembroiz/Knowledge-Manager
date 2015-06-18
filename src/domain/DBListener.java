@@ -1,6 +1,7 @@
 package domain;
 
 import java.sql.*;
+
 import org.postgresql.*;
 
 public class DBListener extends Thread {
@@ -16,7 +17,8 @@ public class DBListener extends Thread {
 		this.pgconn = (PGConnection) conn;
 		try {
 			st = this.conn.createStatement();
-			st.execute("LISTEN newSO");
+			st.execute("LISTEN SO_CHANNEL");
+			st.execute("LISTEN ACTUATION_CHANNEL");
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -32,10 +34,33 @@ public class DBListener extends Thread {
 				rs.close();
 				st.close();
 				PGNotification nots[] = pgconn.getNotifications();
-				if (nots != null) callback.subscribe(nots.length);
-				Thread.sleep(15000);
+				if (nots != null) {
+					System.out.println("-------------------------------- NOTIFICATION -----------------------------------");
+					callback.subscribe(getNewSONumber(nots));
+					printActuations(nots);
+				}
+				Thread.sleep(2000);
 			} catch(SQLException | InterruptedException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+
+	private int getNewSONumber(PGNotification[] nots) {
+		int count = 0;
+		for (PGNotification n : nots) {
+			if (n.getName().toUpperCase().equals("SO_CHANNEL")) {
+				++count;
+			}
+		}
+		return count;
+	}
+	
+	private void printActuations(PGNotification[] nots) {
+		for (PGNotification n : nots) {
+			if (n.getName().toUpperCase().equals("ACTUATION_CHANNEL")) {
+				System.out.println(n.getParameter());
 			}
 		}
 	}
