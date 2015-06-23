@@ -29,9 +29,7 @@ public class Probability {
 	}
 	
 	public boolean triggerStatus(int currentTime) {
-		double prob = getProbability(currentTime);
-		double r = rand.nextDouble();
-		return r <= prob;
+		return rand.nextDouble() <= getProbability(currentTime);
 	}
 	
 }

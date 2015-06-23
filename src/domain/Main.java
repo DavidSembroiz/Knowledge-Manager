@@ -1,10 +1,6 @@
 package domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import behaviour.*;
-import behaviour.Person.*;
+import behaviour.PeopleManager;
 import iot.Manager;
 
 
@@ -15,7 +11,6 @@ public class Main {
 		
 		//new Manager();
 		
-		PeopleManager pm = new PeopleManager();
-		pm.printPeople();
+		new PeopleManager();
 	}
 }

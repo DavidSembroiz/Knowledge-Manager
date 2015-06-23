@@ -11,17 +11,20 @@ public class UserProfile {
 	private Probability entrance;
 	private Probability randomWalks;
 	private Probability lunch;
+	private Probability lunchDuration;
 	private Probability exit;
+	
 	private Type type;
 	
 	public UserProfile(Type t) {
 		this.type = t;
 		/**
-		 * Distinguish between different Types
+		 * Distinguish between different Types to create different probabilities
 		 */
 			entrance = new Probability(getDummyProbability());
 			randomWalks = new Probability(getDummyProbability());
 			lunch = new Probability(getDummyProbability());
+			lunchDuration = new Probability(getDummyProbability());
 			exit = new Probability(getDummyProbability());
 	}
 	
@@ -42,6 +45,12 @@ public class UserProfile {
 	}
 	public void setLunch(Probability lunch) {
 		this.lunch = lunch;
+	}
+	public Probability getLunchDuration() {
+		return lunchDuration;
+	}
+	public void setLunchDuration(Probability lunchDuration) {
+		this.lunchDuration = lunchDuration;
 	}
 	public Probability getExit() {
 		return exit;
