@@ -234,6 +234,10 @@ public class Database {
 			
 			int regs = uts.getRegsByActuator(ruleAssociations, actuator);
 			pst.setInt(5, regs - 1);
+			
+			/**
+			 * Set initial actuator state
+			 */
 			pst.setString(6, "undefined");
 			pst.executeUpdate();
 		} catch(SQLException e) {
@@ -293,9 +297,15 @@ public class Database {
 		}
 	}
 	
+	/**
+	 * Create the label relation between actuators and rules
+	 * The number references how many sensors are needed for that rule.
+	 * TODO change the number for a predefined map
+	 */
+	
 	private void fillRelations() {
 		ruleAssociations.put("actuator1/AirConditioning", 2);
-		ruleAssociations.put("actuator3/CloseDoor", 2);
 		ruleAssociations.put("actuator2/SwitchOffLight", 1);
+		ruleAssociations.put("actuator3/CloseDoor", 2);
 	}
 }
