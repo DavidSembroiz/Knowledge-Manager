@@ -1,8 +1,6 @@
 package domain;
 
-import behaviour.PeopleManager;
 import iot.Manager;
-
 
 
 public class Main {

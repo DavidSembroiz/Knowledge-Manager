@@ -145,13 +145,6 @@ public class PeopleManager {
 		profiles.add(new UserProfile(Type.STUDENT));
 	}
 	
-	private void createPeople() {
-		for (int i = 0; i < 10; ++i) {
-			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.UNASSIGNED, Type.PROFESSOR));
-			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.UNASSIGNED, Type.PAS));
-			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.UNASSIGNED, Type.STUDENT));
-		}
-	}
 	
 	private String getRandomName() {
 		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();

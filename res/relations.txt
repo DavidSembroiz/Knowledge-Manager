@@ -1,0 +1,3 @@
+AirConditioning,actuator1,2
+SwitchOffLight,actuator2,1
+CloseDoor,actuator3,2

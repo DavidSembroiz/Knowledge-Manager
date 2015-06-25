@@ -8,6 +8,10 @@ import rules.RuleDAO;
 
 import org.postgresql.ds.PGPoolingDataSource;
 
+import behaviour.Person;
+import behaviour.Person.State;
+import behaviour.Person.Type;
+
 public class Database {
 	
 	private String AWS_USERNAME;
@@ -32,7 +36,7 @@ public class Database {
 		loadPoolSource();
 		createIdTable();
 		createAssociationsTable();
-		fillRelations();
+		readRelationsFromFile();
 		initialiseCounters();
 	}
 	
@@ -303,9 +307,21 @@ public class Database {
 	 * TODO change the number for a predefined map
 	 */
 	
-	private void fillRelations() {
-		ruleAssociations.put("actuator1/AirConditioning", 2);
-		ruleAssociations.put("actuator2/SwitchOffLight", 1);
-		ruleAssociations.put("actuator3/CloseDoor", 2);
+	private void readRelationsFromFile() {
+		try(BufferedReader br = new BufferedReader(new FileReader("res/relations.txt"))) {
+	        String line = br.readLine();
+	        while ((line = br.readLine()) != null) {
+	        	String[] values = line.split(",");
+	        	ruleAssociations.put(values[1] + "/" + values[0], 
+	        						 Integer.parseInt(values[2]));
+	        }
+	        
+	    } catch (IOException e) {
+	    	System.out.println("ERROR: Unable to read people from file.");
+	    	e.printStackTrace();
+	    } catch(IllegalArgumentException e) {
+	    	System.out.println("ERROR: Person does not contain a valid type.");
+	    	e.printStackTrace();
+	    }
 	}
 }
