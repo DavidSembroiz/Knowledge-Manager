@@ -3,7 +3,7 @@ package behaviour;
 public class Person {
 	
 	public enum State {
-		OUTSIDE, INSIDE, RANDOM_WALKS, LUNCH
+		OUTSIDE, INSIDE, RANDOM_WALKS, LUNCH, UNASSIGNED
 	}
 	
 	public enum Type {
@@ -11,13 +11,13 @@ public class Person {
 	}
 	
 	private String name;
-	private String room;
+	private String location;
 	private State state;
 	private Type type;
 	
-	public Person(String name, String room, State state, Type type) {
+	public Person(String name, String location, State state, Type type) {
 		this.name = name;
-		this.room = room;
+		this.location = location;
 		this.state = state;
 		this.type = type;
 	}
@@ -30,12 +30,12 @@ public class Person {
 		this.name = name;
 	}
 
-	public String getRoom() {
-		return room;
+	public String getLocation() {
+		return location;
 	}
 
-	public void setRoom(String room) {
-		this.room = room;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public State getState() {

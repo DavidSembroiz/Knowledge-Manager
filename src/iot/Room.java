@@ -2,8 +2,8 @@ package iot;
 
 import java.util.ArrayList;
 
+import behaviour.Person;
 import domain.Database;
-import domain.Utils;
 import rules.RuleManager;
 
 public class Room {
@@ -13,12 +13,14 @@ public class Room {
 	private ArrayList<Sensor> sensors;
 	private RuleManager ruleManager;
 	private Database awsdb;
+	private ArrayList<Person> people;
 	
-	public Room(String location, Database awsdb, Utils uts) {
+	public Room(String location, Database awsdb, ArrayList<Person> people) {
 		this.location = location;
 		this.awsdb = awsdb;
+		this.people = people;
 		sensors = new ArrayList<Sensor>();
-		this.ruleManager = new RuleManager(this, uts);
+		this.ruleManager = new RuleManager(this);
 	}
 
 	public String getLocation() {
@@ -37,6 +39,14 @@ public class Room {
 		this.sensors = sensors;
 	}
 	
+	public ArrayList<Person> getPeople() {
+		return people;
+	}
+
+	public void setPeople(ArrayList<Person> people) {
+		this.people = people;
+	}
+
 	private Sensor sensorExists(String soID, String type) {
 		for (Sensor s : sensors) {
 			if (s.getSoID().equals(soID) && s.getType().equals(type)) return s;

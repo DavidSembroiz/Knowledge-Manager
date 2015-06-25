@@ -12,6 +12,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 public class Utils {
+	
+	private static Utils instance = new Utils();
+	
+	private Utils() {
+		
+	}
+	
+	public static Utils getInstance() {
+		return instance;
+	}
 
 	
 	/**

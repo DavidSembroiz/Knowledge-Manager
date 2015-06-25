@@ -2,6 +2,8 @@ package iot;
 
 import java.util.ArrayList;
 
+import behaviour.PeopleManager;
+import behaviour.Person;
 import domain.DBListener;
 import domain.Database;
 import domain.Mqtt;
@@ -13,13 +15,15 @@ public class Manager {
 	private Mqtt mqtt;
 	private Utils uts;
 	private Database awsdb;
+	private PeopleManager peopleManager;
 	
 	
 	public Manager() {
 		rooms = new ArrayList<Room>();
-		uts = new Utils();
-		awsdb = new Database(uts);
-		mqtt = new Mqtt(this, uts, awsdb);
+		uts = Utils.getInstance();
+		peopleManager = new PeopleManager();
+		awsdb = new Database();
+		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 	}
 	
@@ -35,6 +39,7 @@ public class Manager {
 		
 		r.fireRules();
 		printRooms();
+		peopleManager.makeStep();
 	}
 	
 	public void manageMessage(String topic, String message) {
@@ -51,13 +56,13 @@ public class Manager {
 	
 	public Room getRoom(String location) {
 		Room r = roomExists(location);
-		if (r == null) r = registerRoom(location);
+		if (r == null) r = registerRoom(location, peopleManager.assignPeopleToRoom(location));
 		return r;
 	}
 	
 	
-	private Room registerRoom(String location) {
-		Room r = new Room(location, awsdb, uts);
+	private Room registerRoom(String location, ArrayList<Person> people) {
+		Room r = new Room(location, awsdb, people);
 		rooms.add(r);
 		return r;
 	}

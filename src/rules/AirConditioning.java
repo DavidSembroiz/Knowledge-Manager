@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import org.easyrules.annotation.*;
 
 import iot.Sensor;
+import behaviour.Person;
 
 @Rule(name = "Manages air condition extreme cases")
 public class AirConditioning {
+	
+	private ArrayList<Person> people;
 	
 	private Sensor temperature;
 	private Sensor humidity;
@@ -17,7 +20,8 @@ public class AirConditioning {
 	
 	private String action;
 	
-	public AirConditioning() {
+	public AirConditioning(ArrayList<Person> people) {
+		this.people = people;
 		action = "";
 	}
 	

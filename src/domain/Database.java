@@ -25,8 +25,8 @@ public class Database {
 	private Map<String, Integer> ruleAssociations;
 	
 	
-	public Database(Utils uts) {
-		this.uts = uts;
+	public Database() {
+		this.uts = Utils.getInstance();
 		ruleAssociations = new HashMap<String, Integer>();
 		loadProperties();
 		loadPoolSource();

@@ -15,9 +15,9 @@ public class RuleManager {
 	private Utils uts;
 	private Room r;
 	
-	public RuleManager(Room r, Utils uts) {
+	public RuleManager(Room r) {
 		this.r = r;
-		this.uts = uts;
+		this.uts = Utils.getInstance();
 		rulesEngine = aNewRulesEngine().build();
 	}
 	
@@ -34,7 +34,7 @@ public class RuleManager {
 	}
 	
 	private void createAirConditioning(String actuator, String sensors) {
-		AirConditioning ac = new AirConditioning();
+		AirConditioning ac = new AirConditioning(r.getPeople());
 		ArrayList<String> necessary = ac.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);
@@ -45,7 +45,7 @@ public class RuleManager {
 	}
 	
 	private void createSwitchOffLight(String actuator, String sensors) {
-		SwitchOffLight sol = new SwitchOffLight();
+		SwitchOffLight sol = new SwitchOffLight(r.getPeople());
 		ArrayList<String> necessary = sol.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);

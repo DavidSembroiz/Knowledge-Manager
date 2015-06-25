@@ -4,17 +4,21 @@ import java.util.ArrayList;
 
 import org.easyrules.annotation.*;
 
+import behaviour.Person;
 import iot.Sensor;
 
 @Rule(name = "Switch off light")
 public class SwitchOffLight {
 	
+	private ArrayList<Person> people;
+	
 	private Sensor luminosity;
 	
 	//TODO change to an actual actuator
-	//private String actuator;
+	private String actuator;
 	
-	public SwitchOffLight() {
+	public SwitchOffLight(ArrayList<Person> people) {
+		this.people = people;
 	}
 	
 	public ArrayList<String> getNecessarySensors() {

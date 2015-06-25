@@ -12,6 +12,7 @@ public class PeopleManager {
 	 * TODO add Random Walks
 	 */
 	
+	private ArrayList<Person> unassigned;
 	private ArrayList<Person> peopleOutside;
 	private ArrayList<Person> peopleInside;
 	private ArrayList<Person> peopleRandomWalks;
@@ -19,13 +20,17 @@ public class PeopleManager {
 	private ArrayList<UserProfile> profiles;
 	
 	public PeopleManager() {
+		unassigned = new ArrayList<Person>();
 		peopleOutside = new ArrayList<Person>();
 		peopleInside = new ArrayList<Person>();
 		peopleRandomWalks = new ArrayList<Person>();
 		peopleLunch = new ArrayList<Person>();
 		profiles = new ArrayList<UserProfile>();
-		fillPeople();
+		createPeople();
 		generateProfiles();
+	}
+	
+	public void makeStep() {
 		
 		/**
 		 * Disable multiple jumps in the same step
@@ -127,9 +132,8 @@ public class PeopleManager {
 			cur.setState(State.RANDOM_WALKS);
 			peopleRandomWalks.add(peopleInside.remove(i));
 		}
-	}
-}*/
-		
+	}*/
+	
 		
 	private void generateProfiles() {
 		profiles.add(new UserProfile(Type.PROFESSOR));
@@ -137,15 +141,15 @@ public class PeopleManager {
 		profiles.add(new UserProfile(Type.STUDENT));
 	}
 	
-	private void fillPeople() {
+	private void createPeople() {
 		for (int i = 0; i < 10; ++i) {
-			peopleOutside.add(new Person(getRandomName(), getRandomName(), State.OUTSIDE, Type.PROFESSOR));
+			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.OUTSIDE, Type.PROFESSOR));
 		}
 		for (int i = 0; i < 10; ++i) {
-			peopleOutside.add(new Person(getRandomName(), getRandomName(), State.OUTSIDE, Type.PAS));
+			unassigned.add(new Person(getRandomName(), getRandomName(), State.OUTSIDE, Type.PAS));
 		}
 		for (int i = 0; i < 10; ++i) {
-			peopleOutside.add(new Person(getRandomName(), getRandomName(), State.OUTSIDE, Type.STUDENT));
+			unassigned.add(new Person(getRandomName(), getRandomName(), State.OUTSIDE, Type.STUDENT));
 		}
 	}
 	
@@ -186,4 +190,19 @@ public class PeopleManager {
 			System.out.println("State " + p.getState());
 		}
 	}
+
+	public ArrayList<Person> assignPeopleToRoom(String location) {
+		ArrayList<Person> people = new ArrayList<Person>();
+		for (int i = unassigned.size() - 1; i >= 0; --i) {
+			Person cur = unassigned.get(i);
+			if (cur.getLocation().equals(location)) {
+				cur.setState(State.OUTSIDE);
+				peopleOutside.add(unassigned.remove(i));
+				people.add(cur);
+			}
+		}
+		return people;
+	}
+
+	
 }
