@@ -14,12 +14,14 @@ public class Person {
 	private String location;
 	private State state;
 	private Type type;
+	private boolean changed;
 	
 	public Person(String name, String location, State state, Type type) {
 		this.name = name;
 		this.location = location;
 		this.state = state;
 		this.type = type;
+		this.changed = false;
 	}
 
 	public String getName() {
@@ -53,6 +55,12 @@ public class Person {
 	public void setType(Type type) {
 		this.type = type;
 	}
-	
-	
+
+	public boolean isChanged() {
+		return changed;
+	}
+
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
 }

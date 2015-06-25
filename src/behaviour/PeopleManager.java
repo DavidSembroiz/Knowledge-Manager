@@ -35,6 +35,7 @@ public class PeopleManager {
 	}
 	
 	public void makeStep() {
+		resetChanged();
 		
 		/**
 		 * Disable multiple jumps in the same step
@@ -45,6 +46,7 @@ public class PeopleManager {
 		leaveBuilding(t);
 		enterBuilding(t);
 		goForLunch(t);
+		finishLunch(t);
 		printPeople();
 	}
 	
@@ -66,8 +68,9 @@ public class PeopleManager {
 	public void enterBuilding(int t) {
 		for (int i = peopleOutside.size() - 1; i >= 0; --i) {
 			Person cur = peopleOutside.get(i);
-			if (getProfile(cur.getType()).getEntrance().triggerStatus(t)) {
+			if (!cur.isChanged() && getProfile(cur.getType()).getEntrance().triggerStatus(t)) {
 				cur.setState(State.INSIDE);
+				cur.setChanged(true);
 				peopleInside.add(peopleOutside.remove(i));
 			}
 		}
@@ -86,8 +89,9 @@ public class PeopleManager {
 	public void goForLunch(int t) {
 		for (int i = peopleInside.size() - 1; i >= 0; --i) {
 			Person cur = peopleInside.get(i);
-			if (getProfile(cur.getType()).getLunch().triggerStatus(t)) {
+			if (!cur.isChanged() && getProfile(cur.getType()).getLunch().triggerStatus(t)) {
 				cur.setState(State.LUNCH);
+				cur.setChanged(true);
 				peopleLunch.add(peopleInside.remove(i));
 			}
 		}
@@ -102,8 +106,9 @@ public class PeopleManager {
 	public void finishLunch(int t) {
 		for (int i = peopleLunch.size() - 1; i >= 0; --i) {
 			Person cur = peopleLunch.get(i);
-			if (getProfile(cur.getType()).getLunchDuration().triggerStatus(t)) {
+			if (!cur.isChanged() && getProfile(cur.getType()).getLunchDuration().triggerStatus(t)) {
 				cur.setState(State.INSIDE);
+				cur.setChanged(true);
 				peopleInside.add(peopleLunch.remove(i));
 			}
 		}
@@ -118,8 +123,9 @@ public class PeopleManager {
 	public void leaveBuilding(int t) {
 		for (int i = peopleInside.size() - 1; i >= 0; --i) {
 			Person cur = peopleInside.get(i);
-			if (getProfile(cur.getType()).getExit().triggerStatus(t)) {
+			if (!cur.isChanged() && getProfile(cur.getType()).getExit().triggerStatus(t)) {
 				cur.setState(State.OUTSIDE);
+				cur.setChanged(true);
 				peopleOutside.add(peopleInside.remove(i));
 			}
 		}
@@ -166,26 +172,22 @@ public class PeopleManager {
 	
 	public void printPeople() {
 		System.out.println("---------- OUTSIDE ----------");
-		for (int i = 0; i < peopleOutside.size(); ++i) {
-			Person p = peopleOutside.get(i);
+		for (Person p : peopleOutside) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());
 		}
 		System.out.println("---------- INSIDE ----------");
-		for (int i = 0; i < peopleInside.size(); ++i) {
-			Person p = peopleInside.get(i);
+		for (Person p : peopleInside) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());
 		}
 		System.out.println("---------- WALKING ----------");
-		for (int i = 0; i < peopleRandomWalks.size(); ++i) {
-			Person p = peopleRandomWalks.get(i);
+		for (Person p : peopleRandomWalks) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());
 		}
 		System.out.println("---------- LUNCH ----------");
-		for (int i = 0; i < peopleLunch.size(); ++i) {
-			Person p = peopleLunch.get(i);
+		for (Person p : peopleLunch) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());
 		}
@@ -202,6 +204,13 @@ public class PeopleManager {
 			}
 		}
 		return people;
+	}
+	
+	private void resetChanged() {
+		for (Person p : peopleOutside) p.setChanged(false);
+		for (Person p : peopleInside) p.setChanged(false);
+		for (Person p : peopleRandomWalks) p.setChanged(false);
+		for (Person p : peopleLunch) p.setChanged(false);
 	}
 
 	private void readPeopleFromFile() {
