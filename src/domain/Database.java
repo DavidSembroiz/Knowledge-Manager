@@ -319,9 +319,6 @@ public class Database {
 	    } catch (IOException e) {
 	    	System.out.println("ERROR: Unable to read people from file.");
 	    	e.printStackTrace();
-	    } catch(IllegalArgumentException e) {
-	    	System.out.println("ERROR: Person does not contain a valid type.");
-	    	e.printStackTrace();
 	    }
 	}
 }

@@ -146,7 +146,7 @@ public class PeopleManager {
 	}
 	
 	
-	private String getRandomName() {
+	/*private String getRandomName() {
 		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 		StringBuilder sb = new StringBuilder();
 		Random random = new Random();
@@ -155,7 +155,7 @@ public class PeopleManager {
 		    sb.append(c);
 		}
 		return sb.toString();
-	}
+	}*/
 	
 	public void printPeople() {
 		System.out.println("---------- OUTSIDE ----------");
