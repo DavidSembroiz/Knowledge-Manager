@@ -35,14 +35,8 @@ public class PeopleManager {
 	}
 	
 	public void makeStep() {
-		resetChanged();
-		
-		/**
-		 * Disable multiple jumps in the same step
-		 * For instance, it is not possible to do OUTSIDE -> INSIDE -> LUNCH in one step
-		 */
-		
 		int t = 700;
+		resetChanged();
 		leaveBuilding(t);
 		enterBuilding(t);
 		goForLunch(t);
@@ -229,6 +223,10 @@ public class PeopleManager {
 	    	System.out.println("ERROR: Person does not contain a valid type.");
 	    	e.printStackTrace();
 	    }
+	}
+
+	public boolean isAllPeopleAssigned() {
+		return unassigned.isEmpty();
 	}
 	
 }

@@ -27,6 +27,14 @@ public class Manager {
 		new DBListener(mqtt, awsdb.getConnectionListener());
 	}
 	
+	
+	private void simulate() {
+		peopleManager.makeStep();
+		for (Room r : rooms) r.fireRules();
+		printRooms();
+	}
+	
+	
 	private void processMessage(String topic, String message, String location, String soID) {
 		Room r = getRoom(location);
 		
@@ -36,10 +44,7 @@ public class Manager {
 			
 			s.setValue(uts.getValueFromType(message, type));
 		}
-		
-		r.fireRules();
-		printRooms();
-		peopleManager.makeStep();
+		if (peopleManager.isAllPeopleAssigned()) simulate();
 	}
 	
 	public void manageMessage(String topic, String message) {
