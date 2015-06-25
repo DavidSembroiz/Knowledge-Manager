@@ -1,5 +1,8 @@
 package behaviour;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -26,7 +29,8 @@ public class PeopleManager {
 		peopleRandomWalks = new ArrayList<Person>();
 		peopleLunch = new ArrayList<Person>();
 		profiles = new ArrayList<UserProfile>();
-		createPeople();
+		//createPeople();
+		readPeopleFromFile();
 		generateProfiles();
 	}
 	
@@ -143,13 +147,9 @@ public class PeopleManager {
 	
 	private void createPeople() {
 		for (int i = 0; i < 10; ++i) {
-			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.OUTSIDE, Type.PROFESSOR));
-		}
-		for (int i = 0; i < 10; ++i) {
-			unassigned.add(new Person(getRandomName(), getRandomName(), State.OUTSIDE, Type.PAS));
-		}
-		for (int i = 0; i < 10; ++i) {
-			unassigned.add(new Person(getRandomName(), getRandomName(), State.OUTSIDE, Type.STUDENT));
+			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.UNASSIGNED, Type.PROFESSOR));
+			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.UNASSIGNED, Type.PAS));
+			unassigned.add(new Person(getRandomName(), "upc/campusnord/d6/0/008", State.UNASSIGNED, Type.STUDENT));
 		}
 	}
 	
@@ -204,5 +204,22 @@ public class PeopleManager {
 		return people;
 	}
 
+	private void readPeopleFromFile() {
+		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
+	        String line = br.readLine();
+	        while ((line = br.readLine()) != null) {
+	        	String[] values = line.split(",");
+	        	Person p = new Person(values[0], values[1], State.UNASSIGNED, Type.valueOf(values[2].toUpperCase()));
+	        	this.unassigned.add(p);
+	        }
+	        
+	    } catch (IOException e) {
+	    	System.out.println("ERROR: Unable to read people from file.");
+	    	e.printStackTrace();
+	    } catch(IllegalArgumentException e) {
+	    	System.out.println("ERROR: Person does not contain a valid type.");
+	    	e.printStackTrace();
+	    }
+	}
 	
 }
