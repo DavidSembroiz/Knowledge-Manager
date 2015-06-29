@@ -38,13 +38,13 @@ public class PeopleManager {
 		
 		enterBuilding(t);
 		
-		goForRandomWalk(t);
+		/*goForRandomWalk(t);
 		returnFromWalk(t);
 		
 		goForLunch(t);
 		finishLunch(t);
 		
-		leaveBuilding(t);
+		leaveBuilding(t);*/
 		
 		printPeople();
 	}

@@ -49,7 +49,7 @@ public class LightsRule {
 			luminosity.setValue(Integer.toString(0));
 			hasChanged = true;
 		}
-		else if (light.equals("off") && (!Utils.emptyRoom(people) || !environmentalLightOK())) {
+		else if (light.equals("off") && !Utils.emptyRoom(people) && !environmentalLightOK()) {
 			light = "on";
 			luminosity.setValue(Integer.toString(1000));
 			hasChanged = true;
@@ -65,6 +65,6 @@ public class LightsRule {
 		 */
 		
 		if (light.equals("on")) System.out.println("Light switched on");
-		else System.out.println("Light switched off");
+		else if (light.equals("off")) System.out.println("Light switched off");
 	}
 }
