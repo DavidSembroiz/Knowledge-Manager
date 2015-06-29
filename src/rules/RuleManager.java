@@ -43,7 +43,7 @@ public class RuleManager {
 	}
 	
 	private void createHVACRule(String actuator, String sensors) {
-		HVAC ac = new HVAC(r.getPeople());
+		HVACRule ac = new HVACRule(r.getPeople());
 		ArrayList<String> necessary = ac.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);
@@ -54,7 +54,7 @@ public class RuleManager {
 	}
 	
 	private void createLightsRule(String actuator, String sensors) {
-		Lights sol = new Lights(r.getPeople());
+		LightsRule sol = new LightsRule(r.getPeople());
 		ArrayList<String> necessary = sol.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);
@@ -65,7 +65,7 @@ public class RuleManager {
 	}
 	
 	private void createDoorRule(String actuator, String sensors) {
-		Door d = new Door(r.getPeople());
+		DoorRule d = new DoorRule(r.getPeople());
 		ArrayList<String> necessary = d.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);
@@ -76,7 +76,7 @@ public class RuleManager {
 	}
 	
 	private void createWindowRule(String actuator, String sensors) {
-		Window w = new Window(r.getPeople());
+		WindowRule w = new WindowRule(r.getPeople());
 		ArrayList<String> necessary = w.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);
@@ -87,7 +87,7 @@ public class RuleManager {
 	}
 	
 	private void createComputerRule(String actuator, String sensors) {
-		Computer c = new Computer(r.getPeople());
+		ComputerRule c = new ComputerRule(r.getPeople());
 		ArrayList<String> necessary = c.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);

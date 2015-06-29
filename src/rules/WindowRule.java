@@ -8,7 +8,7 @@ import behaviour.Person;
 import iot.Sensor;
 
 @Rule(name = "Window Management Rule")
-public class Window {
+public class WindowRule {
 	
 	private ArrayList<Person> people;
 	
@@ -17,7 +17,7 @@ public class Window {
 	//TODO change to an actual actuator
 	private String actuator;
 	
-	public Window(ArrayList<Person> people) {
+	public WindowRule(ArrayList<Person> people) {
 		this.people = people;
 	}
 	

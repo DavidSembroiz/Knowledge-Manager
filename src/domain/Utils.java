@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import behaviour.Person;
+import behaviour.Person.State;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
@@ -132,5 +135,12 @@ public class Utils {
 			}
 		}
 		return -1;
+	}
+	
+	public static boolean emptyRoom(ArrayList<Person> people) {
+		for (Person p : people) {
+			if (p.getState().equals(State.INSIDE)) return false;
+		}
+		return true;
 	}
 }

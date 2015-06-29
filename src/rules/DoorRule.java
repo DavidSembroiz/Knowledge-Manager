@@ -7,40 +7,40 @@ import org.easyrules.annotation.*;
 import behaviour.Person;
 import iot.Sensor;
 
-@Rule(name = "Lights Management Rule")
-public class Lights {
+@Rule(name = "Door Management Rule")
+public class DoorRule {
 	
 	private ArrayList<Person> people;
 	
-	private Sensor luminosity;
+	private Sensor door;
 	
 	//TODO change to an actual actuator
 	private String actuator;
 	
-	public Lights(ArrayList<Person> people) {
+	public DoorRule(ArrayList<Person> people) {
 		this.people = people;
 	}
 	
 	public ArrayList<String> getNecessarySensors() {
 		ArrayList<String> ret = new ArrayList<String>();
-		if (luminosity == null) ret.add("luminosity");
+		if (door == null) ret.add("door");
 		return ret;
 	}
 	
 	public void setSensor(String ruleSens, Sensor s) {
-		if (ruleSens.equals("luminosity")) {
-			luminosity = s;
+		if (ruleSens.equals("door")) {
+			door = s;
 		}
 	}
 	
 	@Condition
-	public boolean checkLuminosity() {
-		int val = Integer.parseInt(luminosity.getValue());
-		return val > 300;
+	public boolean checkDoor() {
+		int val = Integer.parseInt(door.getValue());
+		return val > 0;
 	}
 	
 	@Action(order = 1)
 	public void switchOffLight() throws Exception {
-		System.out.println("Switch off light triggered");
+		System.out.println("Door triggered");
 	}
 }

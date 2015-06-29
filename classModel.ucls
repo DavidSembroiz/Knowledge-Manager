@@ -109,8 +109,8 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="rules.HVAC" project="KnowledgeManager" 
-    file="/KnowledgeManager/src/rules/HVAC.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="13" language="java" name="rules.HVACRule" project="KnowledgeManager" 
+    file="/KnowledgeManager/src/rules/HVACRule.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-80" y="-23"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -136,8 +136,8 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="rules.Lights" project="KnowledgeManager" 
-    file="/KnowledgeManager/src/rules/Lights.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="16" language="java" name="rules.LightsRule" project="KnowledgeManager" 
+    file="/KnowledgeManager/src/rules/LightsRule.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-223" y="-31"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      

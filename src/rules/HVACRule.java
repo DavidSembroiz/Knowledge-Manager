@@ -8,19 +8,18 @@ import iot.Sensor;
 import behaviour.Person;
 
 @Rule(name = "HVAC Management Rule")
-public class HVAC {
+public class HVACRule {
 	
 	private ArrayList<Person> people;
 	
 	private Sensor temperature;
 	private Sensor humidity;
 	
-	//TODO change to an actual actuator
-	//private String actuator;
+	private String actuator;
 	
 	private String action;
 	
-	public HVAC(ArrayList<Person> people) {
+	public HVACRule(ArrayList<Person> people) {
 		this.people = people;
 		action = "";
 	}

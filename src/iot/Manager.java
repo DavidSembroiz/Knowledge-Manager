@@ -45,7 +45,8 @@ public class Manager {
 			
 			s.setValue(uts.getValueFromType(message, type));
 		}
-		if (peopleManager.isAllPeopleAssigned()) simulate();
+		simulate();
+		//if (peopleManager.isAllPeopleAssigned()) simulate();
 	}
 	
 	public void manageMessage(String topic, String message) {
