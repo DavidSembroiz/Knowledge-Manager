@@ -24,17 +24,26 @@ public class RuleManager {
 	
 	public void registerRules(ArrayList<RuleDAO> rules) {
 		for (RuleDAO rule : rules) {
-			if (rule.getRuleName().equals("AirConditioning")) {
-				createAirConditioning(rule.getActuator(), rule.getSensors());
+			if (rule.getRuleName().equals("HVAC")) {
+				createHVACRule(rule.getActuator(), rule.getSensors());
 			}
-			else if (rule.getRuleName().equals("SwitchOffLight")) {
-				createSwitchOffLight(rule.getActuator(), rule.getSensors());
+			else if (rule.getRuleName().equals("Lights")) {
+				createLightsRule(rule.getActuator(), rule.getSensors());
+			}
+			else if (rule.getRuleName().equals("Door")) {
+				createDoorRule(rule.getActuator(), rule.getSensors());
+			}
+			else if (rule.getRuleName().equals("Window")) {
+				createWindowRule(rule.getActuator(), rule.getSensors());
+			}
+			else if (rule.getRuleName().equals("Computer")) {
+				createComputerRule(rule.getActuator(), rule.getSensors());
 			}
 		}
 	}
 	
-	private void createAirConditioning(String actuator, String sensors) {
-		AirConditioning ac = new AirConditioning(r.getPeople());
+	private void createHVACRule(String actuator, String sensors) {
+		HVAC ac = new HVAC(r.getPeople());
 		ArrayList<String> necessary = ac.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);
@@ -44,8 +53,8 @@ public class RuleManager {
 		System.out.println("Rule " + ac.getClass().getName() + " registered");
 	}
 	
-	private void createSwitchOffLight(String actuator, String sensors) {
-		SwitchOffLight sol = new SwitchOffLight(r.getPeople());
+	private void createLightsRule(String actuator, String sensors) {
+		Lights sol = new Lights(r.getPeople());
 		ArrayList<String> necessary = sol.getNecessarySensors();
 		for (String n : necessary) {
 			String soID = uts.getIdFromType(n, sensors);
@@ -53,6 +62,39 @@ public class RuleManager {
 		}
 		rulesEngine.registerRule(sol);
 		System.out.println("Rule " + sol.getClass().getName() + " registered");
+	}
+	
+	private void createDoorRule(String actuator, String sensors) {
+		Door d = new Door(r.getPeople());
+		ArrayList<String> necessary = d.getNecessarySensors();
+		for (String n : necessary) {
+			String soID = uts.getIdFromType(n, sensors);
+			d.setSensor(n, r.getSensor(soID, n));
+		}
+		rulesEngine.registerRule(d);
+		System.out.println("Rule " + d.getClass().getName() + " registered");
+	}
+	
+	private void createWindowRule(String actuator, String sensors) {
+		Window w = new Window(r.getPeople());
+		ArrayList<String> necessary = w.getNecessarySensors();
+		for (String n : necessary) {
+			String soID = uts.getIdFromType(n, sensors);
+			w.setSensor(n, r.getSensor(soID, n));
+		}
+		rulesEngine.registerRule(w);
+		System.out.println("Rule " + w.getClass().getName() + " registered");
+	}
+	
+	private void createComputerRule(String actuator, String sensors) {
+		Computer c = new Computer(r.getPeople());
+		ArrayList<String> necessary = c.getNecessarySensors();
+		for (String n : necessary) {
+			String soID = uts.getIdFromType(n, sensors);
+			c.setSensor(n, r.getSensor(soID, n));
+		}
+		rulesEngine.registerRule(c);
+		System.out.println("Rule " + c.getClass().getName() + " registered");
 	}
 	
 	public void fireRules() {

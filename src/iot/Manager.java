@@ -29,6 +29,7 @@ public class Manager {
 	
 	
 	private void simulate() {
+		
 		peopleManager.makeStep();
 		for (Room r : rooms) r.fireRules();
 		printRooms();

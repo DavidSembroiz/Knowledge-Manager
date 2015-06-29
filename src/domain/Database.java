@@ -309,7 +309,7 @@ public class Database {
 	
 	private void readRelationsFromFile() {
 		try(BufferedReader br = new BufferedReader(new FileReader("res/relations.txt"))) {
-	        String line = br.readLine();
+	        String line;
 	        while ((line = br.readLine()) != null) {
 	        	String[] values = line.split(",");
 	        	ruleAssociations.put(values[1] + "/" + values[0], 

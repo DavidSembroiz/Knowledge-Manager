@@ -7,8 +7,8 @@ import org.easyrules.annotation.*;
 import iot.Sensor;
 import behaviour.Person;
 
-@Rule(name = "Manages air condition extreme cases")
-public class AirConditioning {
+@Rule(name = "HVAC Management Rule")
+public class HVAC {
 	
 	private ArrayList<Person> people;
 	
@@ -20,7 +20,7 @@ public class AirConditioning {
 	
 	private String action;
 	
-	public AirConditioning(ArrayList<Person> people) {
+	public HVAC(ArrayList<Person> people) {
 		this.people = people;
 		action = "";
 	}

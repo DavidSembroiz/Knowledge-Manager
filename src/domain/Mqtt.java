@@ -95,7 +95,7 @@ public class Mqtt {
 	public void subscribe(int n) {
 		ids = awsdb.queryIds(n);
 		for (String id : ids) {
-			topic = APIKEY + "/" + id + "/streams/weather/updates";
+			topic = APIKEY + "/" + id + "/streams/data/updates";
 			try {
 				client.subscribe(topic);
 				

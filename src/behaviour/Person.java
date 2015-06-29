@@ -15,6 +15,7 @@ public class Person {
 	private State state;
 	private Type type;
 	private boolean changed;
+	private boolean eaten;
 	
 	public Person(String name, String location, State state, Type type) {
 		this.name = name;
@@ -22,6 +23,7 @@ public class Person {
 		this.state = state;
 		this.type = type;
 		this.changed = false;
+		this.eaten = false;
 	}
 
 	public String getName() {
@@ -56,11 +58,19 @@ public class Person {
 		this.type = type;
 	}
 
-	public boolean isChanged() {
+	public boolean hasChanged() {
 		return changed;
 	}
 
 	public void setChanged(boolean changed) {
 		this.changed = changed;
+	}
+	
+	public boolean hasEaten() {
+		return eaten;
+	}
+
+	public void setEaten(boolean eaten) {
+		this.eaten = eaten;
 	}
 }

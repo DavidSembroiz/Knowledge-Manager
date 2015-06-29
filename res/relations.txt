@@ -1,3 +1,5 @@
-AirConditioning,actuator1,2
-SwitchOffLight,actuator2,1
-CloseDoor,actuator3,2
+HVAC,hvac,2
+Lights,light,1
+Door,door,1
+Window,window,1
+Computer,computer,1

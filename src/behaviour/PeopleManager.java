@@ -62,7 +62,7 @@ public class PeopleManager {
 	public void enterBuilding(int t) {
 		for (int i = peopleOutside.size() - 1; i >= 0; --i) {
 			Person cur = peopleOutside.get(i);
-			if (!cur.isChanged() && getProfile(cur.getType()).getEntrance().triggerStatus(t)) {
+			if (!cur.hasChanged() && getProfile(cur.getType()).getEntrance().triggerStatus(t)) {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
 				peopleInside.add(peopleOutside.remove(i));
@@ -83,9 +83,10 @@ public class PeopleManager {
 	public void goForLunch(int t) {
 		for (int i = peopleInside.size() - 1; i >= 0; --i) {
 			Person cur = peopleInside.get(i);
-			if (!cur.isChanged() && getProfile(cur.getType()).getLunch().triggerStatus(t)) {
+			if (!cur.hasChanged() && !cur.hasEaten() && getProfile(cur.getType()).getLunch().triggerStatus(t)) {
 				cur.setState(State.LUNCH);
 				cur.setChanged(true);
+				cur.setEaten(true);
 				peopleLunch.add(peopleInside.remove(i));
 			}
 		}
@@ -100,7 +101,7 @@ public class PeopleManager {
 	public void finishLunch(int t) {
 		for (int i = peopleLunch.size() - 1; i >= 0; --i) {
 			Person cur = peopleLunch.get(i);
-			if (!cur.isChanged() && getProfile(cur.getType()).getLunchDuration().triggerStatus(t)) {
+			if (!cur.hasChanged() && getProfile(cur.getType()).getLunchDuration().triggerStatus(t)) {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
 				peopleInside.add(peopleLunch.remove(i));
@@ -117,7 +118,7 @@ public class PeopleManager {
 	public void leaveBuilding(int t) {
 		for (int i = peopleInside.size() - 1; i >= 0; --i) {
 			Person cur = peopleInside.get(i);
-			if (!cur.isChanged() && getProfile(cur.getType()).getExit().triggerStatus(t)) {
+			if (!cur.hasChanged() && getProfile(cur.getType()).getExit().triggerStatus(t)) {
 				cur.setState(State.OUTSIDE);
 				cur.setChanged(true);
 				peopleOutside.add(peopleInside.remove(i));
