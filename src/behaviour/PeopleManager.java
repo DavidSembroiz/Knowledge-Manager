@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import behaviour.Person.State;
 import behaviour.Person.Type;
@@ -29,7 +28,6 @@ public class PeopleManager {
 		peopleRandomWalks = new ArrayList<Person>();
 		peopleLunch = new ArrayList<Person>();
 		profiles = new ArrayList<UserProfile>();
-		//createPeople();
 		readPeopleFromFile();
 		generateProfiles();
 	}
@@ -37,10 +35,17 @@ public class PeopleManager {
 	public void makeStep() {
 		int t = 700;
 		resetChanged();
-		leaveBuilding(t);
+		
 		enterBuilding(t);
+		
+		goForRandomWalk(t);
+		returnFromWalk(t);
+		
 		goForLunch(t);
 		finishLunch(t);
+		
+		leaveBuilding(t);
+		
 		printPeople();
 	}
 	
@@ -124,20 +129,29 @@ public class PeopleManager {
 				peopleOutside.add(peopleInside.remove(i));
 			}
 		}
-		
-		/**
-		 * TODO add interaction RandomWalks -> Outside
-		 */
 	}
 	
-	/*public void checkRandomWalks(int t) {
-	for (int i = 0; i < peopleInside.size(); ++i) {
-		Person cur = peopleInside.get(i);
-		if (getProfile(cur.getType()).getRandomWalks().triggerStatus(t)) {
-			cur.setState(State.RANDOM_WALKS);
-			peopleRandomWalks.add(peopleInside.remove(i));
+	public void goForRandomWalk(int t) {
+		for (int i = peopleInside.size() - 1; i >= 0; --i) {
+			Person cur = peopleInside.get(i);
+			if (!cur.hasChanged() && getProfile(cur.getType()).getRandomWalks().triggerStatus(t)) {
+				cur.setState(State.RANDOM_WALKS);
+				cur.setChanged(true);
+				peopleRandomWalks.add(peopleInside.remove(i));
+			}
 		}
-	}*/
+	}
+	
+	public void returnFromWalk(int t) {
+		for (int i = peopleRandomWalks.size() - 1; i >= 0; --i) {
+			Person cur = peopleRandomWalks.get(i);
+			if (!cur.hasChanged() && getProfile(cur.getType()).getRandomWalksDuration().triggerStatus(t)) {
+				cur.setState(State.INSIDE);
+				cur.setChanged(true);
+				peopleInside.add(peopleRandomWalks.remove(i));
+			}
+		}
+	}
 	
 		
 	private void generateProfiles() {
@@ -146,17 +160,6 @@ public class PeopleManager {
 		profiles.add(new UserProfile(Type.STUDENT));
 	}
 	
-	
-	/*private String getRandomName() {
-		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-		StringBuilder sb = new StringBuilder();
-		Random random = new Random();
-		for (int i = 0; i < 10; i++) {
-		    char c = chars[random.nextInt(chars.length)];
-		    sb.append(c);
-		}
-		return sb.toString();
-	}*/
 	
 	public void printPeople() {
 		System.out.println("---------- OUTSIDE ----------");

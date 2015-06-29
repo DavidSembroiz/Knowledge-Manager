@@ -1,4 +1,4 @@
-david,upc/campusnord/d6/0/008,student
-pepe,upc/campusnord/d6/0/008,professor
-julian,upc/campusnord/d6/0/008,pas
-sergi,upc/campusnord/d6/0/008,professor
+david,upc/campusnord/d6003,student
+pepe,upc/campusnord/d6001,professor
+julian,upc/campusnord/d6004,pas
+sergi,upc/campusnord/d6002,professor

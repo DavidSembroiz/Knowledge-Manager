@@ -8,10 +8,6 @@ import rules.RuleDAO;
 
 import org.postgresql.ds.PGPoolingDataSource;
 
-import behaviour.Person;
-import behaviour.Person.State;
-import behaviour.Person.Type;
-
 public class Database {
 	
 	private String AWS_USERNAME;

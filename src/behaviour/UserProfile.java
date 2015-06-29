@@ -10,6 +10,7 @@ public class UserProfile {
 	
 	private Probability entrance;
 	private Probability randomWalks;
+	private Probability randomWalksDuration;
 	private Probability lunch;
 	private Probability lunchDuration;
 	private Probability exit;
@@ -23,6 +24,7 @@ public class UserProfile {
 		 */
 			entrance = new Probability(getDummyProbability());
 			randomWalks = new Probability(getDummyProbability());
+			randomWalksDuration = new Probability(getDummyProbability());
 			lunch = new Probability(getDummyProbability());
 			lunchDuration = new Probability(getDummyProbability());
 			exit = new Probability(getDummyProbability());
@@ -39,6 +41,13 @@ public class UserProfile {
 	}
 	public void setRandomWalks(Probability randomWalks) {
 		this.randomWalks = randomWalks;
+	}
+	
+	public Probability getRandomWalksDuration() {
+		return randomWalksDuration;
+	}
+	public void setRandomWalksDuration(Probability randomWalksDuration) {
+		this.randomWalksDuration = randomWalksDuration;
 	}
 	public Probability getLunch() {
 		return lunch;
@@ -75,6 +84,8 @@ public class UserProfile {
 		m.put(47, 1.0);
 		return m;
 	}
+
+	
 	
 	
 }
