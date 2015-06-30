@@ -36,9 +36,13 @@ public class LightsRule {
 		}
 	}
 	
+	private int getEnvironmentalLight() {
+		return 200; // get it from a model
+	}
+	
 	private boolean environmentalLightOK() {
 		int threshold = 500;
-		int modelValue = 600; // get it from a model
+		int modelValue = 400; // get it from a model
 		return modelValue > threshold;
 	}
 	
@@ -46,7 +50,7 @@ public class LightsRule {
 	public boolean checkLuminosity() {
 		if (light.equals("on") && (Utils.emptyRoom(people) || environmentalLightOK())) {
 			light = "off";
-			luminosity.setValue(Integer.toString(0));
+			luminosity.setValue(Integer.toString(getEnvironmentalLight()));
 			hasChanged = true;
 		}
 		else if (light.equals("off") && !Utils.emptyRoom(people) && !environmentalLightOK()) {
@@ -59,6 +63,8 @@ public class LightsRule {
 	
 	@Action(order = 1)
 	public void changeState() throws Exception {
+		
+		hasChanged = false;
 		
 		/**
 		 * Register the new state and compute its new consumption

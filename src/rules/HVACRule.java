@@ -100,6 +100,8 @@ public class HVACRule {
 	@Action(order = 1)
 	public void apply() throws Exception {
 		
+		hasChanged = false;
+		
 		/**
 		 * Register the new state and compute its new consumption
 		 */
@@ -115,7 +117,7 @@ public class HVACRule {
 				System.out.println("HVAC heating the room... " + temperature.getValue());
 				
 			}
-			else if (action.equals("cool")) {
+			else if (action.equals("cold")) {
 				temp -= 0.2;
 				temperature.setValue(Double.toString(temp));
 				System.out.println("HVAC cooling the room... " + temperature.getValue());

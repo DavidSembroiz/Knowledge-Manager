@@ -19,12 +19,17 @@ public class Utils {
 	private static Utils instance = new Utils();
 	
 	private Utils() {
-		
 	}
 	
 	public static Utils getInstance() {
 		return instance;
 	}
+	
+	/**
+	 * 10 second steps at the moment
+	 */
+	
+	public static final int STEPS = 8640; 
 
 	
 	/**

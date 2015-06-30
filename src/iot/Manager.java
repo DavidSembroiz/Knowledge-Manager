@@ -8,6 +8,7 @@ import domain.DBListener;
 import domain.Database;
 import domain.Mqtt;
 import domain.Utils;
+import domain.Register;
 
 public class Manager {
 	
@@ -16,6 +17,7 @@ public class Manager {
 	private Utils uts;
 	private Database awsdb;
 	private PeopleManager peopleManager;
+	private Register reg;
 	
 	
 	public Manager() {
@@ -24,15 +26,23 @@ public class Manager {
 		peopleManager = new PeopleManager();
 		awsdb = new Database();
 		mqtt = new Mqtt(this, awsdb);
+		reg = new Register(10, 10, 10);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 	}
 	
 	
 	private void simulate() {
-		
-		peopleManager.makeStep();
-		for (Room r : rooms) r.fireRules();
-		printRooms();
+		for (int step = 0; step < 10; step++) {
+			peopleManager.makeStep();
+			for (Room r : rooms) r.fireRules();
+			printRooms();
+			reg.printStepConsumption(step);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	
