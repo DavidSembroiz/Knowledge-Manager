@@ -9,6 +9,7 @@ import domain.Database;
 import domain.Mqtt;
 import domain.Utils;
 import domain.Register;
+import models.Weather;
 
 public class Manager {
 	
@@ -18,12 +19,14 @@ public class Manager {
 	private Database awsdb;
 	private PeopleManager peopleManager;
 	private Register reg;
+	private Weather models;
 	
 	
 	public Manager() {
 		rooms = new ArrayList<Room>();
 		uts = Utils.getInstance();
 		reg = Register.getInstance();
+		models = Weather.getInstance();
 		peopleManager = new PeopleManager();
 		awsdb = new Database();
 		mqtt = new Mqtt(this, awsdb);
@@ -37,10 +40,10 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	
 	private void simulate() {
-		while(Utils.CURRENT_STEP < Utils.STEPS) {
+		while(Utils.CURRENT_STEP < 10 /*Utils.STEPS*/) {
 			
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
@@ -61,7 +64,14 @@ public class Manager {
 		for (String type : types) {
 			Sensor s = r.getSensor(soID, type);
 			
-			s.setValue(uts.getValueFromType(message, type));
+			/**
+			 * Currently changed to fit the simulation
+			 */
+			
+			if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
+			else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
+			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
+			else s.setValue(uts.getValueFromType(message, type));
 		}
 		simulate();
 		//if (peopleManager.isAllPeopleAssigned()) simulate();

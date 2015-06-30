@@ -82,7 +82,7 @@ public class HVACRule {
 		
 		if (ac.equals("on") && (Utils.emptyRoom(people) || environmentalTemperatureOK())) {
 			hasChanged = true;
-			temperature.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
+			//temperature.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
 			old_ac = ac;
 			ac = "off";
 		}
