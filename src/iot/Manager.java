@@ -30,19 +30,26 @@ public class Manager {
 		new DBListener(mqtt, awsdb.getConnectionListener());
 	}
 	
+	private void sleep(int s) {
+		try {
+			Thread.sleep(s * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	private void simulate() {
-		for (int step = 0; step < 10; step++) {
+		while(Utils.CURRENT_STEP < Utils.STEPS) {
+			
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			printRooms();
-			reg.computeConsumption(step);
-			reg.printStepConsumption(step);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			reg.computeConsumption();
+			reg.printStepConsumption();
+			sleep(1);
+			
+			++Utils.CURRENT_STEP;
 		}
 	}
 	

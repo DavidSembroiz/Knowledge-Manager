@@ -4,7 +4,7 @@ import domain.Utils;
 
 public class Register {
 	
-private static Register instance = new Register();
+	private static Register instance = new Register();
 	
 	private Register() {
 		initComponents();
@@ -34,14 +34,6 @@ private static Register instance = new Register();
 		this.numLights = 0;
 		this.numHvacs = 0;
 	}
-	
-	
-	/*public Register(int numComputers, int numLights, int numHvacs) {
-		consumption = new int[Utils.STEPS];
-		this.numComputers = numComputers;
-		this.numLights = numLights;
-		this.numHvacs = numHvacs;
-	}*/
 
 	public int getNumComputers() {
 		return numComputers;
@@ -91,21 +83,21 @@ private static Register instance = new Register();
 		this.numHvacs++;
 	}
 	
-	public int computeConsumption(int s) {
+	public int computeConsumption() {
 		int cons = numComputers * COMPUTER_CONSUMPTION * COMPUTERS_PER_ROOM +
 				   numLights * LIGHT_CONSUMPTION * LIGHTS_PER_ROOM+
 				   numHvacs * HVAC_CONSUMPTION * HVACS_PER_ROOM;
-		consumption[s] = cons;
+		consumption[Utils.CURRENT_STEP] = cons;
 		return cons;
 	}
 	
 	public void printConsumption() {
 		for (int i = 0; i < consumption.length; ++i) {
-			printStepConsumption(i);
+			printStepConsumption();
 		}
 	}
 	
-	public void printStepConsumption(int s) {
-		System.out.println(consumption[s]);
+	public void printStepConsumption() {
+		System.out.println("Current consumption: " + consumption[Utils.CURRENT_STEP] + " Watts");
 	}
 }

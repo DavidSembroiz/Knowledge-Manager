@@ -8,12 +8,14 @@ import domain.Utils;
 import domain.Register;
 import behaviour.Person;
 import iot.Sensor;
+import models.Weather;
 
 @Rule(name = "Lights Management Rule")
 public class LightsRule {
 	
 	private ArrayList<Person> people;
 	private Register reg;
+	private Weather models;
 	
 	private Sensor luminosity;
 	private boolean hasChanged;
@@ -22,6 +24,7 @@ public class LightsRule {
 	
 	public LightsRule(ArrayList<Person> people) {
 		reg = Register.getInstance();
+		models = Weather.getInstance();
 		this.people = people;
 		this.light = "off";
 		this.hasChanged = false;
@@ -39,13 +42,9 @@ public class LightsRule {
 		}
 	}
 	
-	private int getEnvironmentalLight() {
-		return 200; // get it from a model
-	}
-	
 	private boolean environmentalLightOK() {
 		int threshold = 500;
-		int modelValue = 400; // get it from a model
+		double modelValue = models.getCurrentEnvironmentalLight();
 		return modelValue > threshold;
 	}
 	
@@ -53,7 +52,7 @@ public class LightsRule {
 	public boolean checkLuminosity() {
 		if (light.equals("on") && (Utils.emptyRoom(people) || environmentalLightOK())) {
 			light = "off";
-			luminosity.setValue(Integer.toString(getEnvironmentalLight()));
+			luminosity.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 			hasChanged = true;
 		}
 		else if (light.equals("off") && !Utils.emptyRoom(people) && !environmentalLightOK()) {

@@ -29,7 +29,11 @@ public class Utils {
 	 * 10 second steps at the moment
 	 */
 	
-	public static final int STEPS = 8640; 
+	public static final int STEPS = 8640;
+	public static final int HALF_HOUR = 30;
+	public static final int DIVISIONS = 48;
+	
+	public static int CURRENT_STEP = 0;
 
 	
 	/**

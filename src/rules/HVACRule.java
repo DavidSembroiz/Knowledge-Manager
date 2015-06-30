@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.easyrules.annotation.*;
 
 import iot.Sensor;
+import models.Weather;
 import behaviour.Person;
 import domain.Utils;
 import domain.Register;
@@ -14,6 +15,7 @@ public class HVACRule {
 	
 	private ArrayList<Person> people;
 	private Register reg;
+	private Weather models;
 	
 	private Sensor temperature;
 	private Sensor humidity;
@@ -26,6 +28,7 @@ public class HVACRule {
 	
 	public HVACRule(ArrayList<Person> people) {
 		reg = Register.getInstance();
+		models = Weather.getInstance();
 		this.people = people;
 		action = "";
 		ac = "off";
@@ -45,14 +48,6 @@ public class HVACRule {
 		else if (ruleSens.equals("humidity")) humidity = s;
 	}
 	
-	private Double getEnvironmentalTemperature() {
-		return 23.0; // get from the model
-	}
-	
-	private Double getEnvironmentalHumidity() {
-		return 35.0; // get from the model
-	}
-	
 	private Double getDesiredTemperature() {
 		Double hum = Double.parseDouble(humidity.getValue());
 		return hum < 45 ? 25.0 : 24.0;
@@ -60,8 +55,8 @@ public class HVACRule {
 	
 	private boolean environmentalTemperatureOK() {
 		
-		Double temp = getEnvironmentalTemperature();
-		Double hum = getEnvironmentalHumidity();
+		Double temp = models.getCurrentEnvironmentalTemperature();
+		Double hum = models.getCurrentEnvironmentalHumidity();
 		/**
 		 * Summer
 		 */
@@ -87,7 +82,7 @@ public class HVACRule {
 		
 		if (ac.equals("on") && (Utils.emptyRoom(people) || environmentalTemperatureOK())) {
 			hasChanged = true;
-			temperature.setValue(Double.toString(getEnvironmentalTemperature()));
+			temperature.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
 			old_ac = ac;
 			ac = "off";
 		}
