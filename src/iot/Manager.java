@@ -43,7 +43,7 @@ public class Manager {
 
 	
 	private void simulate() {
-		while(Utils.CURRENT_STEP < 10 /*Utils.STEPS*/) {
+		while(Utils.CURRENT_STEP < 100 /*Utils.STEPS*/) {
 			
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();

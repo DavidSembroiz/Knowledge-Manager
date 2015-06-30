@@ -57,9 +57,11 @@ public class HVACRule {
 		
 		Double temp = models.getCurrentEnvironmentalTemperature();
 		Double hum = models.getCurrentEnvironmentalHumidity();
+		
 		/**
 		 * Summer
 		 */
+		
 		if (hum < 45 && temp < 28 && temp > 24.5) return true;
 		else if (hum > 60 && temp < 25.5 && temp > 23) return true;
 		else if (temp < 27 && temp > 23.8) return true;
@@ -76,13 +78,24 @@ public class HVACRule {
 		*/
 	}
 	
+	private void moderateTemperature() {
+		double roomTemp = Double.parseDouble(temperature.getValue());
+		double environTemp = models.getCurrentEnvironmentalTemperature();
+		double newTemp = 0;
+		if (roomTemp == environTemp) return;
+		if (roomTemp > environTemp) {
+			newTemp = roomTemp - (roomTemp - environTemp) * 0.2;
+		}
+		else newTemp = roomTemp + (environTemp - roomTemp) * 0.2;
+		temperature.setValue(Double.toString(newTemp));
+	}
+	
 	
 	@Condition
 	public boolean checkConditions() {
 		
 		if (ac.equals("on") && (Utils.emptyRoom(people) || environmentalTemperatureOK())) {
 			hasChanged = true;
-			//temperature.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
 			old_ac = ac;
 			ac = "off";
 		}
@@ -95,6 +108,9 @@ public class HVACRule {
 			else action = "heat";
 			old_ac = ac;
 			ac = "on";
+		}
+		else {
+			moderateTemperature();
 		}
 		return hasChanged;
 	}

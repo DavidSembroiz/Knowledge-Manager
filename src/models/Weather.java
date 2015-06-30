@@ -25,7 +25,7 @@ public class Weather {
 	};
 	
 	public double getCurrentEnvironmentalTemperature() {
-		return environmentalTemperature[0]; // change to fit the current step
+		return environmentalTemperature[3]; // change to fit the current step
 	}
 	
 	/**
