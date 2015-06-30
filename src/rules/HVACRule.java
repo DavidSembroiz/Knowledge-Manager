@@ -7,24 +7,29 @@ import org.easyrules.annotation.*;
 import iot.Sensor;
 import behaviour.Person;
 import domain.Utils;
+import domain.Register;
 
 @Rule(name = "HVAC Management Rule")
 public class HVACRule {
 	
 	private ArrayList<Person> people;
+	private Register reg;
 	
 	private Sensor temperature;
 	private Sensor humidity;
 	
 	private String ac;
+	private String old_ac;
 	
 	private String action;
 	private boolean hasChanged;
 	
 	public HVACRule(ArrayList<Person> people) {
+		reg = Register.getInstance();
 		this.people = people;
 		action = "";
 		ac = "off";
+		old_ac = "";
 		hasChanged = false;
 	}
 	
@@ -83,6 +88,7 @@ public class HVACRule {
 		if (ac.equals("on") && (Utils.emptyRoom(people) || environmentalTemperatureOK())) {
 			hasChanged = true;
 			temperature.setValue(Double.toString(getEnvironmentalTemperature()));
+			old_ac = ac;
 			ac = "off";
 		}
 		else if (ac.equals("on") || 
@@ -92,6 +98,7 @@ public class HVACRule {
 			double diff = getDesiredTemperature() - Double.parseDouble(temperature.getValue());
 			if (diff <= 0.2) action = "cold";
 			else action = "heat";
+			old_ac = ac;
 			ac = "on";
 		}
 		return hasChanged;
@@ -107,9 +114,11 @@ public class HVACRule {
 		 */
 		
 		if (ac.equals("off")) {
+			if (!old_ac.equals(ac)) reg.switchHvacOff();
 			System.out.println("HVAC switched off");
 		}
 		else if (ac.equals("on")) {
+			if (!old_ac.equals(ac)) reg.switchHvacOn();
 			Double temp = Double.parseDouble(temperature.getValue());
 			if (action.equals("heat")) {
 				temp += 0.2;

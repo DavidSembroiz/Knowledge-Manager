@@ -23,10 +23,10 @@ public class Manager {
 	public Manager() {
 		rooms = new ArrayList<Room>();
 		uts = Utils.getInstance();
+		reg = Register.getInstance();
 		peopleManager = new PeopleManager();
 		awsdb = new Database();
 		mqtt = new Mqtt(this, awsdb);
-		reg = new Register(10, 10, 10);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 	}
 	
@@ -36,6 +36,7 @@ public class Manager {
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			printRooms();
+			reg.computeConsumption(step);
 			reg.printStepConsumption(step);
 			try {
 				Thread.sleep(1000);

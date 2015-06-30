@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.easyrules.annotation.*;
 
 import domain.Utils;
+import domain.Register;
 import behaviour.Person;
 import iot.Sensor;
 
@@ -12,6 +13,7 @@ import iot.Sensor;
 public class LightsRule {
 	
 	private ArrayList<Person> people;
+	private Register reg;
 	
 	private Sensor luminosity;
 	private boolean hasChanged;
@@ -19,6 +21,7 @@ public class LightsRule {
 	private String light;
 	
 	public LightsRule(ArrayList<Person> people) {
+		reg = Register.getInstance();
 		this.people = people;
 		this.light = "off";
 		this.hasChanged = false;
@@ -70,7 +73,13 @@ public class LightsRule {
 		 * Register the new state and compute its new consumption
 		 */
 		
-		if (light.equals("on")) System.out.println("Light switched on");
-		else if (light.equals("off")) System.out.println("Light switched off");
+		if (light.equals("on")) {
+			reg.switchLightOn();
+			System.out.println("Light switched on");
+		}
+		else if (light.equals("off")) {
+			reg.switchLightOff();
+			System.out.println("Light switched off");
+		}
 	}
 }

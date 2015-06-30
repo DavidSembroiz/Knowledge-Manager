@@ -4,30 +4,44 @@ import domain.Utils;
 
 public class Register {
 	
+private static Register instance = new Register();
 	
-	private int[] consumption; 
+	private Register() {
+		initComponents();
+	}
+	
+	public static Register getInstance() {
+		return instance;
+	}
+	
+	private int[] consumption;
 	
 	private final int COMPUTER_CONSUMPTION = 100;
 	private final int LIGHT_CONSUMPTION = 15;
 	private final int HVAC_CONSUMPTION = 800;
 	
+	private final int COMPUTERS_PER_ROOM = 2;
+	private final int LIGHTS_PER_ROOM = 5;
+	private final int HVACS_PER_ROOM = 1;
+	
 	private int numComputers;
 	private int numLights;
 	private int numHvacs;
 	
-	public Register() {
+	private void initComponents() {
 		consumption = new int[Utils.STEPS];
-		numComputers = 0;
-		numLights = 0;
-		numHvacs = 0;
+		this.numComputers = 0;
+		this.numLights = 0;
+		this.numHvacs = 0;
 	}
 	
-	public Register(int numComputers, int numLights, int numHvacs) {
+	
+	/*public Register(int numComputers, int numLights, int numHvacs) {
 		consumption = new int[Utils.STEPS];
 		this.numComputers = numComputers;
 		this.numLights = numLights;
 		this.numHvacs = numHvacs;
-	}
+	}*/
 
 	public int getNumComputers() {
 		return numComputers;
@@ -53,10 +67,34 @@ public class Register {
 		this.numHvacs = numHvacs;
 	}
 	
+	public void switchComputerOff() {
+		this.numComputers--;
+	}
+	
+	public void switchComputerOn() {
+		this.numComputers++;
+	}
+	
+	public void switchLightOff() {
+		this.numLights--;
+	}
+	
+	public void switchLightOn() {
+		this.numLights++;
+	}
+	
+	public void switchHvacOff() {
+		this.numHvacs--;
+	}
+	
+	public void switchHvacOn() {
+		this.numHvacs++;
+	}
+	
 	public int computeConsumption(int s) {
-		int cons = numComputers * COMPUTER_CONSUMPTION +
-				   numLights * LIGHT_CONSUMPTION +
-				   numHvacs * HVAC_CONSUMPTION;
+		int cons = numComputers * COMPUTER_CONSUMPTION * COMPUTERS_PER_ROOM +
+				   numLights * LIGHT_CONSUMPTION * LIGHTS_PER_ROOM+
+				   numHvacs * HVAC_CONSUMPTION * HVACS_PER_ROOM;
 		consumption[s] = cons;
 		return cons;
 	}
