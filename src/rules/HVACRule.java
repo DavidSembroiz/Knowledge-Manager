@@ -78,6 +78,10 @@ public class HVACRule {
 		*/
 	}
 	
+	/**
+	 * It usually takes up to 3 hours to modify 10 degrees
+	 */
+	
 	private void moderateTemperature() {
 		double roomTemp = Double.parseDouble(temperature.getValue());
 		double environTemp = models.getCurrentEnvironmentalTemperature();
