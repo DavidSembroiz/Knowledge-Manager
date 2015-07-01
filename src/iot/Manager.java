@@ -80,8 +80,8 @@ public class Manager {
 			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 			else s.setValue(uts.getValueFromType(message, type));
 		}
-		simulate();
-		//if (peopleManager.isAllPeopleAssigned()) simulate();
+		if (allRoomsDefined()) simulate();
+		//if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
 	}
 	
 	public void manageMessage(String topic, String message) {
@@ -114,6 +114,13 @@ public class Manager {
 			if (r.getLocation().equals(location)) return r;
 		}
 		return null;
+	}
+	
+	private boolean allRoomsDefined() {
+		for (Room r : rooms) {
+			if (!r.allSensorsDefined()) return false;
+		}
+		return true;
 	}
 	
 	private void printRooms() {
