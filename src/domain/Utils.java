@@ -152,4 +152,11 @@ public class Utils {
 		}
 		return true;
 	}
+
+	public static boolean justWalking(ArrayList<Person> people) {
+		for (Person p : people) {
+			if (p.getState().equals(State.RANDOM_WALKS)) return true;
+		}
+		return false;
+	}
 }

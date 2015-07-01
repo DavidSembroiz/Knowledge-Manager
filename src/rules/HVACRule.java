@@ -98,6 +98,15 @@ public class HVACRule {
 	@Condition
 	public boolean checkConditions() {
 		
+		/**
+		 * If HVAC is ON:
+		 *  - OFF: room is empty or environmental temperature is OK
+		 *  - KEEP_GOING: temperature adjustment is not instant, it must vary over time
+		 *                until desired state is achieved
+		 * If HVAC is OFF:
+		 *  - ON: someone has entered the room or environmental temperature is BAD
+		 */
+		
 		if (ac.equals("on") && (Utils.emptyRoom(people) || environmentalTemperatureOK())) {
 			hasChanged = true;
 			old_ac = ac;

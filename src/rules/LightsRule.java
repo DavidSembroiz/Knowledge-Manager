@@ -50,6 +50,15 @@ public class LightsRule {
 	
 	@Condition
 	public boolean checkLuminosity() {
+		
+		/**
+		 * If light is ON:
+		 *  - OFF: room is empty or environmental light is OK
+		 * 
+		 * If light is OFF:
+		 *  - ON: someone has entered the room or the environmental light is BAD
+		 */
+		
 		if (light.equals("on") && (Utils.emptyRoom(people) || environmentalLightOK())) {
 			light = "off";
 			luminosity.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
