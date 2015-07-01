@@ -5,14 +5,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import domain.Register;
 import behaviour.Person.State;
 import behaviour.Person.Type;
 
 public class PeopleManager {
 	
-	/**
-	 * TODO add Random Walks
-	 */
+	private static PeopleManager instance = new PeopleManager();
+	
+	private PeopleManager() {
+		initComponents();
+	}
+	
+	public static PeopleManager getInstance() {
+		return instance;
+	}
+	
 	
 	private ArrayList<Person> unassigned;
 	private ArrayList<Person> peopleOutside;
@@ -21,7 +29,7 @@ public class PeopleManager {
 	private ArrayList<Person> peopleLunch;
 	private ArrayList<UserProfile> profiles;
 	
-	public PeopleManager() {
+	private void initComponents() {
 		unassigned = new ArrayList<Person>();
 		peopleOutside = new ArrayList<Person>();
 		peopleInside = new ArrayList<Person>();

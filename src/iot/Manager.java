@@ -13,6 +13,8 @@ import models.Weather;
 
 public class Manager {
 	
+	private int MODE = 1;
+	
 	private ArrayList<Room> rooms;
 	private Mqtt mqtt;
 	private Utils uts;
@@ -27,7 +29,7 @@ public class Manager {
 		uts = Utils.getInstance();
 		reg = Register.getInstance();
 		models = Weather.getInstance();
-		peopleManager = new PeopleManager();
+		peopleManager = PeopleManager.getInstance();
 		awsdb = new Database();
 		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
@@ -43,6 +45,12 @@ public class Manager {
 
 	
 	private void simulate() {
+		
+		if (MODE == 0) {
+			computeDumbScenarioConsumption(); 
+			return;
+		}
+		
 		while(Utils.CURRENT_STEP < 100 /*Utils.STEPS*/) {
 			
 			peopleManager.makeStep();
@@ -59,7 +67,6 @@ public class Manager {
 	
 	private void processMessage(String topic, String message, String location, String soID) {
 		Room r = getRoom(location);
-		
 		ArrayList<String> types = uts.getTypesFromMessage(message);
 		for (String type : types) {
 			Sensor s = r.getSensor(soID, type);
@@ -122,4 +129,22 @@ public class Manager {
 			}
 		}
 	}
+	
+	
+	private void computeDumbScenarioConsumption() {
+		
+		/**
+		 * In this scenario, everything is on throughout the hole day
+		 */
+		
+		int numRooms = rooms.size();
+		
+		reg.setNumComputers(numRooms);
+		reg.setNumHvacs(numRooms);
+		reg.setNumLights(numRooms);
+		
+		int cons = reg.computeConsumption();
+		System.out.println("Consumption: " + cons + " W");
+	}
+	
 }

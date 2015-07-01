@@ -24,6 +24,7 @@ public class ComputerRule {
 	public ComputerRule(ArrayList<Person> people) {
 		this.people = people;
 		this.reg = Register.getInstance();
+		this.comp = "off";
 	}
 	
 	public ArrayList<String> getNecessarySensors() {
