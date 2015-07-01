@@ -17,7 +17,7 @@ public class Register {
 	private int[] consumption;
 	
 	private final int COMPUTER_CONSUMPTION = 100;
-	private final int COMPUTER_SUSPENDED_CONSUMPTION = 100;
+	private final int COMPUTER_SUSPENDED_CONSUMPTION = 25;
 	private final int LIGHT_CONSUMPTION = 15;
 	private final int HVAC_CONSUMPTION = 800;
 	

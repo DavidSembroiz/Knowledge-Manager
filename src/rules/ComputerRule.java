@@ -17,7 +17,6 @@ public class ComputerRule {
 	
 	private Sensor computer;
 	
-	//TODO change to an actual actuator
 	private String comp;
 	private String old_comp;
 	
