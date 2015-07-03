@@ -20,6 +20,7 @@ public class Register {
 	private final int COMPUTER_SUSPENDED_CONSUMPTION = 25;
 	private final int LIGHT_CONSUMPTION = 15;
 	private final int HVAC_CONSUMPTION = 800;
+	private final int HVAC_MAINTAIN_CONSUMPTION = 500;
 	
 	private final int COMPUTERS_PER_ROOM = 2;
 	private final int LIGHTS_PER_ROOM = 5;
@@ -29,6 +30,7 @@ public class Register {
 	private int numSuspComputers;
 	private int numLights;
 	private int numHvacs;
+	private int numMaintHvacs;
 	
 	private void initComponents() {
 		consumption = new int[Utils.STEPS];
@@ -36,6 +38,7 @@ public class Register {
 		this.numSuspComputers = 0;
 		this.numLights = 0;
 		this.numHvacs = 0;
+		this.numMaintHvacs = 0;
 	}
 
 	public int getNumComputers() {
@@ -60,6 +63,19 @@ public class Register {
 
 	public void setNumHvacs(int numHvacs) {
 		this.numHvacs = numHvacs;
+	}
+	
+	public void setMaintainHvacFromOn() {
+		this.numHvacs--;
+		this.numMaintHvacs++;
+	}
+	
+	public void setMaintainHvacFromOff() {
+		this.numMaintHvacs++;
+	}
+	
+	public void switchOffMaintHvac() {
+		this.numMaintHvacs--;
 	}
 	
 	public void switchComputerOff() {
@@ -107,8 +123,9 @@ public class Register {
 	public int computeConsumption() {
 		int cons = numComputers * COMPUTER_CONSUMPTION * COMPUTERS_PER_ROOM +
 				   numSuspComputers * COMPUTER_SUSPENDED_CONSUMPTION * COMPUTERS_PER_ROOM + 
-				   numLights * LIGHT_CONSUMPTION * LIGHTS_PER_ROOM+
-				   numHvacs * HVAC_CONSUMPTION * HVACS_PER_ROOM;
+				   numLights * LIGHT_CONSUMPTION * LIGHTS_PER_ROOM +
+				   numHvacs * HVAC_CONSUMPTION * HVACS_PER_ROOM + 
+				   numMaintHvacs * HVAC_MAINTAIN_CONSUMPTION * HVACS_PER_ROOM;
 		consumption[Utils.CURRENT_STEP] = cons;
 		return cons;
 	}

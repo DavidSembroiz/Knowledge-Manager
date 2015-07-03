@@ -52,10 +52,9 @@ public class Manager {
 		}
 		
 		while(Utils.CURRENT_STEP < 100 /*Utils.STEPS*/) {
-			
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
-			printRooms();
+			//printRooms();
 			reg.computeConsumption();
 			reg.printStepConsumption();
 			sleep(1);
@@ -80,7 +79,10 @@ public class Manager {
 			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 			else s.setValue(uts.getValueFromType(message, type));
 		}
-		if (allRoomsDefined()) simulate();
+
+		
+		simulate();
+		//if (allRoomsDefined()) simulate();
 		//if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
 	}
 	
@@ -141,7 +143,7 @@ public class Manager {
 	private void computeDumbScenarioConsumption() {
 		
 		/**
-		 * In this scenario, everything is on throughout the hole day
+		 * In this scenario, everything is ON throughout the hole day
 		 */
 		
 		int numRooms = rooms.size();

@@ -43,9 +43,7 @@ public class PeopleManager {
 	public void makeStep() {
 		int t = 700;
 		resetChanged();
-		
 		enterBuilding(t);
-		
 		goForRandomWalk(t);
 		returnFromWalk(t);
 		
@@ -170,22 +168,22 @@ public class PeopleManager {
 	
 	
 	public void printPeople() {
-		System.out.println("---------- OUTSIDE ----------");
+		if (!peopleOutside.isEmpty()) System.out.println("---------- OUTSIDE ----------");
 		for (Person p : peopleOutside) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());
 		}
-		System.out.println("---------- INSIDE ----------");
+		if (!peopleInside.isEmpty()) System.out.println("---------- INSIDE ----------");
 		for (Person p : peopleInside) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());
 		}
-		System.out.println("---------- WALKING ----------");
+		if (!peopleRandomWalks.isEmpty()) System.out.println("---------- WALKING ----------");
 		for (Person p : peopleRandomWalks) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());
 		}
-		System.out.println("---------- LUNCH ----------");
+		if (!peopleLunch.isEmpty()) System.out.println("---------- LUNCH ----------");
 		for (Person p : peopleLunch) {
 			System.out.println("Name " + p.getName());
 			System.out.println("State " + p.getState());

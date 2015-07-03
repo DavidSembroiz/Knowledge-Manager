@@ -22,12 +22,41 @@ public class UserProfile {
 		/**
 		 * Distinguish between different Types to create different probabilities
 		 */
-			entrance = new Probability(getDummyProbability());
-			randomWalks = new Probability(getDummyProbability());
-			randomWalksDuration = new Probability(getDummyProbability());
-			lunch = new Probability(getDummyProbability());
-			lunchDuration = new Probability(getDummyProbability());
-			exit = new Probability(getDummyProbability());
+		
+		switch(type) {
+			case PROFESSOR:
+				entrance = new Probability(getDummyProbability());
+				randomWalks = new Probability(getDummyProbability());
+				randomWalksDuration = new Probability(getDummyProbability());
+				lunch = new Probability(getDummyProbability());
+				lunchDuration = new Probability(getDummyProbability());
+				exit = new Probability(getDummyProbability());
+				break;
+			case STUDENT:
+				entrance = new Probability(getDummyProbability());
+				randomWalks = new Probability(getDummyProbability());
+				randomWalksDuration = new Probability(getDummyProbability());
+				lunch = new Probability(getDummyProbability());
+				lunchDuration = new Probability(getDummyProbability());
+				exit = new Probability(getDummyProbability());
+				break;
+			case PAS:
+				entrance = new Probability(getDummyProbability());
+				randomWalks = new Probability(getDummyProbability());
+				randomWalksDuration = new Probability(getDummyProbability());
+				lunch = new Probability(getDummyProbability());
+				lunchDuration = new Probability(getDummyProbability());
+				exit = new Probability(getDummyProbability());
+				break;
+			default:
+				entrance = new Probability(getDummyProbability());
+				randomWalks = new Probability(getDummyProbability());
+				randomWalksDuration = new Probability(getDummyProbability());
+				lunch = new Probability(getDummyProbability());
+				lunchDuration = new Probability(getDummyProbability());
+				exit = new Probability(getDummyProbability());
+				break; 
+		}
 	}
 	
 	public Probability getEntrance() {

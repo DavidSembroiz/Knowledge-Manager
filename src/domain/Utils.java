@@ -159,4 +159,11 @@ public class Utils {
 		}
 		return true;
 	}
+	
+	public static boolean eating(ArrayList<Person> people) {
+		for (Person p : people) {
+			if (!p.getState().equals(State.LUNCH)) return false;
+		}
+		return true;
+	}
 }
