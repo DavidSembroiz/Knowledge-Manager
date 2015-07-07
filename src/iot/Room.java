@@ -8,6 +8,8 @@ import rules.RuleManager;
 
 public class Room {
 	
+	private final int SENSORS_PER_ROOM = 4;
+	
 	private String location;
 	private ArrayList<Sensor> sensors;
 	private RuleManager ruleManager;
@@ -73,6 +75,6 @@ public class Room {
 	}
 	
 	public boolean allSensorsDefined() {
-		return sensors.size() == 4;
+		return sensors.size() == SENSORS_PER_ROOM;
 	}
 }

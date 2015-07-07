@@ -55,7 +55,7 @@ public class Manager {
 			return;
 		}
 		
-		while(Utils.CURRENT_STEP < 100) {
+		while(Utils.CURRENT_STEP < Utils.STEPS) {
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
@@ -70,7 +70,7 @@ public class Manager {
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = readEventFile();
 		Event e;
-		while(Utils.CURRENT_STEP < 100) {
+		while(Utils.CURRENT_STEP < Utils.STEPS) {
 			while (events.peek().getStep() == Utils.CURRENT_STEP) {
 				e = events.poll();
 				peopleManager.executeAction(e.getPerson(), e.getAction());
@@ -78,7 +78,6 @@ public class Manager {
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
 			reg.computeConsumption();
-			
 			reg.printStepConsumption();
 			sleep(1);
 			
@@ -102,10 +101,6 @@ public class Manager {
 			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 			else s.setValue(uts.getValueFromType(message, type));
 		}
-
-		
-		//simulate();
-		//if (allRoomsDefined()) simulate();
 		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) repeatSimulation();
 	}
 	
@@ -117,7 +112,7 @@ public class Manager {
 			/**
 			 * TODO Unable to query database, handle messages
 			 */
-			System.out.println("Unable to query room number, message queued");
+			System.out.println("Unable to query room number, message discarded");
 		}
 	}
 	
