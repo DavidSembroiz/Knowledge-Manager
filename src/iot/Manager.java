@@ -50,6 +50,8 @@ public class Manager {
 	
 	private void simulate() {
 		
+		peopleManager.enableRecordFile();
+		
 		if (MODE == 0) {
 			computeDumbScenarioConsumption(); 
 			return;
@@ -102,7 +104,7 @@ public class Manager {
 			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 			else s.setValue(uts.getValueFromType(message, type));
 		}
-		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) repeatSimulation();
+		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
 	}
 	
 	public void manageMessage(String topic, String message) {

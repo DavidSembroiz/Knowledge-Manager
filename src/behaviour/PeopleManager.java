@@ -1,13 +1,18 @@
 package behaviour;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import domain.Register;
 import behaviour.Person.State;
 import behaviour.Person.Type;
+import domain.Utils;
 
 public class PeopleManager {
 	
@@ -28,6 +33,9 @@ public class PeopleManager {
 	private ArrayList<Person> peopleRandomWalks;
 	private ArrayList<Person> peopleLunch;
 	private ArrayList<UserProfile> profiles;
+	
+	private boolean writeToFile = false;
+	private PrintWriter writer;
 	
 	private void initComponents() {
 		unassigned = new ArrayList<Person>();
@@ -55,6 +63,15 @@ public class PeopleManager {
 		printPeople();
 	}
 	
+	public void enableRecordFile() {
+		writeToFile = true;
+		try {
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/record.txt", true)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private UserProfile getProfile(Type t) {
 		for (int i = 0; i < profiles.size(); ++i) {
 			if (profiles.get(i).getType().equals(t)) {
@@ -77,11 +94,9 @@ public class PeopleManager {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
 				peopleInside.add(peopleOutside.remove(i));
+				if (writeToFile) writer.println(cur.getName() + ",enter," + Utils.CURRENT_STEP);
 			}
 		}
-		/**
-		 * TODO add interaction RandomWalks -> Inside
-		 */
 	}
 	
 	
@@ -99,6 +114,7 @@ public class PeopleManager {
 				cur.setChanged(true);
 				cur.setEaten(true);
 				peopleLunch.add(peopleInside.remove(i));
+				if (writeToFile) writer.println(cur.getName() + ",lunch," + Utils.CURRENT_STEP);
 			}
 		}
 	}
@@ -116,6 +132,7 @@ public class PeopleManager {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
 				peopleInside.add(peopleLunch.remove(i));
+				if (writeToFile) writer.println(cur.getName() + ",returnLunch," + Utils.CURRENT_STEP);
 			}
 		}
 	}
@@ -133,6 +150,7 @@ public class PeopleManager {
 				cur.setState(State.OUTSIDE);
 				cur.setChanged(true);
 				peopleOutside.add(peopleInside.remove(i));
+				if (writeToFile) writer.println(cur.getName() + ",leave," + Utils.CURRENT_STEP);
 			}
 		}
 	}
@@ -144,6 +162,7 @@ public class PeopleManager {
 				cur.setState(State.RANDOM_WALKS);
 				cur.setChanged(true);
 				peopleRandomWalks.add(peopleInside.remove(i));
+				if (writeToFile) writer.println(cur.getName() + ",randomWalk," + Utils.CURRENT_STEP);
 			}
 		}
 	}
@@ -155,6 +174,7 @@ public class PeopleManager {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
 				peopleInside.add(peopleRandomWalks.remove(i));
+				if (writeToFile) writer.println(cur.getName() + ",returnRandomWalk," + Utils.CURRENT_STEP);
 			}
 		}
 	}
