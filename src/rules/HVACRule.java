@@ -88,15 +88,17 @@ public class HVACRule {
 		double newTemp = 0;
 		if (roomTemp == environTemp) return;
 		if (roomTemp > environTemp) {
-			newTemp = roomTemp - (roomTemp - environTemp) * 0.05;
+			newTemp = roomTemp - (roomTemp - environTemp) * 0.1;
 		}
-		else newTemp = roomTemp + (environTemp - roomTemp) * 0.05;
+		else newTemp = roomTemp + (environTemp - roomTemp) * 0.1;
 		temperature.setValue(Double.toString(newTemp));
 	}
 	
 	
 	@Condition
 	public boolean checkConditions() {
+		
+		System.out.println("Current " + temperature.getValue());
 		
 		/**
 		 * If HVAC is ON:
@@ -126,6 +128,7 @@ public class HVACRule {
 			else ac = "maintain";
 		}
 		else if (ac.equals("off")) {
+			System.out.println("Moderating temperature");
 			moderateTemperature();
 		}
 		return hasChanged;

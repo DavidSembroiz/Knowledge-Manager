@@ -1,6 +1,10 @@
 package iot;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 import behaviour.PeopleManager;
 import behaviour.Person;
@@ -51,11 +55,30 @@ public class Manager {
 			return;
 		}
 		
-		while(Utils.CURRENT_STEP < 100 /*Utils.STEPS*/) {
+		while(Utils.CURRENT_STEP < 100) {
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
 			reg.computeConsumption();
+			reg.printStepConsumption();
+			sleep(1);
+			
+			++Utils.CURRENT_STEP;
+		}
+	}
+	
+	private void repeatSimulation() {
+		PriorityQueue<Event> events = readEventFile();
+		Event e;
+		while(Utils.CURRENT_STEP < 100) {
+			while (events.peek().getStep() == Utils.CURRENT_STEP) {
+				e = events.poll();
+				peopleManager.executeAction(e.getPerson(), e.getAction());
+			}
+			for (Room r : rooms) r.fireRules();
+			//printRooms();
+			reg.computeConsumption();
+			
 			reg.printStepConsumption();
 			sleep(1);
 			
@@ -81,9 +104,9 @@ public class Manager {
 		}
 
 		
-		simulate();
+		//simulate();
 		//if (allRoomsDefined()) simulate();
-		//if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
+		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) repeatSimulation();
 	}
 	
 	public void manageMessage(String topic, String message) {
@@ -139,11 +162,27 @@ public class Manager {
 		}
 	}
 	
+	private PriorityQueue<Event> readEventFile() {
+		PriorityQueue<Event> events = new PriorityQueue<Event>();
+		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
+	        String line;
+	        while ((line = br.readLine()) != null) {
+	        	String[] values = line.split(",");
+	        	events.add(new Event(values[0], values[1], Integer.parseInt(values[2])));
+	        }
+	        return events;
+	    } catch (IOException e) {
+	    	System.out.println("ERROR: Unable to read events from file.");
+	    	e.printStackTrace();
+	    }
+		return events;
+	}
+	
 	
 	private void computeDumbScenarioConsumption() {
 		
 		/**
-		 * In this scenario, everything is ON throughout the hole day
+		 * In this scenario, everything is ON throughout the whole day
 		 */
 		
 		int numRooms = rooms.size();

@@ -212,7 +212,7 @@ public class PeopleManager {
 
 	private void readPeopleFromFile() {
 		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
-	        String line = br.readLine();
+	        String line;
 	        while ((line = br.readLine()) != null) {
 	        	String[] values = line.split(",");
 	        	Person p = new Person(values[0], values[1], State.UNASSIGNED, Type.valueOf(values[2].toUpperCase()));
@@ -232,4 +232,38 @@ public class PeopleManager {
 		return unassigned.isEmpty();
 	}
 	
+	public void executeAction(String person, String action) {
+		if (action.equals("enter")) {
+			for (Person p : peopleOutside) {
+				if (p.getName().equals(person)) {
+					p.setState(State.INSIDE);
+					System.out.println(p.getName() + " has entered");
+				}
+			}
+		}
+		else if (action.equals("leave")) {
+			for (Person p : peopleInside) {
+				if (p.getName().equals(person)) {
+					p.setState(State.OUTSIDE);
+					System.out.println(p.getName() + " has left");
+				}
+			}
+		}
+		else if (action.equals("lunch")) {
+			for (Person p : peopleInside) {
+				if (p.getName().equals(person)) {
+					p.setState(State.LUNCH);
+					System.out.println(p.getName() + " is going for lunch");
+				}
+			}
+		}
+		else if (action.equals("returnLunch")) {
+			for (Person p : peopleLunch) {
+				if (p.getName().equals(person)) {
+					p.setState(State.INSIDE);
+					System.out.println(p.getName() + " has come back");
+				}
+			}
+		}
+	}
 }
