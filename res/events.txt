@@ -1,6 +1,8 @@
 david,enter,0
+david,lunch,5
 pepe,enter,10
 julian,enter,12
-david,lunch,29
-julian,leave,44
-david,returnLunch,46
+julian,leave,14
+david,returnLunch,16
+pepe,leave,19
+david,leave,24

@@ -233,37 +233,42 @@ public class PeopleManager {
 	}
 	
 	public void executeAction(String person, String action) {
+		System.out.println("ACTION          " + action);
+		int i = 0;
 		if (action.equals("enter")) {
-			for (Person p : peopleOutside) {
-				if (p.getName().equals(person)) {
-					p.setState(State.INSIDE);
-					System.out.println(p.getName() + " has entered");
-				}
-			}
+			while (!peopleOutside.get(i).getName().equals(person)) ++i;
+			Person p = peopleOutside.get(i);
+			p.setState(State.INSIDE);
+			peopleOutside.remove(p);
+			peopleInside.add(p);
+			System.out.println(p.getName() + " has entered");
 		}
 		else if (action.equals("leave")) {
-			for (Person p : peopleInside) {
-				if (p.getName().equals(person)) {
-					p.setState(State.OUTSIDE);
-					System.out.println(p.getName() + " has left");
-				}
-			}
+			while (!peopleInside.get(i).getName().equals(person)) ++i;
+			Person p = peopleInside.get(i);
+			p.setState(State.OUTSIDE);
+			peopleInside.remove(p);
+			peopleOutside.add(p);
+			System.out.println(p.getName() + " has left");
 		}
 		else if (action.equals("lunch")) {
-			for (Person p : peopleInside) {
-				if (p.getName().equals(person)) {
-					p.setState(State.LUNCH);
-					System.out.println(p.getName() + " is going for lunch");
-				}
-			}
+			while (!peopleInside.get(i).getName().equals(person)) ++i;
+			Person p = peopleInside.get(i);
+			p.setState(State.LUNCH);
+			peopleInside.remove(p);
+			peopleLunch.add(p);
+			System.out.println(p.getName() + " is going for lunch");
 		}
 		else if (action.equals("returnLunch")) {
-			for (Person p : peopleLunch) {
-				if (p.getName().equals(person)) {
-					p.setState(State.INSIDE);
-					System.out.println(p.getName() + " has come back");
-				}
-			}
+			while (!peopleLunch.get(i).getName().equals(person)) ++i;
+			Person p = peopleLunch.get(i);
+			p.setState(State.INSIDE);
+			peopleLunch.remove(p);
+			peopleInside.add(p);
+			System.out.println(p.getName() + " has come back");
+		}
+		else {
+			System.out.println("Action is not correct");
 		}
 	}
 }

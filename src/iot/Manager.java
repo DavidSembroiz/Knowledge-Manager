@@ -71,7 +71,8 @@ public class Manager {
 		PriorityQueue<Event> events = readEventFile();
 		Event e;
 		while(Utils.CURRENT_STEP < Utils.STEPS) {
-			while (events.peek().getStep() == Utils.CURRENT_STEP) {
+			System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
+			while (!events.isEmpty() && events.peek().getStep() == Utils.CURRENT_STEP) {
 				e = events.poll();
 				peopleManager.executeAction(e.getPerson(), e.getAction());
 			}
