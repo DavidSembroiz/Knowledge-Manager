@@ -18,6 +18,7 @@ import models.Weather;
 public class Manager {
 	
 	private int MODE = 1;
+	private int RECORD_FILE = 0;
 	
 	private ArrayList<Room> rooms;
 	private Mqtt mqtt;
@@ -50,12 +51,12 @@ public class Manager {
 	
 	private void simulate() {
 		
-		peopleManager.enableRecordFile();
-		
 		if (MODE == 0) {
 			computeDumbScenarioConsumption(); 
 			return;
 		}
+		
+		if (RECORD_FILE == 1) peopleManager.enableRecordFile();
 		
 		while(Utils.CURRENT_STEP < Utils.STEPS) {
 			peopleManager.makeStep();
@@ -65,8 +66,10 @@ public class Manager {
 			reg.printStepConsumption();
 			sleep(1);
 			
+			peopleManager.flushData(100);
 			++Utils.CURRENT_STEP;
 		}
+		peopleManager.closeFile();
 	}
 	
 	private void repeatSimulation() {

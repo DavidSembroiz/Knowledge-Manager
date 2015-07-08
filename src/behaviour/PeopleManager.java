@@ -2,12 +2,10 @@ package behaviour;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import behaviour.Person.State;
@@ -72,6 +70,10 @@ public class PeopleManager {
 		}
 	}
 	
+	public void flushData(int steps) {
+		if (writer != null && Utils.CURRENT_STEP % steps == 0) writer.flush();
+	}
+	
 	private UserProfile getProfile(Type t) {
 		for (int i = 0; i < profiles.size(); ++i) {
 			if (profiles.get(i).getType().equals(t)) {
@@ -103,7 +105,7 @@ public class PeopleManager {
 	/**
 	 * Checks whether the person is going for lunch and changes his status to LUNCH
 	 * 
-	 * @param t
+	 * @param t	
 	 */
 	
 	public void goForLunch(int t) {
@@ -253,7 +255,6 @@ public class PeopleManager {
 	}
 	
 	public void executeAction(String person, String action) {
-		System.out.println("ACTION          " + action);
 		int i = 0;
 		if (action.equals("enter")) {
 			while (!peopleOutside.get(i).getName().equals(person)) ++i;
@@ -287,8 +288,28 @@ public class PeopleManager {
 			peopleInside.add(p);
 			System.out.println(p.getName() + " has come back");
 		}
+		else if (action.equals("randomWalk")) {
+			while (!peopleInside.get(i).getName().equals(person)) ++i;
+			Person p = peopleInside.get(i);
+			p.setState(State.RANDOM_WALKS);
+			peopleInside.remove(p);
+			peopleRandomWalks.add(p);
+			System.out.println(p.getName() + " is walking");
+		}
+		else if (action.equals("returnRandomWalk")) {
+			while (!peopleRandomWalks.get(i).getName().equals(person)) ++i;
+			Person p = peopleRandomWalks.get(i);
+			p.setState(State.INSIDE);
+			peopleRandomWalks.remove(p);
+			peopleInside.add(p);
+			System.out.println(p.getName() + " has returned from walking");
+		}
 		else {
 			System.out.println("Action is not correct");
 		}
+	}
+
+	public void closeFile() {
+		if (writer != null) writer.close();
 	}
 }
