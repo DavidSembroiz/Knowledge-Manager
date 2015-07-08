@@ -152,7 +152,7 @@ public class Database {
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) res = rs.getString("location");
 		} catch(SQLException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			closeConnection(c);
 		}
@@ -206,7 +206,7 @@ public class Database {
 				insertNewAssociationRule(location, actuator, soID, type);
 			}
 		} catch(SQLException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			closeConnection(c);
 		}
@@ -269,7 +269,7 @@ public class Database {
 			pst.setString(3, rule);
 			pst.executeUpdate();
 		} catch(SQLException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			closeConnection(c);
 		}
@@ -291,7 +291,7 @@ public class Database {
 				pst.executeUpdate();
 			}
 		} catch(SQLException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			closeConnection(c);
 		}
@@ -313,7 +313,7 @@ public class Database {
 	        }
 	        br.close();
 	    } catch (IOException e) {
-	    	System.out.println("ERROR: Unable to read people from file.");
+	    	System.err.println("ERROR: Unable to read people from file.");
 	    	e.printStackTrace();
 	    }
 	}

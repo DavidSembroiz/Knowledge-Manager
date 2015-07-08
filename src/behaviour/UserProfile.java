@@ -84,7 +84,7 @@ public class UserProfile {
 	        }
 	        br.close();
 	    } catch (IOException e) {
-	    	System.out.println("ERROR: Unable to read probability from file.");
+	    	System.err.println("ERROR: Unable to read probability from file.");
 	    	e.printStackTrace();
 	    }
 	}
@@ -110,7 +110,7 @@ public class UserProfile {
 			randomWalksDuration = p;
 			break;
 		default:
-			System.out.println("ERROR: profile file wrongly formatted");
+			System.err.println("ERROR: profile file wrongly formatted");
 			break;
 		}
 	}
