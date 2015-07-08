@@ -64,7 +64,7 @@ public class PeopleManager {
 	public void enableRecordFile() {
 		writeToFile = true;
 		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/record.txt", true)));
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.txt", false)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
