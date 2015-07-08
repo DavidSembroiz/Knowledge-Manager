@@ -1,7 +1,9 @@
 package behaviour;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
 import domain.Utils;
 
 public class Probability {
@@ -11,6 +13,14 @@ public class Probability {
 	
 	public Probability(Map<Integer, Double> p) {
 		this.probabilityPerHour = p;
+		this.rand = new Random();
+	}
+	
+	public Probability(String[] values) {
+		probabilityPerHour = new HashMap<Integer, Double>();
+		for (int i = 0; i < values.length; ++i) {
+			probabilityPerHour.put(i, Double.parseDouble(values[i]));
+		}
 		this.rand = new Random();
 	}
 	

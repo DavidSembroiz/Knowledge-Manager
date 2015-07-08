@@ -60,9 +60,10 @@ public class Utils {
 			while ((sCurrentLine = br.readLine()) != null) {
 				ids.add(sCurrentLine);
 			}
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 		return ids;
 	}
 

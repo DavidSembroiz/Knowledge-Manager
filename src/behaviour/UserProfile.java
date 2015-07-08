@@ -1,12 +1,11 @@
 package behaviour;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import behaviour.Person.Type;
 
 public class UserProfile {
-	
 	
 	private Probability entrance;
 	private Probability randomWalks;
@@ -19,44 +18,7 @@ public class UserProfile {
 	
 	public UserProfile(Type t) {
 		this.type = t;
-		/**
-		 * Distinguish between different Types to create different probabilities
-		 */
-		
-		switch(type) {
-			case PROFESSOR:
-				entrance = new Probability(getDummyProbability());
-				randomWalks = new Probability(getDummyProbability());
-				randomWalksDuration = new Probability(getDummyProbability());
-				lunch = new Probability(getDummyProbability());
-				lunchDuration = new Probability(getDummyProbability());
-				exit = new Probability(getDummyProbability());
-				break;
-			case STUDENT:
-				entrance = new Probability(getDummyProbability());
-				randomWalks = new Probability(getDummyProbability());
-				randomWalksDuration = new Probability(getDummyProbability());
-				lunch = new Probability(getDummyProbability());
-				lunchDuration = new Probability(getDummyProbability());
-				exit = new Probability(getDummyProbability());
-				break;
-			case PAS:
-				entrance = new Probability(getDummyProbability());
-				randomWalks = new Probability(getDummyProbability());
-				randomWalksDuration = new Probability(getDummyProbability());
-				lunch = new Probability(getDummyProbability());
-				lunchDuration = new Probability(getDummyProbability());
-				exit = new Probability(getDummyProbability());
-				break;
-			default:
-				entrance = new Probability(getDummyProbability());
-				randomWalks = new Probability(getDummyProbability());
-				randomWalksDuration = new Probability(getDummyProbability());
-				lunch = new Probability(getDummyProbability());
-				lunchDuration = new Probability(getDummyProbability());
-				exit = new Probability(getDummyProbability());
-				break; 
-		}
+		loadProfileFromFile();
 	}
 	
 	public Probability getEntrance() {
@@ -103,20 +65,53 @@ public class UserProfile {
 	public void setT(Type t) {
 		this.type = t;
 	}
-
-	private Map<Integer, Double> getDummyProbability() {
-		Map<Integer, Double> m = new HashMap<Integer, Double>();
-		double s = 1.0/48;
-		for (int i = 0; i < 48; ++i) {
-			m.put(i, s*i);
-		}
-		m.put(47, 1.0);
-		return m;
+	
+	/**
+	 * Profile file is divided in blocks of two lines with the following format:
+	 * 
+	 * probabilityName
+	 * value,value,value,value...
+	 */
+	
+	private void loadProfileFromFile() {
+		String path = "res/profile/" + this.type.toString().toLowerCase() + ".txt";
+		try(BufferedReader br = new BufferedReader(new FileReader(path))) {
+	        String line;
+	        while ((line = br.readLine()) != null) {
+	        	String[] values = br.readLine().split(",");
+	        	Probability p = new Probability(values);
+	        	assignProbability(line, p);
+	        }
+	        br.close();
+	    } catch (IOException e) {
+	    	System.out.println("ERROR: Unable to read probability from file.");
+	    	e.printStackTrace();
+	    }
 	}
-	
-	
 
-	
-	
-	
+	private void assignProbability(String name, Probability p) {
+		switch (name) {
+		case "entrance":
+			entrance = p;
+			break;
+		case "exit":
+			exit = p;
+			break;
+		case "lunch":
+			lunch = p;
+			break;
+		case "lunchDuration":
+			lunchDuration = p;
+			break;
+		case "randomWalks":
+			randomWalks = p;
+			break;
+		case "randomWalksDuration":
+			randomWalksDuration = p;
+			break;
+		default:
+			System.out.println("ERROR: profile file wrongly formatted");
+			break;
+		}
+	}
 }

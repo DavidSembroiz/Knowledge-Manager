@@ -311,7 +311,7 @@ public class Database {
 	        	ruleAssociations.put(values[1] + "/" + values[0], 
 	        						 Integer.parseInt(values[2]));
 	        }
-	        
+	        br.close();
 	    } catch (IOException e) {
 	    	System.out.println("ERROR: Unable to read people from file.");
 	    	e.printStackTrace();
