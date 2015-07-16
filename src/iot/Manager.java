@@ -35,7 +35,7 @@ public class Manager {
 		reg = Register.getInstance();
 		models = Weather.getInstance();
 		peopleManager = PeopleManager.getInstance();
-		awsdb = new Database();
+		awsdb = Database.getInstance();
 		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 	}
@@ -46,6 +46,10 @@ public class Manager {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void terminate() {
+		System.exit(0);
 	}
 
 	
@@ -65,12 +69,13 @@ public class Manager {
 			//printRooms();
 			reg.computeConsumption();
 			reg.printStepConsumption();
-			sleep(1);
+			//sleep(1);
 			
-			peopleManager.flushData(100);
+			peopleManager.flushData(100, Utils.CURRENT_STEP);
 			++Utils.CURRENT_STEP;
 		}
 		peopleManager.closeFile();
+		terminate();
 	}
 	
 	private void repeatSimulation() {

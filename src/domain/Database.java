@@ -8,7 +8,19 @@ import rules.RuleDAO;
 
 import org.postgresql.ds.PGPoolingDataSource;
 
+import behaviour.PeopleManager;
+
 public class Database {
+	
+	private static Database instance = new Database();
+	
+	private Database() {
+		initComponents();
+	}
+	
+	public static Database getInstance() {
+		return instance;
+	}
 	
 	private String AWS_USERNAME;
 	private String AWS_PASSWORD;
@@ -25,7 +37,7 @@ public class Database {
 	private Map<String, Integer> ruleAssociations;
 	
 	
-	public Database() {
+	private void initComponents() {
 		this.uts = Utils.getInstance();
 		ruleAssociations = new HashMap<String, Integer>();
 		loadProperties();

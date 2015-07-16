@@ -64,14 +64,14 @@ public class PeopleManager {
 	public void enableRecordFile() {
 		writeToFile = true;
 		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.txt", false)));
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.txt")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void flushData(int steps) {
-		if (writer != null && Utils.CURRENT_STEP % steps == 0) writer.flush();
+	public void flushData(int steps, int current) {
+		if (writer != null && current % steps == 0) writer.flush();
 	}
 	
 	private UserProfile getProfile(Type t) {
