@@ -51,6 +51,10 @@ public class Manager {
 	private void terminate() {
 		System.exit(0);
 	}
+	
+	/**
+	 * Initial simulation
+	 */
 
 	
 	private void simulate() {
@@ -106,6 +110,7 @@ public class Manager {
 			
 			/**
 			 * Currently changed to fit the simulation
+			 * 
 			 */
 			
 			if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
