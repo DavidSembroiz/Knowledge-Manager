@@ -15,6 +15,7 @@ public class Register {
 	}
 	
 	private int[] consumption;
+	private int totalConsumption;
 	
 	private final int COMPUTER_CONSUMPTION = 100;
 	private final int COMPUTER_SUSPENDED_CONSUMPTION = 25;
@@ -34,6 +35,7 @@ public class Register {
 	
 	private void initComponents() {
 		consumption = new int[Utils.STEPS];
+		totalConsumption = 0;
 		this.numComputers = 0;
 		this.numSuspComputers = 0;
 		this.numLights = 0;
@@ -127,18 +129,25 @@ public class Register {
 				   numHvacs * HVAC_CONSUMPTION * HVACS_PER_ROOM + 
 				   numMaintHvacs * HVAC_MAINTAIN_CONSUMPTION * HVACS_PER_ROOM;
 		consumption[Utils.CURRENT_STEP] = cons;
+		totalConsumption += cons;
 		return cons;
 	}
 	
 	public void printConsumption() {
 		for (int i = 0; i < consumption.length; ++i) {
-			printStepConsumption();
+			System.out.println("Step " + i + " " + consumption[i] + " Watts");
 		}
 	}
 	
-	public void printStepConsumption() {
-		System.out.println("Current consumption: " + consumption[Utils.CURRENT_STEP] + " Watts");
-	}
-
+	/**
+	 * Since the consumption is added every step (10 seconds), the
+	 * result must be tuned in order to correctly count Kwh
+	 */
 	
+	public void printTotalConsumption() {
+		
+		double kwh = totalConsumption / 360.0;
+		
+		System.out.println("Total consumption: " + kwh);
+	}
 }

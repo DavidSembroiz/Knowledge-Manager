@@ -8,6 +8,10 @@ import rules.RuleManager;
 
 public class Room {
 	
+	/**
+	 * Current value used to know when all room sensors have been filled
+	 */
+	
 	private final int SENSORS_PER_ROOM = 4;
 	
 	private String location;

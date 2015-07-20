@@ -60,8 +60,8 @@ public class Manager {
 	private void simulate() {
 		
 		if (MODE == 0) {
-			computeDumbScenarioConsumption(); 
-			return;
+			dumbScenario();
+			terminate();
 		}
 		
 		if (RECORD_FILE == 1) peopleManager.enableRecordFile();
@@ -71,13 +71,15 @@ public class Manager {
 			peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
-			reg.computeConsumption();
-			reg.printStepConsumption();
+			int cur = reg.computeConsumption();
+			System.out.println("Current consumption: " + cur + " Watts");
 			//sleep(1);
 			
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
 			++Utils.CURRENT_STEP;
 		}
+		reg.printConsumption();
+		reg.printTotalConsumption();
 		peopleManager.closeFile();
 		terminate();
 	}
@@ -93,8 +95,8 @@ public class Manager {
 			}
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
-			reg.computeConsumption();
-			reg.printStepConsumption();
+			int cur = reg.computeConsumption();
+			System.out.println("Current consumption: " + cur + " Watts");
 			sleep(1);
 			
 			++Utils.CURRENT_STEP;
@@ -111,6 +113,7 @@ public class Manager {
 			/**
 			 * Currently changed to fit the simulation
 			 * 
+			 * Initialise sensors with proper data instead of RNG data
 			 */
 			
 			if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
@@ -191,20 +194,20 @@ public class Manager {
 	}
 	
 	
-	private void computeDumbScenarioConsumption() {
+	private void dumbScenario() {
 		
 		/**
 		 * In this scenario, everything is ON throughout the whole day
+		 * This means between 8:00h and 19:00h
 		 */
 		
 		int numRooms = rooms.size();
-		
 		reg.setNumComputers(numRooms);
 		reg.setNumHvacs(numRooms);
 		reg.setNumLights(numRooms);
-		
 		int cons = reg.computeConsumption();
-		System.out.println("Consumption: " + cons + " W");
+		int totalCons = cons * 11;
+		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}
 	
 }
