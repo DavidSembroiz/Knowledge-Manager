@@ -80,7 +80,7 @@ public class Database {
 		poolSource.setDatabaseName(AWS_DB_NAME);
 		poolSource.setUser(AWS_USERNAME);
 		poolSource.setPassword(AWS_PASSWORD);
-		poolSource.setMaxConnections(20);
+		poolSource.setMaxConnections(50);
 	}
 	
 	private void closeConnection(Connection c) {

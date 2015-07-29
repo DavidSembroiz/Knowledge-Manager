@@ -78,7 +78,7 @@ public class Manager {
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
 			++Utils.CURRENT_STEP;
 		}
-		reg.printConsumption();
+		//reg.printConsumption();
 		reg.printTotalConsumption();
 		peopleManager.closeFile();
 		terminate();
@@ -106,9 +106,11 @@ public class Manager {
 	
 	private void processMessage(String topic, String message, String location, String soID) {
 		Room r = getRoom(location);
+		System.out.println("Room gotten");
 		ArrayList<String> types = uts.getTypesFromMessage(message);
 		for (String type : types) {
-			Sensor s = r.getSensor(soID, type);
+			System.out.println(type);
+			Sensor s = r.getSensor(soID, type);	
 			
 			/**
 			 * Currently changed to fit the simulation
@@ -128,6 +130,7 @@ public class Manager {
 		String soID = uts.extractIdFromTopic(topic);
 		String location = awsdb.getLocation(soID);
 		if (location != null) processMessage(topic, message, location, soID);
+
 		else {
 			/**
 			 * TODO Unable to query database, handle messages
@@ -198,7 +201,7 @@ public class Manager {
 		
 		/**
 		 * In this scenario, everything is ON throughout the whole day
-		 * This means between 8:00h and 19:00h
+		 * This means between 8:00h and 19:00h (11 hours in total)
 		 */
 		
 		int numRooms = rooms.size();

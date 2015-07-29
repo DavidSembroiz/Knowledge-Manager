@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import behaviour.Person.State;
 import behaviour.Person.Type;
@@ -47,7 +49,7 @@ public class PeopleManager {
 	}
 	
 	public void makeStep() {
-		int t = 700;
+		int t = Utils.CURRENT_STEP;
 		resetChanged();
 		enterBuilding(t);
 		goForRandomWalk(t);
@@ -99,6 +101,7 @@ public class PeopleManager {
 				if (writeToFile) writer.println(cur.getName() + ",enter," + Utils.CURRENT_STEP);
 			}
 		}
+		System.out.println("People Outside: " + peopleOutside.size());
 	}
 	
 	
