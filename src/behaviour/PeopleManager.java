@@ -94,9 +94,10 @@ public class PeopleManager {
 	public void enterBuilding(int t) {
 		for (int i = peopleOutside.size() - 1; i >= 0; --i) {
 			Person cur = peopleOutside.get(i);
-			if (!cur.hasChanged() && getProfile(cur.getType()).getEntrance().triggerStatus(t)) {
+			if (!cur.hasChanged() && !cur.hasEntered() && getProfile(cur.getType()).getEntrance().triggerStatus(t)) {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
+				cur.setEntered(true);
 				peopleInside.add(peopleOutside.remove(i));
 				if (writeToFile) writer.println(cur.getName() + ",enter," + Utils.CURRENT_STEP);
 			}
@@ -118,6 +119,7 @@ public class PeopleManager {
 				cur.setState(State.LUNCH);
 				cur.setChanged(true);
 				cur.setEaten(true);
+				cur.setLunchReturn(Utils.CURRENT_STEP, getProfile(cur.getType()).getLunchDuration());
 				peopleLunch.add(peopleInside.remove(i));
 				if (writeToFile) writer.println(cur.getName() + ",lunch," + Utils.CURRENT_STEP);
 			}
@@ -133,7 +135,8 @@ public class PeopleManager {
 	public void finishLunch(int t) {
 		for (int i = peopleLunch.size() - 1; i >= 0; --i) {
 			Person cur = peopleLunch.get(i);
-			if (!cur.hasChanged() && getProfile(cur.getType()).getLunchDuration().triggerStatus(t)) {
+			//if (!cur.hasChanged() && getProfile(cur.getType()).getLunchDuration().triggerStatus(t)) {
+			if (!cur.hasChanged() && cur.getLunchReturn() <= Utils.CURRENT_STEP) {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
 				peopleInside.add(peopleLunch.remove(i));
@@ -163,9 +166,11 @@ public class PeopleManager {
 	public void goForRandomWalk(int t) {
 		for (int i = peopleInside.size() - 1; i >= 0; --i) {
 			Person cur = peopleInside.get(i);
-			if (!cur.hasChanged() && getProfile(cur.getType()).getRandomWalks().triggerStatus(t)) {
+			if (!cur.hasChanged() && cur.canRandomWalk() && getProfile(cur.getType()).getRandomWalks().triggerStatus(t)) {
 				cur.setState(State.RANDOM_WALKS);
 				cur.setChanged(true);
+				cur.setRandomWalksReturn(Utils.CURRENT_STEP, getProfile(cur.getType()).getRandomWalksDuration());
+				cur.addRandomWalk();
 				peopleRandomWalks.add(peopleInside.remove(i));
 				if (writeToFile) writer.println(cur.getName() + ",randomWalk," + Utils.CURRENT_STEP);
 			}
@@ -175,7 +180,8 @@ public class PeopleManager {
 	public void returnFromWalk(int t) {
 		for (int i = peopleRandomWalks.size() - 1; i >= 0; --i) {
 			Person cur = peopleRandomWalks.get(i);
-			if (!cur.hasChanged() && getProfile(cur.getType()).getRandomWalksDuration().triggerStatus(t)) {
+			//if (!cur.hasChanged() && getProfile(cur.getType()).getRandomWalksDuration().triggerStatus(t)) {
+			if (!cur.hasChanged() && cur.getRandomWalksReturn() <= Utils.CURRENT_STEP) {
 				cur.setState(State.INSIDE);
 				cur.setChanged(true);
 				peopleInside.add(peopleRandomWalks.remove(i));

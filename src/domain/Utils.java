@@ -26,12 +26,14 @@ public class Utils {
 	}
 	
 	/**
-	 * 10 second steps at the moment
+	 * 10 second steps
 	 */
 	
 	public static final int STEPS = 8640;
 	public static final int HALF_HOUR = 30;
 	public static final int DIVISIONS = 48;
+	
+	public static final int MAX_RANDOM_WALKS = 5;
 	
 	public static int CURRENT_STEP = 0;
 
@@ -52,7 +54,7 @@ public class Utils {
 	 * 
 	 * @return
 	 */
-	public ArrayList<String> readSOIdsFromFile() {
+	/*public ArrayList<String> readSOIdsFromFile() {
 		String path = ".\\src\\database\\database_ids.txt";
 		ArrayList<String> ids = new ArrayList<String>();
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
@@ -65,7 +67,7 @@ public class Utils {
 			e.printStackTrace();
 		} 
 		return ids;
-	}
+	}*/
 
 
 	public ArrayList<String> getTypesFromMessage(String message) {
