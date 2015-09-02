@@ -106,6 +106,9 @@ public class Mqtt {
 		}
 	}
 	
+	public ArrayList<String> getIds() {
+		return ids;
+	}
 	
 	/**
 	 * Disconnects the client from the ServIoTicy endpoint

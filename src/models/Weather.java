@@ -1,5 +1,7 @@
 package models;
 
+import domain.Utils;
+
 
 public class Weather {
 	
@@ -13,9 +15,18 @@ public class Weather {
 	}
 	
 	/**
-	 * Daily temperature every hour, starts at 0h
+	 * Returns the weighted value between two, according to the current time (step)
 	 */
 	
+	private double getWeightedValue(double val1, double val2) {
+		double min = Math.min(val1, val2);
+		double max = Math.max(val1, val2);
+		return min + (max - min) * (Utils.CURRENT_STEP%360/360.0);
+	}
+	
+	/**
+	 * Daily temperature every hour, starts at 0h
+	 */
 	
 	private static final double[] environmentalTemperature = {
 		25, 24, 23, 22, 21, 21,
@@ -25,7 +36,14 @@ public class Weather {
 	};
 	
 	public double getCurrentEnvironmentalTemperature() {
-		return environmentalTemperature[3]; // change to fit the current step
+		int p1 = Utils.CURRENT_STEP/360;
+		double val1 = environmentalTemperature[p1];
+		if (Utils.CURRENT_STEP%360 != 0) {
+			int p2 = (p1 + 1)%24;
+			double val2 = environmentalTemperature[p2];
+			return getWeightedValue(val1, val2);
+		}
+		return val1;
 	}
 	
 	/**
@@ -40,7 +58,14 @@ public class Weather {
 	};
 	
 	public double getCurrentEnvironmentalHumidity() {
-		return environmentalHumidity[0]; // change to fit the current step
+		int p1 = Utils.CURRENT_STEP/360;
+		double val1 = environmentalHumidity[p1];
+		if (Utils.CURRENT_STEP%360 != 0) {
+			int p2 = (p1 + 1)%24;
+			double val2 = environmentalHumidity[p2];
+			return getWeightedValue(val1, val2);
+		}
+		return val1;
 	}
 	
 	/**
@@ -55,7 +80,13 @@ public class Weather {
 	};
 	
 	public double getCurrentEnvironmentalLight() {
-		return environmentalLight[0]; // change to fit the current step
+		int p1 = Utils.CURRENT_STEP/360;
+		double val1 = environmentalLight[p1];
+		if (Utils.CURRENT_STEP%360 != 0) {
+			int p2 = (p1 + 1)%24;
+			double val2 = environmentalLight[p2];
+			return getWeightedValue(val1, val2);
+		}
+		return val1;
 	}
-
 }

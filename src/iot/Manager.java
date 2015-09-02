@@ -38,6 +38,8 @@ public class Manager {
 		awsdb = Database.getInstance();
 		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
+		
+		//sendInitialMessages();
 	}
 	
 	private void sleep(int s) {
@@ -50,6 +52,10 @@ public class Manager {
 	
 	private void terminate() {
 		System.exit(0);
+	}
+	
+	private void initComponents() {
+		
 	}
 	
 	/**
@@ -68,7 +74,7 @@ public class Manager {
 		
 		while(Utils.CURRENT_STEP < Utils.STEPS) {
 			System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
-			peopleManager.makeStep();
+			if (Utils.CURRENT_STEP % 10 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
 			int cur = reg.computeConsumption();
@@ -124,6 +130,30 @@ public class Manager {
 			else s.setValue(uts.getValueFromType(message, type));
 		}
 		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
+	}
+	
+	private void sendInitialMessages() {
+		ArrayList<String> ids = mqtt.getIds();
+		String xm1000Message = "{\"lastUpdate\":1441174408196,"
+								+ "\"channels\":{"
+						   	 	+ "\"humidity\":{\"current-value\":0},"
+						   		+ "\"luminosity\":{\"current-value\":0},"
+						   		+ "\"temperature\":{\"current-value\":0}}}";
+		String computerMessage = "{\"lastUpdate\":1441174408196,"
+				   			   		+ "\"channels\":{"
+							   		+ "\"computer\":{\"current-value\":0}}}";
+		for (String id : ids) {
+			String topic = "API_KEY/" + id;
+			String model = awsdb.getModel(id);
+			switch(model) {
+			case "XM1000":
+				manageMessage(topic, xm1000Message);
+				break;
+			case "Computer":
+				manageMessage(topic, computerMessage);
+				break;
+			}
+		}
 	}
 	
 	public void manageMessage(String topic, String message) {

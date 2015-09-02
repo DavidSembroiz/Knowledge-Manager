@@ -104,10 +104,10 @@ public class HVACRule {
 		 * If HVAC is ON:
 		 *  - OFF: room is empty
 		 *  - HEAT or COLD: temperature adjustment is not instant, it must vary over time
-		 *                until desired state is achieved
+		 *                  until desired state is achieved
 		 *  - MAINTAIN: temperature is OK, do nothing
 		 * If HVAC is OFF:
-		 *  - ON: someone has entered the room or environmental temperature is BAD
+		 *  - ON: someone has entered the room and environmental temperature is BAD
 		 */
 		
 		if ((ac.equals("on") || ac.equals("maintain")) && 

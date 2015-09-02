@@ -154,6 +154,23 @@ public class Database {
 		return ret;
 	}
 	
+	public String getModel(String soID) {
+		c = null;
+		String res = null;
+		try {
+			c = poolSource.getConnection();
+			pst = c.prepareStatement("SELECT model FROM ids WHERE servioticy_id = ?");
+			pst.setString(1, soID);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) res = rs.getString("model");
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(c);
+		}
+		return res;
+	}
+	
 	public String getLocation(String soID) {
 		c = null;
 		String res = null;

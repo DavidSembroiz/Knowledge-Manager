@@ -51,7 +51,9 @@ public class PeopleManager {
 	public void makeStep() {
 		int t = Utils.CURRENT_STEP;
 		resetChanged();
+		
 		enterBuilding(t);
+		
 		goForRandomWalk(t);
 		returnFromWalk(t);
 		
