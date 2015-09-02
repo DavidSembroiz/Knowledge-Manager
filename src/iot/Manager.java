@@ -53,10 +53,7 @@ public class Manager {
 	private void terminate() {
 		System.exit(0);
 	}
-	
-	private void initComponents() {
-		
-	}
+
 	
 	/**
 	 * Initial simulation
@@ -139,9 +136,11 @@ public class Manager {
 						   	 	+ "\"humidity\":{\"current-value\":0},"
 						   		+ "\"luminosity\":{\"current-value\":0},"
 						   		+ "\"temperature\":{\"current-value\":0}}}";
+		
 		String computerMessage = "{\"lastUpdate\":1441174408196,"
 				   			   		+ "\"channels\":{"
 							   		+ "\"computer\":{\"current-value\":0}}}";
+		
 		for (String id : ids) {
 			String topic = "API_KEY/" + id;
 			String model = awsdb.getModel(id);
