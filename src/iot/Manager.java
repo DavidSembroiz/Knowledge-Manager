@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
 import behaviour.PeopleManager;
@@ -39,7 +43,7 @@ public class Manager {
 		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 		
-		//sendInitialMessages();
+		sendInitialMessages();
 	}
 	
 	private void sleep(int s) {
@@ -70,12 +74,12 @@ public class Manager {
 		if (RECORD_FILE == 1) peopleManager.enableRecordFile();
 		
 		while(Utils.CURRENT_STEP < Utils.STEPS) {
-			System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
+			//System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
 			if (Utils.CURRENT_STEP % 10 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
 			int cur = reg.computeConsumption();
-			System.out.println("Current consumption: " + cur + " Watts");
+			//System.out.println("Current consumption: " + cur + " Watts");
 			//sleep(1);
 			
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
@@ -225,20 +229,52 @@ public class Manager {
 		return events;
 	}
 	
+	/**
+	 * Calculates the number of hours that everyone has been inside the building.
+	 * It assumes that everyone who enter eventually leaves.
+	 */
+	
+	private int checkWorkingHours() {
+		HashMap<String, Integer> times = new HashMap<String, Integer>();
+		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
+	        String line;
+	        while ((line = br.readLine()) != null) {
+	        	String[] values = line.split(",");
+	        	if (values[1].equals("enter")) {
+	        		times.put(values[0], Integer.parseInt(values[2]));
+	        	}
+	        	else if (values[1].equals("leave")) {
+	        		times.put(values[0], Integer.parseInt(values[2]) - times.get(values[0]));
+	        	}
+	        }
+	        int totalTime = 0;
+	        Iterator<Entry<String, Integer>> it = times.entrySet().iterator();
+	        while (it.hasNext()) {
+	        	totalTime +=  it.next().getValue();
+	        	it.remove();
+	        }
+	        return totalTime;
+	    } catch (IOException e) {
+	    	System.out.println("ERROR: Unable to read events from file.");
+	    	e.printStackTrace();
+	    }
+		return 0;
+	}
+	
 	
 	private void dumbScenario() {
 		
 		/**
 		 * In this scenario, everything is ON throughout the whole day
-		 * This means between 8:00h and 19:00h (11 hours in total)
+		 * It firstly calculates the time everyone is inside the building.
 		 */
 		
-		int numRooms = rooms.size();
-		reg.setNumComputers(numRooms);
-		reg.setNumHvacs(numRooms);
-		reg.setNumLights(numRooms);
+		int workingHours = checkWorkingHours();
+		reg.setNumComputers(1);
+		reg.setNumHvacs(1);
+		reg.setNumLights(1);
 		int cons = reg.computeConsumption();
-		int totalCons = cons * 11;
+		double totalCons = cons * workingHours/360.0;
 		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}
 	

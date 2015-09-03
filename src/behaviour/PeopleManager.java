@@ -62,7 +62,7 @@ public class PeopleManager {
 		
 		leaveBuilding(t);
 		
-		printPeople();
+		//printPeople();
 	}
 	
 	public void enableRecordFile() {
@@ -104,7 +104,7 @@ public class PeopleManager {
 				if (writeToFile) writer.println(cur.getName() + ",enter," + Utils.CURRENT_STEP);
 			}
 		}
-		System.out.println("People Outside: " + peopleOutside.size());
+		//System.out.println("People Outside: " + peopleOutside.size());
 	}
 	
 	
@@ -156,7 +156,7 @@ public class PeopleManager {
 	public void leaveBuilding(int t) {
 		for (int i = peopleInside.size() - 1; i >= 0; --i) {
 			Person cur = peopleInside.get(i);
-			if (!cur.hasChanged() && getProfile(cur.getType()).getExit().triggerStatus(t)) {
+			if (!cur.hasChanged() && getProfile(cur.getType()).getExit().triggerStatusWithPrint(t)) {
 				cur.setState(State.OUTSIDE);
 				cur.setChanged(true);
 				peopleOutside.add(peopleInside.remove(i));

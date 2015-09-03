@@ -30,10 +30,10 @@ public class Utils {
 	 */
 	
 	public static final int STEPS = 8640;
-	public static final int HALF_HOUR = 30;
+	public static final int HALF_HOUR = 180;
 	public static final int DIVISIONS = 48;
 	
-	public static final int MAX_RANDOM_WALKS = 5;
+	public static final int MAX_RANDOM_WALKS = 2;
 	
 	public static int CURRENT_STEP = 0;
 

@@ -98,7 +98,7 @@ public class HVACRule {
 	@Condition
 	public boolean checkConditions() {
 		
-		System.out.println("Current " + temperature.getValue());
+		//System.out.println("Current " + temperature.getValue());
 		
 		/**
 		 * If HVAC is ON:
@@ -128,7 +128,7 @@ public class HVACRule {
 			else ac = "maintain";
 		}
 		else if (ac.equals("off")) {
-			System.out.println("Moderating temperature");
+			//System.out.println("Moderating temperature");
 			moderateTemperature();
 		}
 		return hasChanged;

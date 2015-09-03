@@ -35,15 +35,19 @@ public class Weather {
 		34, 31, 29, 27, 26, 25
 	};
 	
+	/**
+	 * Returns the current environmental temperature. If the current time is between two values,
+	 * it calculates the weighted value inbetween both of them.
+	 */
+	
 	public double getCurrentEnvironmentalTemperature() {
 		int p1 = Utils.CURRENT_STEP/360;
 		double val1 = environmentalTemperature[p1];
-		if (Utils.CURRENT_STEP%360 != 0) {
-			int p2 = (p1 + 1)%24;
-			double val2 = environmentalTemperature[p2];
-			return getWeightedValue(val1, val2);
-		}
-		return val1;
+		if (Utils.CURRENT_STEP%360 == 0) return val1;
+			
+		int p2 = (p1 + 1)%24;
+		double val2 = environmentalTemperature[p2];
+		return getWeightedValue(val1, val2);
 	}
 	
 	/**
