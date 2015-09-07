@@ -17,15 +17,31 @@ public class Register {
 	private int[] consumption;
 	private int totalConsumption;
 	
+	/**
+	 * Consumption of every element being tracked
+	 */
+	
 	private final int COMPUTER_CONSUMPTION = 100;
 	private final int COMPUTER_SUSPENDED_CONSUMPTION = 25;
 	private final int LIGHT_CONSUMPTION = 15;
 	private final int HVAC_CONSUMPTION = 800;
 	private final int HVAC_MAINTAIN_CONSUMPTION = 500;
 	
+	/**
+	 * Number of elements per ROOM
+	 */
+	
 	private final int COMPUTERS_PER_ROOM = 2;
 	private final int LIGHTS_PER_ROOM = 5;
 	private final int HVACS_PER_ROOM = 1;
+	
+	/**
+	 * Consumption of IoT elements
+	 */
+	
+	private final double SENSOR_CONSUMPTION = 0.05;
+	private final double GATEWAY_CONSUMPTION = 10;
+	
 	
 	private int numComputers;
 	private int numSuspComputers;

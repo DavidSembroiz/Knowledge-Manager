@@ -21,6 +21,10 @@ import org.eclipse.paho.client.mqttv3.*;
 
 public class Mqtt {
 	
+	/**
+	 * High enough value to query all the ID database
+	 */
+	
 	private static final int QUERY_ALL = 99999999;
 	
 	private String ADDRESS;
@@ -48,6 +52,10 @@ public class Mqtt {
 		subscribe(QUERY_ALL);
 	}
 	
+	/**
+	 * Reads all the needed properties for the MQTT connection
+	 */
+	
 	private void loadProperties() {
 		prop = new Properties();
 		try {
@@ -70,6 +78,11 @@ public class Mqtt {
 	 */
 	private void connect() {
 		connOpts = new MqttConnectOptions();
+		
+		/**
+		 * Session has to be set to TRUE
+		 */
+		
 		connOpts.setCleanSession(true);
 		connOpts.setUserName(USERNAME);
 		connOpts.setPassword(PASSWORD.toCharArray());
@@ -86,11 +99,8 @@ public class Mqtt {
 	}
 	
 	/**
-	 * Subscribes to all the sensor ID availables
+	 * Subscribes to the last n IDs inserted in the database
 	 * 
-	 * 
-	 * TODO change topic string depending on data model
-	 * @param n 
 	 */
 	public void subscribe(int n) {
 		ids = awsdb.queryIds(n);

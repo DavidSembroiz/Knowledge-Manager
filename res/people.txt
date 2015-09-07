@@ -1,5 +1,10 @@
-david,upc/campusnord/d6003,professor
 pepe,upc/campusnord/d6001,professor
-julian,upc/campusnord/d6004,professor
 sergi,upc/campusnord/d6002,professor
+david,upc/campusnord/d6003,professor
+julian,upc/campusnord/d6004,professor
 albert,upc/campusnord/d6005,professor
+pepe,upc/campusnord/d6006,professor
+sergi,upc/campusnord/d6007,professor
+david,upc/campusnord/d6008,professor
+julian,upc/campusnord/d6009,professor
+albert,upc/campusnord/d6010,professor

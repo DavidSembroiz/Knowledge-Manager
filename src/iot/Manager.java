@@ -21,7 +21,20 @@ import models.Weather;
 
 public class Manager {
 	
-	private int MODE = 1;
+	/**
+	 * MODE to run the different version alternatives:
+	 * 
+	 *  0: dumb scenario, everything is on throughout working hours
+	 *  2: repeat simulation
+	 *  Rest: normal simulation
+	 */
+	
+	private int MODE = 2;
+	
+	/**
+	 * The record file saves all the actions in events.txt
+	 */
+	
 	private int RECORD_FILE = 1;
 	
 	private ArrayList<Room> rooms;
@@ -43,31 +56,35 @@ public class Manager {
 		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 		
-		sendInitialMessages();
+		/**
+		 * If the scenario is set to dumb, simulation can be performed without handling messages
+		 */
+		
+		if (MODE == 0) {
+			dumbScenario();
+			terminate();
+		}
+		
+		//sendInitialMessages();
 	}
 	
-	private void sleep(int s) {
+	/*private void sleep(int s) {
 		try {
 			Thread.sleep(s * 1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	private void terminate() {
 		System.exit(0);
 	}
 
 	
-	/**
-	 * Initial simulation
-	 */
-
-	
 	private void simulate() {
 		
-		if (MODE == 0) {
-			dumbScenario();
+		if (MODE == 2) {
+			repeatSimulation();
 			terminate();
 		}
 		
@@ -78,7 +95,7 @@ public class Manager {
 			if (Utils.CURRENT_STEP % 10 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
-			int cur = reg.computeConsumption();
+			//int cur = reg.computeConsumption();
 			//System.out.println("Current consumption: " + cur + " Watts");
 			//sleep(1);
 			
@@ -104,16 +121,17 @@ public class Manager {
 			//printRooms();
 			int cur = reg.computeConsumption();
 			System.out.println("Current consumption: " + cur + " Watts");
-			sleep(1);
+			//sleep(1);
 			
 			++Utils.CURRENT_STEP;
 		}
+		reg.printTotalConsumption();
+		terminate();
 	}
 	
 	
 	private void processMessage(String topic, String message, String location, String soID) {
 		Room r = getRoom(location);
-		System.out.println("Room gotten");
 		ArrayList<String> types = uts.getTypesFromMessage(message);
 		for (String type : types) {
 			System.out.println(type);
