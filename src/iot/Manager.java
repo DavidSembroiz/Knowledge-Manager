@@ -29,7 +29,7 @@ public class Manager {
 	 *  Rest: normal simulation
 	 */
 	
-	private int MODE = 2;
+	private int MODE = 0;
 	
 	/**
 	 * The record file saves all the actions in events.txt
