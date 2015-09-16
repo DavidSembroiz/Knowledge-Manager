@@ -47,9 +47,16 @@ public class Manager {
 	
 	
 	public Manager() {
+		
+		reg = Register.getInstance();
+		
+		if (MODE == 0) {
+			dumbScenario();
+			terminate();
+		}
+		
 		rooms = new ArrayList<Room>();
 		uts = Utils.getInstance();
-		reg = Register.getInstance();
 		models = Weather.getInstance();
 		peopleManager = PeopleManager.getInstance();
 		awsdb = Database.getInstance();
@@ -59,12 +66,7 @@ public class Manager {
 		/**
 		 * If the scenario is set to dumb, simulation can be performed without handling messages
 		 */
-		
-		if (MODE == 0) {
-			dumbScenario();
-			terminate();
-		}
-		
+
 		//sendInitialMessages();
 	}
 	
@@ -95,7 +97,7 @@ public class Manager {
 			if (Utils.CURRENT_STEP % 10 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			//printRooms();
-			//int cur = reg.computeConsumption();
+			int cur = reg.computeConsumption();
 			//System.out.println("Current consumption: " + cur + " Watts");
 			//sleep(1);
 			

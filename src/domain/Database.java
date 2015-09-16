@@ -27,7 +27,6 @@ public class Database {
 	private String AWS_DB;
 	private String AWS_DB_NAME;
 	
-	private Connection c;
 	private Statement st;
 	private PreparedStatement pst;
 	private Utils uts;
@@ -49,7 +48,7 @@ public class Database {
 	}
 	
 	public Connection getConnectionListener() {
-		c = null;
+		Connection c = null;
 		try {
 			c = poolSource.getConnection();
 		} catch (SQLException e) {
@@ -94,7 +93,7 @@ public class Database {
 	}
 	
 	private void createIdTable() {
-		c = null;
+		Connection c = null;
 		try {
 			c = poolSource.getConnection();
 			st = c.createStatement();
@@ -113,7 +112,7 @@ public class Database {
 	}
 	
 	private void createAssociationsTable() {
-		c = null;
+		Connection c = null;
 		try {
 			c = poolSource.getConnection();
 			st = c.createStatement();
@@ -136,7 +135,7 @@ public class Database {
 	
 	public ArrayList<String> queryIds(int n) {
 		ArrayList<String> ret = new ArrayList<String>();
-		c = null;
+		Connection c = null;
 		try {
 			c = poolSource.getConnection();
 			pst = c.prepareStatement("SELECT servioticy_id FROM ids ORDER BY created DESC LIMIT ?");
@@ -155,7 +154,7 @@ public class Database {
 	}
 	
 	public String getModel(String soID) {
-		c = null;
+		Connection c = null;
 		String res = null;
 		try {
 			c = poolSource.getConnection();
@@ -172,7 +171,7 @@ public class Database {
 	}
 	
 	public String getLocation(String soID) {
-		c = null;
+		Connection c = null;
 		String res = null;
 		try {
 			c = poolSource.getConnection();
@@ -189,7 +188,7 @@ public class Database {
 	}
 	
 	public void updateAssociations(String soID, String type, String location) {
-		c = null;
+		Connection c = null;
 		String[] associations = null;
 		try {
 			c = poolSource.getConnection();
@@ -212,7 +211,7 @@ public class Database {
 	}
 	
 	private void updateActuator(String location, String actuator, String type, String soID) {
-		c = null;
+		Connection c = null;
 		try {
 			c = poolSource.getConnection();
 			pst = c.prepareStatement("SELECT sensors, registrations_left FROM associations WHERE location = ? AND actuator = ?");
@@ -242,7 +241,7 @@ public class Database {
 	}
 	
 	private void insertNewAssociationRule(String location, String actuator, String soID, String type) {
-		c = null;
+		Connection c = null;
 		String rule = uts.getRuleByActuator(ruleAssociations, actuator);
 		/**
 		 * Unable to find the rule
@@ -277,7 +276,7 @@ public class Database {
 	}
 	
 	public ArrayList<RuleDAO> getCompletedRules(String location) {
-		c = null;
+		Connection c = null;
 		ArrayList<RuleDAO> rules = new ArrayList<RuleDAO>();
 		try {
 			c = poolSource.getConnection();
@@ -306,7 +305,7 @@ public class Database {
 	}
 	
 	private void initialiseCounters() {
-		c = null;
+		Connection c = null;
 		try {
 			c = poolSource.getConnection();
 			pst = c.prepareStatement("UPDATE associations SET sensors = ?, registrations_left = ?, state = ? WHERE rule = ?");
