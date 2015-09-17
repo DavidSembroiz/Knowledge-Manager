@@ -29,7 +29,7 @@ public class Manager {
 	 *  Rest: normal simulation
 	 */
 	
-	private int MODE = 0;
+	private int MODE = 1;
 	
 	/**
 	 * The record file saves all the actions in events.txt
@@ -113,7 +113,7 @@ public class Manager {
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = readEventFile();
 		Event e;
-		while(Utils.CURRENT_STEP < Utils.STEPS) {
+		while(!events.isEmpty() && Utils.CURRENT_STEP < Utils.STEPS) {
 			System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
 			while (!events.isEmpty() && events.peek().getStep() == Utils.CURRENT_STEP) {
 				e = events.poll();
@@ -200,7 +200,7 @@ public class Manager {
 	
 	
 	private Room registerRoom(String location, ArrayList<Person> people) {
-		Room r = new Room(location, awsdb, people);
+		Room r = new Room(location, awsdb, people, reg.getSensorsPerRoom());
 		rooms.add(r);
 		return r;
 	}
@@ -294,7 +294,7 @@ public class Manager {
 		reg.setNumHvacs(1);
 		reg.setNumLights(1);
 		int cons = reg.computeConsumption();
-		double totalCons = cons * workingHours/360.0;
+		double totalCons = cons * (workingHours/360.0);
 		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}
 	

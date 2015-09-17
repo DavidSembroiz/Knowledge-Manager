@@ -39,6 +39,8 @@ public class Register {
 	 * Consumption of IoT elements
 	 */
 	
+	private final int SENSORS_PER_ROOM = 4;
+	private final int NUM_GATEWAYS = 10;
 	private final double SENSOR_CONSUMPTION = 0.05;
 	private final double GATEWAY_CONSUMPTION = 10;
 	
@@ -146,6 +148,21 @@ public class Register {
 				   numMaintHvacs * HVAC_MAINTAIN_CONSUMPTION * HVACS_PER_ROOM;
 		consumption[Utils.CURRENT_STEP] = cons;
 		totalConsumption += cons;
+		return cons;
+	}
+	
+	public int getSensorsPerRoom() {
+		return SENSORS_PER_ROOM;
+	}
+	
+	/**
+	 * Currently all the rooms have Computer. Therefore numComputers = numRooms
+	 * 
+	 */
+	
+	public double computeSensorsConsumption() {
+		double cons = numComputers * SENSORS_PER_ROOM * SENSOR_CONSUMPTION +
+				      GATEWAY_CONSUMPTION * NUM_GATEWAYS;
 		return cons;
 	}
 	

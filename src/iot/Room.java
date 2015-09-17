@@ -12,18 +12,19 @@ public class Room {
 	 * Current value used to know when all room sensors have been filled
 	 */
 	
-	private final int SENSORS_PER_ROOM = 4;
 	
 	private String location;
 	private ArrayList<Sensor> sensors;
 	private RuleManager ruleManager;
 	private Database awsdb;
 	private ArrayList<Person> people;
+	private int sensorsPerRoom;
 	
-	public Room(String location, Database awsdb, ArrayList<Person> people) {
+	public Room(String location, Database awsdb, ArrayList<Person> people, int numSensors) {
 		this.location = location;
 		this.awsdb = awsdb;
 		this.people = people;
+		this.sensorsPerRoom = numSensors;
 		sensors = new ArrayList<Sensor>();
 		this.ruleManager = new RuleManager(this);
 	}
@@ -79,6 +80,6 @@ public class Room {
 	}
 	
 	public boolean allSensorsDefined() {
-		return sensors.size() == SENSORS_PER_ROOM;
+		return sensors.size() == sensorsPerRoom;
 	}
 }

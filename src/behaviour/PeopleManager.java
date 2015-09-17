@@ -251,7 +251,6 @@ public class PeopleManager {
 	        	Person p = new Person(values[0], values[1], State.UNASSIGNED, Type.valueOf(values[2].toUpperCase()));
 	        	this.unassigned.add(p);
 	        }
-	        
 	    } catch (IOException e) {
 	    	System.err.println("ERROR: Unable to read people from file.");
 	    	e.printStackTrace();
