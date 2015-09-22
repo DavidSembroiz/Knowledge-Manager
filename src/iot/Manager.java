@@ -37,6 +37,13 @@ public class Manager {
 	
 	private int RECORD_FILE = 1;
 	
+	/**
+	 * If NEW_PEOPLE == 1, then a new group of people is generated before the simulation
+	 */
+	
+	private int NEW_PEOPLE = 1;
+	private int NUM_ROOMS = 100;
+	
 	private ArrayList<Room> rooms;
 	private Mqtt mqtt;
 	private Utils uts;
@@ -48,6 +55,7 @@ public class Manager {
 	
 	public Manager() {
 		
+		uts = Utils.getInstance();
 		reg = Register.getInstance();
 		
 		if (MODE == 0) {
@@ -55,11 +63,12 @@ public class Manager {
 			terminate();
 		}
 		
+		if (MODE != 2 && NEW_PEOPLE == 1) uts.generatePeople(NUM_ROOMS);
+		
 		rooms = new ArrayList<Room>();
-		uts = Utils.getInstance();
 		models = Weather.getInstance();
-		peopleManager = PeopleManager.getInstance();
 		awsdb = Database.getInstance();
+		peopleManager = PeopleManager.getInstance();
 		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 		

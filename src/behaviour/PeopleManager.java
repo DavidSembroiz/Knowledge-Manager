@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import behaviour.Person.State;
 import behaviour.Person.Type;
@@ -261,6 +262,7 @@ public class PeopleManager {
 	}
 
 	public boolean isAllPeopleAssigned() {
+		System.out.println("People without assigning: " + unassigned.size());
 		return unassigned.isEmpty();
 	}
 	

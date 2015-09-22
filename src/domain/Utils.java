@@ -1,11 +1,15 @@
 package domain;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import behaviour.Person;
@@ -169,4 +173,40 @@ public class Utils {
 		}
 		return true;
 	}
+	
+	public void generatePeople(int numRooms) {
+		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/people.txt")))) {
+	        for (int i = 1; i <= numRooms; ++i) {
+	        	String name = getRandomName();
+	        	String room = getProperRoomName(i);
+	        	String type = "professor";
+	        	wr.println(name + "," + room + "," + type);
+	        }
+	    } catch (IOException e) {
+	    	System.err.println("ERROR: Unable to read people from file.");
+	    	e.printStackTrace();
+	    } catch(IllegalArgumentException e) {
+	    	System.err.println("ERROR: Person does not contain a valid type.");
+	    	e.printStackTrace();
+	    }
+	}
+	
+	private String getRandomName() {
+		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+		StringBuilder sb = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < 10; i++) {
+		    char c = chars[random.nextInt(chars.length)];
+		    sb.append(c);
+		}
+		return sb.toString();
+	}
+	
+	private String getProperRoomName(int id) {
+        String res = "upc/campusnord/";
+        if (id < 10) res += "d600" + id;
+        else if (id < 100) res += "d60" + id;
+        else if (id < 1000) res += "d6" + id;
+        return res;
+    }
 }
