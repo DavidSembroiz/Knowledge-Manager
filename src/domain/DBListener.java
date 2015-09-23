@@ -1,6 +1,7 @@
 package domain;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import org.postgresql.*;
 
@@ -36,7 +37,7 @@ public class DBListener extends Thread {
 				PGNotification nots[] = pgconn.getNotifications();
 				if (nots != null) {
 					System.out.println("-------------------------------- NOTIFICATION -----------------------------------");
-					callback.subscribe(getNewSONumber(nots));
+					callback.subscribe(getNewSOIds(nots));
 					printActuations(nots);
 				}
 				Thread.sleep(2000);
@@ -47,14 +48,14 @@ public class DBListener extends Thread {
 	}
 	
 
-	private int getNewSONumber(PGNotification[] nots) {
-		int count = 0;
+	private ArrayList<String> getNewSOIds(PGNotification[] nots) {
+		ArrayList<String> ids = new ArrayList<String>();
 		for (PGNotification n : nots) {
 			if (n.getName().toUpperCase().equals("SO_CHANNEL")) {
-				++count;
+				ids.add(n.getParameter());
 			}
 		}
-		return count;
+		return ids;
 	}
 	
 	private void printActuations(PGNotification[] nots) {

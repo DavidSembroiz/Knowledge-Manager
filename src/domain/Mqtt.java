@@ -49,7 +49,7 @@ public class Mqtt {
 		this.manager = m;
 		loadProperties();
 		connect();
-		subscribe(QUERY_ALL);
+		subscribe(awsdb.queryIds(QUERY_ALL));
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class Mqtt {
 	 * Subscribes to the last n IDs inserted in the database
 	 * 
 	 */
-	public void subscribe(int n) {
+	/*public void subscribe(int n) {
 		ids = awsdb.queryIds(n);
 		for (String id : ids) {
 			topic = APIKEY + "/" + id + "/streams/data/updates";
@@ -114,7 +114,21 @@ public class Mqtt {
 				e.printStackTrace();
 			}
 		}
+	}*/
+	
+	public void subscribe(ArrayList<String> ids) {
+		for (String id : ids) {
+			topic = APIKEY + "/" + id + "/streams/data/updates";
+			try {
+				client.subscribe(topic);
+				
+				System.out.println("Subscribed to SO " + uts.extractIdFromTopic(topic));
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}
+		}
 	}
+	
 	
 	public ArrayList<String> getIds() {
 		return ids;
