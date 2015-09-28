@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
@@ -29,7 +28,7 @@ public class Manager {
 	 *  Rest: normal simulation
 	 */
 	
-	private int MODE = 1;
+	private int MODE = 2;
 	
 	/**
 	 * The record file saves all the actions in events.txt

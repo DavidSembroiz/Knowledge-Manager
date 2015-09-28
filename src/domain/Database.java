@@ -8,8 +8,6 @@ import rules.RuleDAO;
 
 import org.postgresql.ds.PGPoolingDataSource;
 
-import behaviour.PeopleManager;
-
 public class Database {
 	
 	private static Database instance = new Database();

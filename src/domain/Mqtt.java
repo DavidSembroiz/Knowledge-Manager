@@ -38,14 +38,12 @@ public class Mqtt {
 	private ArrayList<String> ids;
 	private String topic;
 	private Utils uts;
-	private Database awsdb;
 	private Properties prop;
 	private Manager manager;
 
 	public Mqtt(Manager m, Database awsdb) {
 		ids = new ArrayList<String>();
 		uts = Utils.getInstance();
-		this.awsdb = awsdb;
 		this.manager = m;
 		loadProperties();
 		connect();

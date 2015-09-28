@@ -1,8 +1,6 @@
 package domain;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -105,6 +103,7 @@ public class Utils {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public String addToJSON(String soID, String type, String json) {
 		JSONParser parser = new JSONParser();
 		try {
