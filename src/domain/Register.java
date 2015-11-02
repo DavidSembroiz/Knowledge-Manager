@@ -1,5 +1,10 @@
 package domain;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import domain.Utils;
 
 public class Register {
@@ -75,6 +80,10 @@ public class Register {
 
 	public void setNumLights(int numLights) {
 		this.numLights = numLights;
+	}
+	
+	public int getNumMaintHvacs() {
+		return numMaintHvacs;
 	}
 
 	public int getNumHvacs() {
@@ -166,9 +175,13 @@ public class Register {
 		return cons;
 	}
 	
-	public void printConsumption() {
-		for (int i = 0; i < consumption.length; ++i) {
-			System.out.println("Step " + i + " " + consumption[i] + " Watts");
+	public void writeConsumptionToFile() {
+		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")))) {
+			for (int i = 0; i < consumption.length; ++i) {
+				wr.println(consumption[i]);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	

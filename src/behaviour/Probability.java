@@ -44,7 +44,7 @@ public class Probability {
 	public boolean triggerStatusWithPrint(int currentTime) {
 		double next = rand.nextDouble();
 		double real = getProbability(currentTime)/10;
-		System.out.println("Next: " + next + "     |     " + "Real: " + real + "(" + currentTime + ")");
+		//System.out.println("Next: " + next + "     |     " + "Real: " + real + "(" + currentTime + ")");
 		return next < real;
 	}
 	

@@ -23,6 +23,8 @@ public class Person {
 	private int randomWalksReturn;
 	private int numRandomWalks;
 	
+	private int insideTime;
+	
 	public Person(String name, String location, State state, Type type) {
 		this.name = name;
 		this.location = location;
@@ -34,6 +36,17 @@ public class Person {
 		this.lunchReturn = -1;
 		this.randomWalksReturn = -1;
 		this.numRandomWalks = 0;
+		this.insideTime = 0;
+	}
+	
+	
+
+	public int getInsideTime() {
+		return insideTime;
+	}
+
+	public void setInsideTime(int insideTime) {
+		this.insideTime = insideTime;
 	}
 
 	public String getName() {

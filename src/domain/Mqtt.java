@@ -47,7 +47,8 @@ public class Mqtt {
 		this.manager = m;
 		loadProperties();
 		connect();
-		subscribe(awsdb.queryIds(QUERY_ALL));
+		ids = awsdb.queryIds(QUERY_ALL);
+		subscribe(ids);
 	}
 	
 	/**
@@ -130,6 +131,10 @@ public class Mqtt {
 	
 	public ArrayList<String> getIds() {
 		return ids;
+	}
+	
+	public void addId(String id) {
+		ids.add(id);
 	}
 	
 	/**

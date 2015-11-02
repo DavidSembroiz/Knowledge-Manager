@@ -6,7 +6,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import behaviour.Person.State;
 import behaviour.Person.Type;
@@ -42,7 +47,7 @@ public class PeopleManager {
 		peopleRandomWalks = new ArrayList<Person>();
 		peopleLunch = new ArrayList<Person>();
 		profiles = new ArrayList<UserProfile>();
-		readPeopleFromFile();
+		readPeople();
 		generateProfiles();
 	}
 	
@@ -240,12 +245,70 @@ public class PeopleManager {
 		for (Person p : peopleRandomWalks) p.setChanged(false);
 		for (Person p : peopleLunch) p.setChanged(false);
 	}
+	
+	public HashMap<String, ArrayList<Map.Entry<String, String>>> getPeopleFromFile() {
+		HashMap<String, ArrayList<Map.Entry<String,String>>> ppl = new HashMap<String, ArrayList<Map.Entry<String, String>>>();
+		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
+	        String line = br.readLine();
+	        String[] values = line.split(",");
+	        String currentRoom = values[1];
+	        ArrayList<Map.Entry<String, String>> names = new ArrayList<Map.Entry<String, String>>();
+	        Map.Entry<String, String> entry =  new AbstractMap.SimpleEntry<String, String>(values[0], values[2]);
+	        names.add(entry);
+	        while ((line = br.readLine()) != null) {
+	        	values = line.split(",");
+	        	if (values[1].equals(currentRoom)) {
+	        		names.add(new AbstractMap.SimpleEntry<String, String>(values[0], values[2]));
+	        	}
+	        	else {
+	        		ppl.put(currentRoom, names);
+	        		currentRoom = values[1];
+	        		names = new ArrayList<Map.Entry<String, String>>();
+	        		names.add(new AbstractMap.SimpleEntry<String, String>(values[0], values[2]));
+	        	}
+	        }
+	        return ppl;
+	    } catch (IOException e) {
+	    	System.err.println("ERROR: Unable to read people from file.");
+	    	e.printStackTrace();
+	    } catch(IllegalArgumentException e) {
+	    	System.err.println("ERROR: Person does not contain a valid type.");
+	    	e.printStackTrace();
+	    }
+		return ppl;
+	}
+	
+	/*public void printHash() {
+		HashMap<String, ArrayList<Entry<String, String>>> ppl = getPeopleFromFile();
+		Iterator it = ppl.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Entry) it.next();
+			System.out.println(pair.getKey() + " = " + pair.getValue());
+			it.remove();
+		}
+	}*/
+	
+	private void readPeople() {
+		HashMap<String, ArrayList<Entry<String, String>>> ppl = getPeopleFromFile();
+		Iterator<?> it = ppl.entrySet().iterator();
+		while (it.hasNext()) {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String, ArrayList<Entry<String, String>>> pair = (Entry<String, ArrayList<Entry<String, String>>>) it.next();
+			for (int i = 0; i < pair.getValue().size(); ++i) {
+				Map.Entry<String, String> vals = pair.getValue().get(i);
+				Person p = new Person(vals.getKey(), pair.getKey(), State.UNASSIGNED, Type.valueOf(vals.getValue().toUpperCase()));
+				this.unassigned.add(p);
+			}
+		}
+	}
 
-	private void readPeopleFromFile() {
+	
+	/*private void readPeopleFromFile() {
 		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
 	        String line;
 	        while ((line = br.readLine()) != null) {
 	        	String[] values = line.split(",");
+	        	System.out.println(values[1] + " " + values[0] + " " + values[2]);
 	        	Person p = new Person(values[0], values[1], State.UNASSIGNED, Type.valueOf(values[2].toUpperCase()));
 	        	this.unassigned.add(p);
 	        }
@@ -256,8 +319,9 @@ public class PeopleManager {
 	    	System.err.println("ERROR: Person does not contain a valid type.");
 	    	e.printStackTrace();
 	    }
-	}
-
+	}*/
+	 
+	
 	public boolean isAllPeopleAssigned() {
 		return unassigned.isEmpty();
 	}
@@ -296,7 +360,7 @@ public class PeopleManager {
 			peopleInside.add(p);
 			System.out.println(p.getName() + " has come back");
 		}
-		else if (action.equals("randomWalk")) {
+		else if (Utils.RANDOM_WALS && action.equals("randomWalk")) {
 			while (!peopleInside.get(i).getName().equals(person)) ++i;
 			Person p = peopleInside.get(i);
 			p.setState(State.RANDOM_WALKS);
@@ -304,7 +368,7 @@ public class PeopleManager {
 			peopleRandomWalks.add(p);
 			System.out.println(p.getName() + " is walking");
 		}
-		else if (action.equals("returnRandomWalk")) {
+		else if (Utils.RANDOM_WALS && action.equals("returnRandomWalk")) {
 			while (!peopleRandomWalks.get(i).getName().equals(person)) ++i;
 			Person p = peopleRandomWalks.get(i);
 			p.setState(State.INSIDE);

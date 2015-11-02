@@ -52,7 +52,9 @@ public class DBListener extends Thread {
 		ArrayList<String> ids = new ArrayList<String>();
 		for (PGNotification n : nots) {
 			if (n.getName().toUpperCase().equals("SO_CHANNEL")) {
-				ids.add(n.getParameter());
+				String id = n.getParameter();
+				callback.addId(id);
+				ids.add(id);
 			}
 		}
 		return ids;

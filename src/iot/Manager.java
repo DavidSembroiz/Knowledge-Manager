@@ -1,11 +1,15 @@
 package iot;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
@@ -40,8 +44,11 @@ public class Manager {
 	 * If NEW_PEOPLE == 1, then a new group of people is generated before the simulation
 	 */
 	
-	private int NEW_PEOPLE = 1;
-	private int NUM_ROOMS = 100;
+	private int NEW_PEOPLE = 0;
+	
+	private int PROFESSOR_NUM_ROOMS = 100;
+	private int STUDENT_NUM_ROOMS = 0;
+	private int PAS_NUM_ROOMS = 0;
 	
 	private ArrayList<Room> rooms;
 	private Mqtt mqtt;
@@ -57,17 +64,21 @@ public class Manager {
 		uts = Utils.getInstance();
 		reg = Register.getInstance();
 		
+		if (MODE == 1 && NEW_PEOPLE == 1) {
+			uts.generatePeople(PROFESSOR_NUM_ROOMS, STUDENT_NUM_ROOMS, PAS_NUM_ROOMS);
+		}
+		
+		peopleManager = PeopleManager.getInstance();
+		
 		if (MODE == 0) {
 			dumbScenario();
 			terminate();
 		}
 		
-		if (MODE != 2 && NEW_PEOPLE == 1) uts.generatePeople(NUM_ROOMS);
 		
 		rooms = new ArrayList<Room>();
 		models = Weather.getInstance();
 		awsdb = Database.getInstance();
-		peopleManager = PeopleManager.getInstance();
 		mqtt = new Mqtt(this, awsdb);
 		new DBListener(mqtt, awsdb.getConnectionListener());
 		
@@ -104,15 +115,13 @@ public class Manager {
 			//System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
 			if (Utils.CURRENT_STEP % 10 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
-			//printRooms();
-			int cur = reg.computeConsumption();
-			//System.out.println("Current consumption: " + cur + " Watts");
-			//sleep(1);
+			//System.out.println(reg.getNumHvacs() + " " + reg.getNumMaintHvacs());
 			
+			reg.computeConsumption();
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
 			++Utils.CURRENT_STEP;
 		}
-		//reg.printConsumption();
+		reg.writeConsumptionToFile();
 		reg.printTotalConsumption();
 		peopleManager.closeFile();
 		terminate();
@@ -128,13 +137,13 @@ public class Manager {
 				peopleManager.executeAction(e.getPerson(), e.getAction());
 			}
 			for (Room r : rooms) r.fireRules();
-			//printRooms();
 			int cur = reg.computeConsumption();
 			System.out.println("Current consumption: " + cur + " Watts");
 			//sleep(1);
 			
 			++Utils.CURRENT_STEP;
 		}
+		reg.writeConsumptionToFile();
 		reg.printTotalConsumption();
 		terminate();
 	}
@@ -163,6 +172,7 @@ public class Manager {
 	
 	private void sendInitialMessages() {
 		ArrayList<String> ids = mqtt.getIds();
+		System.out.println(ids.size());
 		String xm1000Message = "{\"lastUpdate\":1441174408196,"
 								+ "\"channels\":{"
 						   	 	+ "\"humidity\":{\"current-value\":0},"
@@ -237,6 +247,7 @@ public class Manager {
 				System.out.println("--- Sensor " + s.getSoID());
 				System.out.println("----- Type " + s.getType());
 				System.out.println("----- Value " + s.getValue());
+				System.out.println("Finish");
 			}
 		}
 	}
@@ -257,30 +268,57 @@ public class Manager {
 		return events;
 	}
 	
+	private String getRoomFromPeople(String name) {
+		HashMap<String, ArrayList<Map.Entry<String, String>>> ppl = peopleManager.getPeopleFromFile();
+		Iterator it = ppl.entrySet().iterator();
+		while (it.hasNext()) {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String, ArrayList<Entry<String, String>>> pair = (Entry<String, ArrayList<Entry<String, String>>>) it.next();
+			for (int i = 0; i < pair.getValue().size(); ++i) {
+				Map.Entry<String, String> vals = pair.getValue().get(i);
+				if (vals.getKey().equals(name)) return pair.getKey();
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Calculates the number of hours that everyone has been inside the building.
 	 * It assumes that everyone who enter eventually leaves.
 	 */
 	
+	/**
+	 * TODO: fix shared rooms, currently they are counted as separated rooms.
+	 * Get the maximum working hours of every room with the aid of ppl map.
+	 */
+	
 	private int checkWorkingHours() {
-		HashMap<String, Integer> times = new HashMap<String, Integer>();
+		HashMap<String, Integer> timesEnter = new HashMap<String, Integer>();
+		HashMap<String, Integer> timesLeave = new HashMap<String, Integer>();
 		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
 	        String line;
 	        while ((line = br.readLine()) != null) {
 	        	String[] values = line.split(",");
 	        	if (values[1].equals("enter")) {
-	        		times.put(values[0], Integer.parseInt(values[2]));
+	        		String room = getRoomFromPeople(values[0]);
+	        		timesEnter.put(room, Math.min(timesEnter.containsKey(room) ? timesEnter.get(room) : 10000, Integer.parseInt(values[2])));
 	        	}
 	        	else if (values[1].equals("leave")) {
-	        		times.put(values[0], Integer.parseInt(values[2]) - times.get(values[0]));
+	        		String room = getRoomFromPeople(values[0]);
+	        		timesLeave.put(room, Math.max(timesLeave.containsKey(room) ? timesLeave.get(room) : 0, Integer.parseInt(values[2])));
 	        	}
 	        }
 	        int totalTime = 0;
-	        Iterator<Entry<String, Integer>> it = times.entrySet().iterator();
+	        Iterator<Entry<String, Integer>> it = timesEnter.entrySet().iterator();
 	        while (it.hasNext()) {
-	        	totalTime +=  it.next().getValue();
-	        	it.remove();
+	        	Map.Entry<String, Integer> pair = it.next();
+	        	if (timesLeave.containsKey(pair.getKey())) {
+	        		totalTime +=  timesLeave.get(pair.getKey()) - pair.getValue();
+	        	}
 	        }
+	        
+	        calculateConsumptionHistory(timesEnter, timesLeave);
+	        
 	        return totalTime;
 	    } catch (IOException e) {
 	    	System.out.println("ERROR: Unable to read events from file.");
@@ -290,6 +328,28 @@ public class Manager {
 	}
 	
 	
+	private void calculateConsumptionHistory(HashMap<String, Integer> timesEnter, HashMap<String, Integer> timesLeave) {
+		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")))) {
+			int roomCons = reg.computeConsumption();
+			int activeRooms = 0;
+			Iterator<Entry<String, Integer>> itEnter;
+			for (int i = 0; i < uts.STEPS; ++i) {
+				itEnter = timesEnter.entrySet().iterator();
+				while (itEnter.hasNext()) {
+					Map.Entry<String, Integer> pair = itEnter.next();
+					if (pair.getValue() <= i && timesLeave.get(pair.getKey()) > i) {
+						activeRooms++;
+					}
+				}
+				wr.println(activeRooms * roomCons);
+				//if (i%100 == 0) System.out.println(i + " " + activeRooms);
+				activeRooms = 0;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void dumbScenario() {
 		
 		/**
@@ -297,11 +357,11 @@ public class Manager {
 		 * It firstly calculates the time everyone is inside the building.
 		 */
 		
-		int workingHours = checkWorkingHours();
 		reg.setNumComputers(1);
 		reg.setNumHvacs(1);
 		reg.setNumLights(1);
 		int cons = reg.computeConsumption();
+		int workingHours = checkWorkingHours();
 		double totalCons = cons * (workingHours/360.0);
 		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}

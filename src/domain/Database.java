@@ -20,10 +20,11 @@ public class Database {
 		return instance;
 	}
 	
-	private String AWS_USERNAME;
-	private String AWS_PASSWORD;
-	private String AWS_DB;
-	private String AWS_DB_NAME;
+	private String DB_USERNAME;
+	private String DB_PASSWORD;
+	private String DB;
+	private String DB_NAME;
+	private String DB_TABLE;
 	
 	private Statement st;
 	private PreparedStatement pst;
@@ -39,7 +40,7 @@ public class Database {
 		ruleAssociations = new HashMap<String, Integer>();
 		loadProperties();
 		loadPoolSource();
-		createIdTable();
+		//createIdTable();
 		createAssociationsTable();
 		readRelationsFromFile();
 		initialiseCounters();
@@ -60,10 +61,11 @@ public class Database {
 		try {
 			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
-			AWS_USERNAME = prop.getProperty("aws_username");
-			AWS_PASSWORD = prop.getProperty("aws_password");
-			AWS_DB = prop.getProperty("aws_db");
-			AWS_DB_NAME = prop.getProperty("aws_db_name");
+			DB_USERNAME = prop.getProperty("db_username");
+			DB_PASSWORD = prop.getProperty("db_password");
+			DB = prop.getProperty("db");
+			DB_NAME = prop.getProperty("db_name");
+			DB_TABLE = prop.getProperty("db_table");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -72,11 +74,11 @@ public class Database {
 	
 	private void loadPoolSource() {
 		poolSource = new PGPoolingDataSource();
-		poolSource.setDataSourceName("AWS Data Source");
-		poolSource.setServerName(AWS_DB);
-		poolSource.setDatabaseName(AWS_DB_NAME);
-		poolSource.setUser(AWS_USERNAME);
-		poolSource.setPassword(AWS_PASSWORD);
+		poolSource.setDataSourceName("DB Data Source");
+		poolSource.setServerName(DB);
+		poolSource.setDatabaseName(DB_NAME);
+		poolSource.setUser(DB_USERNAME);
+		poolSource.setPassword(DB_PASSWORD);
 		poolSource.setMaxConnections(50);
 	}
 	
@@ -90,12 +92,12 @@ public class Database {
 		}
 	}
 	
-	private void createIdTable() {
+	/*private void createIdTable() {
 		Connection c = null;
 		try {
 			c = poolSource.getConnection();
 			st = c.createStatement();
-			String create = "CREATE TABLE IF NOT EXISTS ids ("
+			String create = "CREATE TABLE IF NOT EXISTS " + DB_TABLE + " ("
 					  	  + "servioticy_id varchar(50) primary key,"
 					  	  + "model varchar(30),"
 					  	  + "location varchar(100),"
@@ -107,7 +109,7 @@ public class Database {
 		} finally {
 			closeConnection(c);
 		}
-	}
+	}*/
 	
 	private void createAssociationsTable() {
 		Connection c = null;
@@ -136,7 +138,7 @@ public class Database {
 		Connection c = null;
 		try {
 			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT servioticy_id FROM ids ORDER BY created DESC LIMIT ?");
+			pst = c.prepareStatement("SELECT servioticy_id FROM " + DB_TABLE + " ORDER BY created DESC LIMIT ?");
 			pst.setInt(1, n);
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()) {
@@ -156,7 +158,7 @@ public class Database {
 		String res = null;
 		try {
 			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT model FROM ids WHERE servioticy_id = ?");
+			pst = c.prepareStatement("SELECT model FROM " + DB_TABLE + " WHERE servioticy_id = ?");
 			pst.setString(1, soID);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) res = rs.getString("model");
@@ -173,7 +175,7 @@ public class Database {
 		String res = null;
 		try {
 			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT location FROM ids WHERE servioticy_id = ?");
+			pst = c.prepareStatement("SELECT location FROM " + DB_TABLE + " WHERE servioticy_id = ?");
 			pst.setString(1, soID);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) res = rs.getString("location");
@@ -190,7 +192,7 @@ public class Database {
 		String[] associations = null;
 		try {
 			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT associations FROM ids WHERE servioticy_id = ?");
+			pst = c.prepareStatement("SELECT associations FROM " + DB_TABLE + " WHERE servioticy_id = ?");
 			pst.setString(1, soID);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next() && rs.getString("associations") != null) {

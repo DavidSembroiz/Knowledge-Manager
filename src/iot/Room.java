@@ -28,6 +28,10 @@ public class Room {
 		sensors = new ArrayList<Sensor>();
 		this.ruleManager = new RuleManager(this);
 	}
+	
+	public RuleManager getRuleManager() {
+		return ruleManager;
+	}
 
 	public String getLocation() {
 		return location;

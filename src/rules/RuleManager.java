@@ -21,6 +21,10 @@ public class RuleManager {
 		rulesEngine = aNewRulesEngine().build();
 	}
 	
+	public RulesEngine getRulesEngine() {
+		return rulesEngine;
+	}
+	
 	
 	public void registerRules(ArrayList<RuleDAO> rules) {
 		for (RuleDAO rule : rules) {

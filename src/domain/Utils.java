@@ -36,8 +36,10 @@ public class Utils {
 	public static final int DIVISIONS = 48;
 	
 	public static final int MAX_RANDOM_WALKS = 2;
+	public static final boolean RANDOM_WALS = false;
 	
 	public static int CURRENT_STEP = 0;
+	private static int CURRENT_ROOM_NO = 1;
 
 	
 	/**
@@ -173,12 +175,55 @@ public class Utils {
 		return true;
 	}
 	
+	public void generatePeople(int numProfRooms, int numStudRooms, int numPasRooms) {
+		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/people.txt")))) {
+			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numProfRooms; ++i) {
+	        	String name = getRandomName();
+	        	String room = getProperRoomName(i);
+	        	String type = "professor";
+	        	wr.println(name + "," + room + "," + type);
+	        }
+			CURRENT_ROOM_NO += numProfRooms;
+			
+			
+			int studentsPerRoom = 1;
+			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numStudRooms; ++i) {
+				String room = getProperRoomName(i);
+				for (int j = 0; j < studentsPerRoom; ++j) {
+					String name = getRandomName();
+		        	String type = "student";
+		        	wr.println(name + "," + room + "," + type);
+				}
+			}
+			CURRENT_ROOM_NO += numStudRooms;
+			
+			int PasPerRoom = 1;
+			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numPasRooms; ++i) {
+				String room = getProperRoomName(i);
+				for (int j = 0; j < PasPerRoom; ++j) {
+					String name = getRandomName();
+		        	String type = "pas";
+		        	wr.println(name + "," + room + "," + type);
+				}
+			}
+			CURRENT_ROOM_NO += numPasRooms;
+			
+	    } catch (IOException e) {
+	    	System.err.println("ERROR: Unable to read people from file.");
+	    	e.printStackTrace();
+	    } catch(IllegalArgumentException e) {
+	    	System.err.println("ERROR: Person does not contain a valid type.");
+	    	e.printStackTrace();
+	    }
+	}
+	
+	/*
 	public void generatePeople(int numRooms) {
 		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/people.txt")))) {
 	        for (int i = 1; i <= numRooms; ++i) {
 	        	String name = getRandomName();
 	        	String room = getProperRoomName(i);
-	        	String type = "professor";
+	        	String type = getRandomType();
 	        	wr.println(name + "," + room + "," + type);
 	        }
 	    } catch (IOException e) {
@@ -189,6 +234,7 @@ public class Utils {
 	    	e.printStackTrace();
 	    }
 	}
+	*/
 	
 	private String getRandomName() {
 		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();

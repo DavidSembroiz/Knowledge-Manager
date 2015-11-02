@@ -50,7 +50,7 @@ public class HVACRule {
 	
 	private Double getDesiredTemperature() {
 		Double hum = Double.parseDouble(humidity.getValue());
-		return hum < 45 ? 25.0 : 24.0;
+		return hum < 45 ? 23.0 : 22.0;
 	}
 	
 	private boolean environmentalTemperatureOK() {
@@ -62,10 +62,13 @@ public class HVACRule {
 		 * Summer
 		 */
 		
-		if (hum < 45 && temp < 28 && temp > 24.5) return true;
+		if (temp < 23 && temp > 21) return true;
+		return false;
+		
+		/*if (hum < 45 && temp < 24 && temp > 23) return true;
 		else if (hum > 60 && temp < 25.5 && temp > 23) return true;
 		else if (temp < 27 && temp > 23.8) return true;
-		return false;
+		return false;*/
 		
 		/**
 		 * Winter
@@ -120,15 +123,16 @@ public class HVACRule {
 		else if (ac.equals("on") ||
 				 ac.equals("off") && !Utils.emptyRoom(people) && !environmentalTemperatureOK()) {
 			hasChanged = true;
+			System.out.println("Desired " + getDesiredTemperature());
 			double diff = getDesiredTemperature() - Double.parseDouble(temperature.getValue());
 			old_ac = ac;
 			ac = "on";
-			if (diff < -0.5) action = "cold";
-			else if (diff > 0.5) action = "heat";
+			System.out.println(diff);
+			if (diff < -0.2) action = "cold";
+			else if (diff > 0.2) action = "heat";
 			else ac = "maintain";
 		}
 		else if (ac.equals("off")) {
-			//System.out.println("Moderating temperature");
 			moderateTemperature();
 		}
 		return hasChanged;
@@ -150,17 +154,21 @@ public class HVACRule {
 		}
 		else if (ac.equals("on")) {
 			if (old_ac.equals("off")) reg.switchHvacOn();
+			else if (old_ac.equals("maintain")) {
+				reg.switchOffMaintHvac();
+				reg.switchHvacOn();
+			}
 			Double temp = Double.parseDouble(temperature.getValue());
 			if (action.equals("heat")) {
-				temp += 0.2;
+				temp += 0.001;
 				temperature.setValue(Double.toString(temp));
-				System.out.println("HVAC heating the room... " + temperature.getValue());
+				System.out.println("HVAC heating the room " + people.get(0).getLocation() + " " + temperature.getValue());
 				
 			}
 			else if (action.equals("cold")) {
-				temp -= 0.2;
+				temp -= 0.001;
 				temperature.setValue(Double.toString(temp));
-				System.out.println("HVAC cooling the room... " + temperature.getValue());
+				System.out.println("HVAC cooling the room " + people.get(0).getLocation() + " " + temperature.getValue());
 				
 			}
 		}
