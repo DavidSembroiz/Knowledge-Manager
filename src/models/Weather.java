@@ -29,10 +29,10 @@ public class Weather {
 	 */
 	
 	private static final double[] environmentalTemperature = {
-		25, 24, 23, 22, 21, 21,
+		21, 20, 19, 18, 18, 19,
 		20, 22, 24, 26, 28, 30,
 		33, 34, 35, 36, 36, 35,
-		34, 31, 29, 27, 26, 25
+		34, 31, 29, 27, 25, 22
 	};
 	
 	/**
@@ -55,10 +55,10 @@ public class Weather {
 	 */
 	
 	private static final double[] environmentalHumidity = {
-		51, 48, 50, 54, 56, 56,
+		48, 48, 50, 54, 56, 56,
 		55, 50, 47, 42, 38, 35,
 		33, 31, 29, 29, 29, 32,
-		37, 35, 38, 41, 44, 48
+		35, 37, 38, 41, 44, 48
 	};
 	
 	public double getCurrentEnvironmentalHumidity() {
@@ -78,9 +78,9 @@ public class Weather {
 	
 	private static final double[] environmentalLight = {
 		20, 20, 20, 40, 60, 60,
-		100, 120, 140, 180, 160, 200,
-		300, 400, 500, 1000, 1400, 1500,
-		1400, 1200, 800, 500, 300, 100
+		100, 120, 140, 200, 400, 600,
+		800, 900, 1000, 1200, 1400, 1500,
+		1400, 1200, 600, 200, 100, 20
 	};
 	
 	public double getCurrentEnvironmentalLight() {

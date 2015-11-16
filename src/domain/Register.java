@@ -1,17 +1,23 @@
 package domain;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Properties;
 
 import domain.Utils;
 
 public class Register {
 	
+	private Properties prop;
+	
 	private static Register instance = new Register();
 	
 	private Register() {
+		loadProperties();
 		initComponents();
 	}
 	
@@ -26,28 +32,28 @@ public class Register {
 	 * Consumption of every element being tracked
 	 */
 	
-	private final int COMPUTER_CONSUMPTION = 100;
-	private final int COMPUTER_SUSPENDED_CONSUMPTION = 25;
-	private final int LIGHT_CONSUMPTION = 15;
-	private final int HVAC_CONSUMPTION = 800;
-	private final int HVAC_MAINTAIN_CONSUMPTION = 500;
+	private int COMPUTER_CONSUMPTION;
+	private int COMPUTER_SUSPENDED_CONSUMPTION;
+	private int LIGHT_CONSUMPTION;
+	private int HVAC_CONSUMPTION;
+	private int HVAC_MAINTAIN_CONSUMPTION;
 	
 	/**
 	 * Number of elements per ROOM
 	 */
 	
-	private final int COMPUTERS_PER_ROOM = 2;
-	private final int LIGHTS_PER_ROOM = 5;
-	private final int HVACS_PER_ROOM = 1;
+	private int COMPUTERS_PER_ROOM;
+	private int LIGHTS_PER_ROOM;
+	private int HVACS_PER_ROOM;
 	
 	/**
 	 * Consumption of IoT elements
 	 */
 	
-	private final int SENSORS_PER_ROOM = 4;
-	private final int NUM_GATEWAYS = 10;
-	private final double SENSOR_CONSUMPTION = 0.05;
-	private final double GATEWAY_CONSUMPTION = 10;
+	private int SENSORS_PER_ROOM;
+	private int NUM_GATEWAYS;
+	private double SENSOR_CONSUMPTION;
+	private double GATEWAY_CONSUMPTION;
 	
 	
 	private int numComputers;
@@ -55,6 +61,31 @@ public class Register {
 	private int numLights;
 	private int numHvacs;
 	private int numMaintHvacs;
+	
+	private void loadProperties() {
+		prop = new Properties();
+		try {
+			InputStream is = new FileInputStream("model.properties");
+			prop.load(is);
+			COMPUTER_CONSUMPTION = Integer.parseInt(prop.getProperty("computer_consumption"));
+			COMPUTER_SUSPENDED_CONSUMPTION = Integer.parseInt(prop.getProperty("computer_suspended_consumption"));
+			LIGHT_CONSUMPTION = Integer.parseInt(prop.getProperty("light_consumption"));
+			HVAC_CONSUMPTION = Integer.parseInt(prop.getProperty("hvac_consumption"));
+			HVAC_MAINTAIN_CONSUMPTION = Integer.parseInt(prop.getProperty("hvac_maintain_consumption"));
+			
+			COMPUTERS_PER_ROOM = Integer.parseInt(prop.getProperty("computers_per_room"));
+			LIGHTS_PER_ROOM = Integer.parseInt(prop.getProperty("lights_per_room"));
+			HVACS_PER_ROOM = Integer.parseInt(prop.getProperty("hvacs_per_room"));
+			
+			SENSORS_PER_ROOM = Integer.parseInt(prop.getProperty("sensors_per_room"));
+			NUM_GATEWAYS = Integer.parseInt(prop.getProperty("num_gateways"));
+			SENSOR_CONSUMPTION = Double.parseDouble(prop.getProperty("sensor_consumption"));
+			GATEWAY_CONSUMPTION = Double.parseDouble(prop.getProperty("gateway_consumption"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void initComponents() {
 		consumption = new int[Utils.STEPS];

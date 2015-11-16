@@ -58,7 +58,7 @@ public class Mqtt {
 	private void loadProperties() {
 		prop = new Properties();
 		try {
-			InputStream is = new FileInputStream("manager.properties");
+			InputStream is = new FileInputStream("database.properties");
 			prop.load(is);
 			ADDRESS = prop.getProperty("so_address");
 			USERNAME = prop.getProperty("so_username");

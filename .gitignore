@@ -1,4 +1,4 @@
 /bin/
 /knowledge*
-*.properties
+database.properties
 

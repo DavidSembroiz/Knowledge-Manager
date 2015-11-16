@@ -2,9 +2,11 @@ package iot;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.Properties;
 
 import behaviour.PeopleManager;
 import behaviour.Person;
@@ -32,23 +35,25 @@ public class Manager {
 	 *  Rest: normal simulation
 	 */
 	
-	private int MODE = 2;
+	private int MODE;
 	
 	/**
 	 * The record file saves all the actions in events.txt
 	 */
 	
-	private int RECORD_FILE = 1;
+	private int RECORD_FILE;
 	
 	/**
 	 * If NEW_PEOPLE == 1, then a new group of people is generated before the simulation
 	 */
 	
-	private int NEW_PEOPLE = 0;
+	private int NEW_PEOPLE;
 	
-	private int PROFESSOR_NUM_ROOMS = 100;
-	private int STUDENT_NUM_ROOMS = 0;
-	private int PAS_NUM_ROOMS = 0;
+	private int PROFESSOR_NUM_ROOMS;
+	private int STUDENT_NUM_ROOMS;
+	private int PAS_NUM_ROOMS;
+	
+	private Properties prop;
 	
 	private ArrayList<Room> rooms;
 	private Mqtt mqtt;
@@ -60,6 +65,8 @@ public class Manager {
 	
 	
 	public Manager() {
+		
+		loadProperties();
 		
 		uts = Utils.getInstance();
 		reg = Register.getInstance();
@@ -87,6 +94,23 @@ public class Manager {
 		 */
 
 		//sendInitialMessages();
+	}
+	
+	private void loadProperties() {
+		prop = new Properties();
+		try {
+			InputStream is = new FileInputStream("manager.properties");
+			prop.load(is);
+			MODE = Integer.parseInt(prop.getProperty("mode"));
+			RECORD_FILE = Integer.parseInt(prop.getProperty("record_file"));
+			NEW_PEOPLE = Integer.parseInt(prop.getProperty("new_people"));
+			PROFESSOR_NUM_ROOMS = Integer.parseInt(prop.getProperty("professor_num_rooms"));
+			STUDENT_NUM_ROOMS = Integer.parseInt(prop.getProperty("student_num_rooms"));
+			PAS_NUM_ROOMS = Integer.parseInt(prop.getProperty("pas_num_rooms"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/*private void sleep(int s) {
