@@ -61,6 +61,7 @@ public class Register {
 	private int numLights;
 	private int numHvacs;
 	private int numMaintHvacs;
+	private int numRooms;
 	
 	private void loadProperties() {
 		prop = new Properties();
@@ -82,6 +83,12 @@ public class Register {
 			SENSOR_CONSUMPTION = Double.parseDouble(prop.getProperty("sensor_consumption"));
 			GATEWAY_CONSUMPTION = Double.parseDouble(prop.getProperty("gateway_consumption"));
 			
+			is = new FileInputStream("manager.properties");
+			prop.load(is);
+			numRooms = Integer.parseInt(prop.getProperty("professor_num_rooms")) +
+					   Integer.parseInt(prop.getProperty("student_num_rooms")) +
+					   Integer.parseInt(prop.getProperty("pas_num_rooms"));
+			System.out.println(numRooms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -194,14 +201,10 @@ public class Register {
 	public int getSensorsPerRoom() {
 		return SENSORS_PER_ROOM;
 	}
-	
-	/**
-	 * Currently all the rooms have Computer. Therefore numComputers = numRooms
-	 * 
-	 */
+
 	
 	public double computeSensorsConsumption() {
-		double cons = numComputers * SENSORS_PER_ROOM * SENSOR_CONSUMPTION +
+		double cons = numRooms * SENSORS_PER_ROOM * SENSOR_CONSUMPTION +
 				      GATEWAY_CONSUMPTION * NUM_GATEWAYS;
 		return cons;
 	}
