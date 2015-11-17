@@ -53,6 +53,10 @@ public class Manager {
 	private int STUDENT_NUM_ROOMS;
 	private int PAS_NUM_ROOMS;
 	
+	private int PROFESSORS_PER_ROOM;
+	private int STUDENTS_PER_ROOM;
+	private int PAS_PER_ROOM;
+	
 	private Properties prop;
 	
 	private ArrayList<Room> rooms;
@@ -72,7 +76,8 @@ public class Manager {
 		reg = Register.getInstance();
 		
 		if (MODE == 1 && NEW_PEOPLE == 1) {
-			uts.generatePeople(PROFESSOR_NUM_ROOMS, STUDENT_NUM_ROOMS, PAS_NUM_ROOMS);
+			uts.generatePeople(PROFESSOR_NUM_ROOMS, STUDENT_NUM_ROOMS, PAS_NUM_ROOMS,
+							   PROFESSORS_PER_ROOM, STUDENTS_PER_ROOM, PAS_PER_ROOM);
 		}
 		
 		peopleManager = PeopleManager.getInstance();
@@ -107,6 +112,9 @@ public class Manager {
 			PROFESSOR_NUM_ROOMS = Integer.parseInt(prop.getProperty("professor_num_rooms"));
 			STUDENT_NUM_ROOMS = Integer.parseInt(prop.getProperty("student_num_rooms"));
 			PAS_NUM_ROOMS = Integer.parseInt(prop.getProperty("pas_num_rooms"));
+			PROFESSORS_PER_ROOM = Integer.parseInt(prop.getProperty("professors_per_room"));
+			STUDENTS_PER_ROOM = Integer.parseInt(prop.getProperty("students_per_room"));
+			PAS_PER_ROOM = Integer.parseInt(prop.getProperty("pas_per_room"));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -194,7 +202,7 @@ public class Manager {
 		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
 	}
 	
-	private void sendInitialMessages() {
+	/*private void sendInitialMessages() {
 		ArrayList<String> ids = mqtt.getIds();
 		System.out.println(ids.size());
 		String xm1000Message = "{\"lastUpdate\":1441174408196,"
@@ -219,7 +227,7 @@ public class Manager {
 				break;
 			}
 		}
-	}
+	}*/
 	
 	public void manageMessage(String topic, String message) {
 		String soID = uts.extractIdFromTopic(topic);
@@ -261,7 +269,7 @@ public class Manager {
 		return true;
 	}
 	
-	private void printRooms() {
+	/*private void printRooms() {
 		for (int i = 0; i < rooms.size(); ++i) {
 			Room r = rooms.get(i);
 			ArrayList<Sensor> sens = r.getSensors();
@@ -274,7 +282,7 @@ public class Manager {
 				System.out.println("Finish");
 			}
 		}
-	}
+	}*/
 	
 	private PriorityQueue<Event> readEventFile() {
 		PriorityQueue<Event> events = new PriorityQueue<Event>();
@@ -294,7 +302,7 @@ public class Manager {
 	
 	private String getRoomFromPeople(String name) {
 		HashMap<String, ArrayList<Map.Entry<String, String>>> ppl = peopleManager.getPeopleFromFile();
-		Iterator it = ppl.entrySet().iterator();
+		Iterator<?> it = ppl.entrySet().iterator();
 		while (it.hasNext()) {
 			@SuppressWarnings("unchecked")
 			Map.Entry<String, ArrayList<Entry<String, String>>> pair = (Entry<String, ArrayList<Entry<String, String>>>) it.next();
@@ -357,11 +365,11 @@ public class Manager {
 			int roomCons = reg.computeConsumption();
 			int activeRooms = 0;
 			Iterator<Entry<String, Integer>> itEnter;
-			for (int i = 0; i < uts.STEPS; ++i) {
+			for (int i = 0; i < Utils.STEPS; ++i) {
 				itEnter = timesEnter.entrySet().iterator();
 				while (itEnter.hasNext()) {
 					Map.Entry<String, Integer> pair = itEnter.next();
-					if (pair.getValue() <= i && timesLeave.get(pair.getKey()) > i) {
+					if (pair != null && timesLeave.containsKey(pair.getKey()) && pair.getValue() <= i && timesLeave.get(pair.getKey()) > i) {
 						activeRooms++;
 					}
 				}

@@ -360,7 +360,7 @@ public class PeopleManager {
 			peopleInside.add(p);
 			System.out.println(p.getName() + " has come back");
 		}
-		else if (Utils.RANDOM_WALS && action.equals("randomWalk")) {
+		else if (Utils.RANDOM_WALKS && action.equals("randomWalk")) {
 			while (!peopleInside.get(i).getName().equals(person)) ++i;
 			Person p = peopleInside.get(i);
 			p.setState(State.RANDOM_WALKS);
@@ -368,7 +368,7 @@ public class PeopleManager {
 			peopleRandomWalks.add(p);
 			System.out.println(p.getName() + " is walking");
 		}
-		else if (Utils.RANDOM_WALS && action.equals("returnRandomWalk")) {
+		else if (Utils.RANDOM_WALKS && action.equals("returnRandomWalk")) {
 			while (!peopleRandomWalks.get(i).getName().equals(person)) ++i;
 			Person p = peopleRandomWalks.get(i);
 			p.setState(State.INSIDE);

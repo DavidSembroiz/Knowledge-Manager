@@ -88,7 +88,6 @@ public class Register {
 			numRooms = Integer.parseInt(prop.getProperty("professor_num_rooms")) +
 					   Integer.parseInt(prop.getProperty("student_num_rooms")) +
 					   Integer.parseInt(prop.getProperty("pas_num_rooms"));
-			System.out.println(numRooms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

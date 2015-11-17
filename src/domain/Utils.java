@@ -1,12 +1,15 @@
 package domain;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
@@ -21,26 +24,45 @@ public class Utils {
 	private static Utils instance = new Utils();
 	
 	private Utils() {
+		loadProperties();
 	}
 	
 	public static Utils getInstance() {
 		return instance;
 	}
 	
+	private Properties prop;
+	
 	/**
 	 * 10 second steps
 	 */
 	
-	public static final int STEPS = 8640;
-	public static final int HALF_HOUR = 180;
-	public static final int DIVISIONS = 48;
+	public static int STEPS;
 	
-	public static final int MAX_RANDOM_WALKS = 2;
-	public static final boolean RANDOM_WALS = false;
+	public static int MAX_RANDOM_WALKS;
+	public static boolean RANDOM_WALKS;
 	
 	public static int CURRENT_STEP = 0;
 	private static int CURRENT_ROOM_NO = 1;
 
+	
+	
+
+	private void loadProperties() {
+		prop = new Properties();
+		try {
+			InputStream is = new FileInputStream("manager.properties");
+			prop.load(is);
+			
+			STEPS = Integer.parseInt(prop.getProperty("steps"));
+			
+			MAX_RANDOM_WALKS = Integer.parseInt(prop.getProperty("max_random_walks"));
+			RANDOM_WALKS = Boolean.parseBoolean(prop.getProperty("random_walks"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}	
 	
 	/**
 	 * Gets the soID from a topic string
@@ -48,32 +70,12 @@ public class Utils {
 	 * @param topic
 	 * @return
 	 */
+	
 	public String extractIdFromTopic(String topic) {
 		return topic.split("/")[1];
 	}
-
-
-	/**
-	 * Provisional function to read SO IDS from a database file
-	 * 
-	 * @return
-	 */
-	/*public ArrayList<String> readSOIdsFromFile() {
-		String path = ".\\src\\database\\database_ids.txt";
-		ArrayList<String> ids = new ArrayList<String>();
-		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null) {
-				ids.add(sCurrentLine);
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-		return ids;
-	}*/
-
-
+	
+	
 	public ArrayList<String> getTypesFromMessage(String message) {
 		ArrayList<String> ret = new ArrayList<String>();
 		JSONParser parser = new JSONParser();
@@ -175,18 +177,19 @@ public class Utils {
 		return true;
 	}
 	
-	public void generatePeople(int numProfRooms, int numStudRooms, int numPasRooms) {
+	public void generatePeople(int numProfRooms, int numStudRooms, int numPasRooms,
+							   int professorsPerRoom, int studentsPerRoom, int pasPerRoom) {
 		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/people.txt")))) {
 			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numProfRooms; ++i) {
-	        	String name = getRandomName();
-	        	String room = getProperRoomName(i);
-	        	String type = "professor";
-	        	wr.println(name + "," + room + "," + type);
+				String room = getProperRoomName(i);
+				for (int j = 0; j < professorsPerRoom; ++j) {
+					String name = getRandomName();
+		        	String type = "professor";
+		        	wr.println(name + "," + room + "," + type);
+				}
 	        }
 			CURRENT_ROOM_NO += numProfRooms;
 			
-			
-			int studentsPerRoom = 1;
 			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numStudRooms; ++i) {
 				String room = getProperRoomName(i);
 				for (int j = 0; j < studentsPerRoom; ++j) {
@@ -197,10 +200,9 @@ public class Utils {
 			}
 			CURRENT_ROOM_NO += numStudRooms;
 			
-			int PasPerRoom = 1;
 			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numPasRooms; ++i) {
 				String room = getProperRoomName(i);
-				for (int j = 0; j < PasPerRoom; ++j) {
+				for (int j = 0; j < pasPerRoom; ++j) {
 					String name = getRandomName();
 		        	String type = "pas";
 		        	wr.println(name + "," + room + "," + type);
@@ -217,24 +219,6 @@ public class Utils {
 	    }
 	}
 	
-	/*
-	public void generatePeople(int numRooms) {
-		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/people.txt")))) {
-	        for (int i = 1; i <= numRooms; ++i) {
-	        	String name = getRandomName();
-	        	String room = getProperRoomName(i);
-	        	String type = getRandomType();
-	        	wr.println(name + "," + room + "," + type);
-	        }
-	    } catch (IOException e) {
-	    	System.err.println("ERROR: Unable to read people from file.");
-	    	e.printStackTrace();
-	    } catch(IllegalArgumentException e) {
-	    	System.err.println("ERROR: Person does not contain a valid type.");
-	    	e.printStackTrace();
-	    }
-	}
-	*/
 	
 	private String getRandomName() {
 		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();

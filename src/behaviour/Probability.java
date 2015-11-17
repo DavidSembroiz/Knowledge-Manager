@@ -10,11 +10,9 @@ public class Probability {
 	
 	private Map<Integer, Double> probabilityPerHour;
 	private Random rand;
+	private int HALF_HOUR = 180;
+	private int DIVISIONS = 48;
 	
-	public Probability(Map<Integer, Double> p) {
-		this.probabilityPerHour = p;
-		this.rand = new Random();
-	}
 	
 	public Probability(String[] values) {
 		probabilityPerHour = new HashMap<Integer, Double>();
@@ -25,16 +23,16 @@ public class Probability {
 	}
 	
 	private double getProbability(int currentTime) {
-		int t1 = currentTime/Utils.HALF_HOUR;
+		int t1 = currentTime/HALF_HOUR;
 		double p1 = this.probabilityPerHour.get(t1);
-		if (currentTime%Utils.HALF_HOUR == 0) return p1;
+		if (currentTime%HALF_HOUR == 0) return p1;
 		
-		int t2 = (t1 + 1)%Utils.DIVISIONS;
+		int t2 = (t1 + 1)%DIVISIONS;
 		double p2 = this.probabilityPerHour.get(t2);
 		
 		double min = Math.min(p1, p2);
 		double max = Math.max(p1, p2);
-		return min + (max - min) * ((currentTime%Utils.HALF_HOUR)/Utils.HALF_HOUR);
+		return min + (max - min) * ((currentTime%HALF_HOUR)/HALF_HOUR);
 	}
 	
 	public boolean triggerStatus(int currentTime) {
