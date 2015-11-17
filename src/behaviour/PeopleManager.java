@@ -65,6 +65,8 @@ public class PeopleManager {
 		
 		leaveBuilding(t);
 		
+		if (t > 7560 && !peopleInside.isEmpty()) emptyBuilding();
+		
 		//printPeople();
 	}
 	
@@ -88,6 +90,18 @@ public class PeopleManager {
 			}
 		}
 		return null;
+	}
+	
+	private void emptyBuilding() {
+		for (int i = peopleInside.size() - 1; i >= 0; --i) {
+			Person cur = peopleInside.get(i);
+			if (!cur.hasChanged()) {
+				cur.setState(State.OUTSIDE);
+				cur.setChanged(true);
+				peopleOutside.add(peopleInside.remove(i));
+				if (writeToFile) writer.println(cur.getName() + ",leave," + Utils.CURRENT_STEP);
+			}
+		}
 	}
 	
 	/**
