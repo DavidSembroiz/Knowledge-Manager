@@ -22,7 +22,7 @@ public class MqttCb implements MqttCallback {
 	public void connectionLost(Throwable arg0) {
 		System.out.println(arg0.getMessage());
 		System.out.println("Connection lost!");
-		System.exit(-1);
+		
 	}
 
 	@Override
@@ -38,7 +38,6 @@ public class MqttCb implements MqttCallback {
 		String mess = new String(message.getPayload());
 	
 		System.out.println("-------------------------------------------------");
-		System.out.println("| Topic: " + topic);
 		System.out.println("| Message: " + mess);
 		System.out.println("-------------------------------------------------");
 		

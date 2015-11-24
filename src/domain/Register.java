@@ -49,7 +49,7 @@ public class Register {
 	/**
 	 * Consumption of IoT elements
 	 */
-	
+	private int MODE;
 	private int SENSORS_PER_ROOM;
 	private int NUM_GATEWAYS;
 	private double SENSOR_CONSUMPTION;
@@ -85,6 +85,7 @@ public class Register {
 			
 			is = new FileInputStream("manager.properties");
 			prop.load(is);
+			MODE = Integer.parseInt(prop.getProperty("mode"));
 			numRooms = Integer.parseInt(prop.getProperty("professor_num_rooms")) +
 					   Integer.parseInt(prop.getProperty("student_num_rooms")) +
 					   Integer.parseInt(prop.getProperty("pas_num_rooms"));
@@ -192,6 +193,7 @@ public class Register {
 				   numLights * LIGHT_CONSUMPTION * LIGHTS_PER_ROOM +
 				   numHvacs * HVAC_CONSUMPTION * HVACS_PER_ROOM + 
 				   numMaintHvacs * HVAC_MAINTAIN_CONSUMPTION * HVACS_PER_ROOM;
+		if (MODE == 1 || MODE == 2) cons += computeSensorsConsumption();
 		consumption[Utils.CURRENT_STEP] = cons;
 		totalConsumption += cons;
 		return cons;

@@ -40,6 +40,10 @@ public class PeopleManager {
 	private boolean writeToFile = false;
 	private PrintWriter writer;
 	
+	/**
+	 * Initialise all the components required to manage people.
+	 */
+	
 	private void initComponents() {
 		unassigned = new ArrayList<Person>();
 		peopleOutside = new ArrayList<Person>();
@@ -50,6 +54,10 @@ public class PeopleManager {
 		readPeople();
 		generateProfiles();
 	}
+	
+	/**
+	 * Makes a simulation step by moving people through the states.
+	 */
 	
 	public void makeStep() {
 		int t = Utils.CURRENT_STEP;
@@ -65,10 +73,15 @@ public class PeopleManager {
 		
 		leaveBuilding(t);
 		
-		if (t > 7560 && !peopleInside.isEmpty()) emptyBuilding();
+		if (t > 7620 && !peopleInside.isEmpty()) emptyBuilding();
 		
 		//printPeople();
 	}
+	
+	/**
+	 * Enables to recording of events that happens during the simulation to allow
+	 * further repetitions.
+	 */
 	
 	public void enableRecordFile() {
 		writeToFile = true;
@@ -107,7 +120,6 @@ public class PeopleManager {
 	/**
 	 * Checks whether the person is entering the building and changes his status to INSIDE
 	 * 
-	 * @param t
 	 */
 	
 	public void enterBuilding(int t) {
@@ -128,7 +140,6 @@ public class PeopleManager {
 	/**
 	 * Checks whether the person is going for lunch and changes his status to LUNCH
 	 * 
-	 * @param t	
 	 */
 	
 	public void goForLunch(int t) {
@@ -148,7 +159,6 @@ public class PeopleManager {
 	/**
 	 * Checks whether the person has finished lunch and changes his status to INSIDE
 	 * 
-	 * @param t
 	 */
 	
 	public void finishLunch(int t) {
@@ -167,13 +177,12 @@ public class PeopleManager {
 	/**
 	 * Checks whether the person is leaving the building and changes his status to OUTSIDE
 	 * 
-	 * @param t
 	 */
 	
 	public void leaveBuilding(int t) {
 		for (int i = peopleInside.size() - 1; i >= 0; --i) {
 			Person cur = peopleInside.get(i);
-			if (!cur.hasChanged() && getProfile(cur.getType()).getExit().triggerStatusWithPrint(t)) {
+			if (!cur.hasChanged() && getProfile(cur.getType()).getExit().triggerStatus(t)) {
 				cur.setState(State.OUTSIDE);
 				cur.setChanged(true);
 				peopleOutside.add(peopleInside.remove(i));
@@ -268,8 +277,10 @@ public class PeopleManager {
 	        String currentRoom = values[1];
 	        ArrayList<Map.Entry<String, String>> names = new ArrayList<Map.Entry<String, String>>();
 	        Map.Entry<String, String> entry =  new AbstractMap.SimpleEntry<String, String>(values[0], values[2]);
+	        boolean more = false;
 	        names.add(entry);
 	        while ((line = br.readLine()) != null) {
+	        	more = true;
 	        	values = line.split(",");
 	        	if (values[1].equals(currentRoom)) {
 	        		names.add(new AbstractMap.SimpleEntry<String, String>(values[0], values[2]));
@@ -281,6 +292,7 @@ public class PeopleManager {
 	        		names.add(new AbstractMap.SimpleEntry<String, String>(values[0], values[2]));
 	        	}
 	        }
+	        if (!more) ppl.put(currentRoom, names);
 	        return ppl;
 	    } catch (IOException e) {
 	    	System.err.println("ERROR: Unable to read people from file.");
@@ -348,7 +360,7 @@ public class PeopleManager {
 			p.setState(State.INSIDE);
 			peopleOutside.remove(p);
 			peopleInside.add(p);
-			System.out.println(p.getName() + " has entered");
+			//System.out.println(p.getName() + " has entered");
 		}
 		else if (action.equals("leave")) {
 			while (!peopleInside.get(i).getName().equals(person)) ++i;
@@ -356,7 +368,7 @@ public class PeopleManager {
 			p.setState(State.OUTSIDE);
 			peopleInside.remove(p);
 			peopleOutside.add(p);
-			System.out.println(p.getName() + " has left");
+			//System.out.println(p.getName() + " has left");
 		}
 		else if (action.equals("lunch")) {
 			while (!peopleInside.get(i).getName().equals(person)) ++i;
@@ -364,7 +376,7 @@ public class PeopleManager {
 			p.setState(State.LUNCH);
 			peopleInside.remove(p);
 			peopleLunch.add(p);
-			System.out.println(p.getName() + " is going for lunch");
+			//System.out.println(p.getName() + " is going for lunch");
 		}
 		else if (action.equals("returnLunch")) {
 			while (!peopleLunch.get(i).getName().equals(person)) ++i;
@@ -372,7 +384,7 @@ public class PeopleManager {
 			p.setState(State.INSIDE);
 			peopleLunch.remove(p);
 			peopleInside.add(p);
-			System.out.println(p.getName() + " has come back");
+			//System.out.println(p.getName() + " has come back");
 		}
 		else if (Utils.RANDOM_WALKS && action.equals("randomWalk")) {
 			while (!peopleInside.get(i).getName().equals(person)) ++i;
@@ -380,7 +392,7 @@ public class PeopleManager {
 			p.setState(State.RANDOM_WALKS);
 			peopleInside.remove(p);
 			peopleRandomWalks.add(p);
-			System.out.println(p.getName() + " is walking");
+			//System.out.println(p.getName() + " is walking");
 		}
 		else if (Utils.RANDOM_WALKS && action.equals("returnRandomWalk")) {
 			while (!peopleRandomWalks.get(i).getName().equals(person)) ++i;
@@ -388,7 +400,7 @@ public class PeopleManager {
 			p.setState(State.INSIDE);
 			peopleRandomWalks.remove(p);
 			peopleInside.add(p);
-			System.out.println(p.getName() + " has returned from walking");
+			//System.out.println(p.getName() + " has returned from walking");
 		}
 		else {
 			System.out.println("Action is not correct");

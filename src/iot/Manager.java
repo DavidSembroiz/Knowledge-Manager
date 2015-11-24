@@ -41,7 +41,8 @@ public class Manager {
 	 * The record file saves all the actions in events.txt
 	 */
 	
-	private int RECORD_FILE;
+	private int EVENTS_FILE;
+	
 	
 	/**
 	 * If NEW_PEOPLE == 1, then a new group of people is generated before the simulation
@@ -98,7 +99,7 @@ public class Manager {
 		 * If the scenario is set to dumb, simulation can be performed without handling messages
 		 */
 
-		//sendInitialMessages();
+		sendInitialMessages();
 	}
 	
 	private void loadProperties() {
@@ -107,7 +108,7 @@ public class Manager {
 			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
 			MODE = Integer.parseInt(prop.getProperty("mode"));
-			RECORD_FILE = Integer.parseInt(prop.getProperty("record_file"));
+			EVENTS_FILE = Integer.parseInt(prop.getProperty("events_file"));getClass();
 			NEW_PEOPLE = Integer.parseInt(prop.getProperty("new_people"));
 			PROFESSOR_NUM_ROOMS = Integer.parseInt(prop.getProperty("professor_num_rooms"));
 			STUDENT_NUM_ROOMS = Integer.parseInt(prop.getProperty("student_num_rooms"));
@@ -121,33 +122,24 @@ public class Manager {
 		}
 	}
 	
-	/*private void sleep(int s) {
-		try {
-			Thread.sleep(s * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}*/
-	
 	private void terminate() {
 		System.exit(0);
 	}
 
-	
 	private void simulate() {
+		System.out.println("Starting simulation");
 		
 		if (MODE == 2) {
 			repeatSimulation();
 			terminate();
 		}
 		
-		if (RECORD_FILE == 1) peopleManager.enableRecordFile();
+		if (EVENTS_FILE == 1) peopleManager.enableRecordFile();
 		
-		while(Utils.CURRENT_STEP < Utils.STEPS) {
+		while (Utils.CURRENT_STEP < Utils.STEPS) {
 			//System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
-			if (Utils.CURRENT_STEP % 10 == 0) peopleManager.makeStep();
+			if (Utils.CURRENT_STEP % 30 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
-			//System.out.println(reg.getNumHvacs() + " " + reg.getNumMaintHvacs());
 			
 			reg.computeConsumption();
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
@@ -163,7 +155,6 @@ public class Manager {
 		PriorityQueue<Event> events = readEventFile();
 		Event e;
 		while(!events.isEmpty() && Utils.CURRENT_STEP < Utils.STEPS) {
-			System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
 			while (!events.isEmpty() && events.peek().getStep() == Utils.CURRENT_STEP) {
 				e = events.poll();
 				peopleManager.executeAction(e.getPerson(), e.getAction());
@@ -171,7 +162,6 @@ public class Manager {
 			for (Room r : rooms) r.fireRules();
 			int cur = reg.computeConsumption();
 			System.out.println("Current consumption: " + cur + " Watts");
-			//sleep(1);
 			
 			++Utils.CURRENT_STEP;
 		}
@@ -202,9 +192,8 @@ public class Manager {
 		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
 	}
 	
-	/*private void sendInitialMessages() {
+	private void sendInitialMessages() {
 		ArrayList<String> ids = mqtt.getIds();
-		System.out.println(ids.size());
 		String xm1000Message = "{\"lastUpdate\":1441174408196,"
 								+ "\"channels\":{"
 						   	 	+ "\"humidity\":{\"current-value\":0},"
@@ -227,7 +216,7 @@ public class Manager {
 				break;
 			}
 		}
-	}*/
+	}
 	
 	public void manageMessage(String topic, String message) {
 		String soID = uts.extractIdFromTopic(topic);
@@ -319,12 +308,7 @@ public class Manager {
 	 * It assumes that everyone who enter eventually leaves.
 	 */
 	
-	/**
-	 * TODO: fix shared rooms, currently they are counted as separated rooms.
-	 * Get the maximum working hours of every room with the aid of ppl map.
-	 */
-	
-	private int checkWorkingHours() {
+	private int checkWorkingHours(Double dev) {
 		HashMap<String, Integer> timesEnter = new HashMap<String, Integer>();
 		HashMap<String, Integer> timesLeave = new HashMap<String, Integer>();
 		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
@@ -349,7 +333,7 @@ public class Manager {
 	        	}
 	        }
 	        
-	        calculateConsumptionHistory(timesEnter, timesLeave);
+	        calculateConsumptionHistory(timesEnter, timesLeave, dev);
 	        
 	        return totalTime;
 	    } catch (IOException e) {
@@ -360,7 +344,7 @@ public class Manager {
 	}
 	
 	
-	private void calculateConsumptionHistory(HashMap<String, Integer> timesEnter, HashMap<String, Integer> timesLeave) {
+	private void calculateConsumptionHistory(HashMap<String, Integer> timesEnter, HashMap<String, Integer> timesLeave, Double dev) {
 		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")))) {
 			int roomCons = reg.computeConsumption();
 			int activeRooms = 0;
@@ -373,7 +357,7 @@ public class Manager {
 						activeRooms++;
 					}
 				}
-				wr.println(activeRooms * roomCons);
+				wr.println(activeRooms * roomCons * dev);
 				//if (i%100 == 0) System.out.println(i + " " + activeRooms);
 				activeRooms = 0;
 			}
@@ -389,12 +373,14 @@ public class Manager {
 		 * It firstly calculates the time everyone is inside the building.
 		 */
 		
+		Double dev = 1.0;
+		
 		reg.setNumComputers(1);
 		reg.setNumHvacs(1);
 		reg.setNumLights(1);
 		int cons = reg.computeConsumption();
-		int workingHours = checkWorkingHours();
-		double totalCons = cons * (workingHours/360.0);
+		int workingHours = checkWorkingHours(dev);
+		double totalCons = cons * (workingHours/360.0) * dev;
 		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}
 	

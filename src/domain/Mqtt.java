@@ -85,6 +85,7 @@ public class Mqtt {
 		connOpts.setCleanSession(true);
 		connOpts.setUserName(USERNAME);
 		connOpts.setPassword(PASSWORD.toCharArray());
+		connOpts.setKeepAliveInterval(600);
 		try {
 			client = new MqttClient(ADDRESS, CLIENTID);
 			callback = new MqttCb(manager);

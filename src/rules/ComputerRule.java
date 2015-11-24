@@ -78,23 +78,23 @@ public class ComputerRule {
 		if (comp.equals("on")) {
 			if (old_comp.equals("off")) {
 				reg.switchComputerOn();
-				System.out.println("Computer switched on");
+				System.out.println(Utils.CURRENT_STEP + " Computer switched on");
 			}
 			else if (old_comp.equals("suspended")) {
 				reg.enableSuspendedComputer();
-				System.out.println("Computer enabled from suspension");
+				System.out.println(Utils.CURRENT_STEP + " Computer enabled from suspension");
 			}
 		}
 		else if (comp.equals("suspended")) {
 			if (old_comp.equals("on")) {
 				reg.putComputerInSuspension();
-				System.out.println("Computer turned into suspension mode");
+				System.out.println(Utils.CURRENT_STEP + " Computer turned into suspension mode");
 			}
 		}
 		else if (comp.equals("off")) {
 			if (old_comp.equals("on")) {
 				reg.switchComputerOff();
-				System.out.println("Computer switched off");
+				System.out.println(Utils.CURRENT_STEP + " Computer switched off");
 			}
 		}
 	}

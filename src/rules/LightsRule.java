@@ -83,11 +83,11 @@ public class LightsRule {
 		
 		if (light.equals("on")) {
 			reg.switchLightOn();
-			System.out.println("Light switched on");
+			System.out.println(Utils.CURRENT_STEP + " Light switched on");
 		}
 		else if (light.equals("off")) {
 			reg.switchLightOff();
-			System.out.println("Light switched off");
+			System.out.println(Utils.CURRENT_STEP + " Light switched off");
 		}
 	}
 }

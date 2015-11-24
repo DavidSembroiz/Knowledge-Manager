@@ -62,13 +62,10 @@ public class HVACRule {
 		 * Summer
 		 */
 		
-		if (temp < 23 && temp > 21) return true;
+		if (hum < 45 && temp < 23 && temp > 22) return true;
+		else if (hum > 60 && temp < 22 && temp > 21) return true;
+		else if (temp < 22.5 && temp > 21.5) return true;
 		return false;
-		
-		/*if (hum < 45 && temp < 24 && temp > 23) return true;
-		else if (hum > 60 && temp < 25.5 && temp > 23) return true;
-		else if (temp < 27 && temp > 23.8) return true;
-		return false;*/
 		
 		/**
 		 * Winter
@@ -123,11 +120,10 @@ public class HVACRule {
 		else if (ac.equals("on") ||
 				 ac.equals("off") && !Utils.emptyRoom(people) && !environmentalTemperatureOK()) {
 			hasChanged = true;
-			System.out.println("Desired " + getDesiredTemperature());
+			//System.out.println("Desired " + getDesiredTemperature());
 			double diff = getDesiredTemperature() - Double.parseDouble(temperature.getValue());
 			old_ac = ac;
 			ac = "on";
-			System.out.println(diff);
 			if (diff < -0.2) action = "cold";
 			else if (diff > 0.2) action = "heat";
 			else ac = "maintain";
@@ -148,32 +144,42 @@ public class HVACRule {
 		 */
 		
 		if (ac.equals("off")) {
-			if (old_ac.equals("on")) reg.switchHvacOff();
-			else if (old_ac.equals("maintain")) reg.switchOffMaintHvac();
+			if (old_ac.equals("on")) {
+				System.out.println(Utils.CURRENT_STEP + " HVAC switched off from on");
+				reg.switchHvacOff();
+			}
+			else if (old_ac.equals("maintain")) {
+				System.out.println(Utils.CURRENT_STEP + " HVAC switched to off from maintain");
+				reg.switchOffMaintHvac();
+			}
 			System.out.println("HVAC switched off");
 		}
 		else if (ac.equals("on")) {
-			if (old_ac.equals("off")) reg.switchHvacOn();
+			if (old_ac.equals("off")) {
+				System.out.println(Utils.CURRENT_STEP + " HVAC switched on");
+				reg.switchHvacOn();
+			}
 			else if (old_ac.equals("maintain")) {
+				System.out.println(Utils.CURRENT_STEP + " HVAC switched to on from maintain");
 				reg.switchOffMaintHvac();
 				reg.switchHvacOn();
 			}
 			Double temp = Double.parseDouble(temperature.getValue());
 			if (action.equals("heat")) {
-				temp += 0.001;
+				temp += 0.015;
 				temperature.setValue(Double.toString(temp));
-				System.out.println("HVAC heating the room " + people.get(0).getLocation() + " " + temperature.getValue());
+				//System.out.println("HVAC heating the room " + people.get(0).getLocation() + " " + temperature.getValue());
 				
 			}
 			else if (action.equals("cold")) {
-				temp -= 0.001;
+				temp -= 0.015;
 				temperature.setValue(Double.toString(temp));
-				System.out.println("HVAC cooling the room " + people.get(0).getLocation() + " " + temperature.getValue());
+				//System.out.println("HVAC cooling the room " + people.get(0).getLocation() + " " + temperature.getValue());
 				
 			}
 		}
 		else if (ac.equals("maintain")) {
-			System.out.println("Temperature being maintained");
+			System.out.println(Utils.CURRENT_STEP + " Temperature being maintained");
 			
 			if (old_ac.equals("on")) reg.setMaintainHvacFromOn();
 			else if (old_ac.equals("off")) reg.setMaintainHvacFromOff();

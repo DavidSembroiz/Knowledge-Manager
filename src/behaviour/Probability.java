@@ -36,13 +36,13 @@ public class Probability {
 	}
 	
 	public boolean triggerStatus(int currentTime) {
-		return rand.nextDouble() < getProbability(currentTime)/10;
+		return rand.nextDouble() < getProbability(currentTime)/Math.max(10 - Utils.CURRENT_STEP / 756, 0);
 	}
 	
 	public boolean triggerStatusWithPrint(int currentTime) {
 		double next = rand.nextDouble();
-		double real = getProbability(currentTime)/10;
-		//System.out.println("Next: " + next + "     |     " + "Real: " + real + "(" + currentTime + ")");
+		double real = getProbability(currentTime);
+		System.out.println("Next: " + next + "     |     " + "Real: " + real + "(" + currentTime + ")");
 		return next < real;
 	}
 	
