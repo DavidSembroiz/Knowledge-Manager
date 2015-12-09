@@ -1,7 +1,9 @@
 package domain;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +17,7 @@ import java.util.Set;
 
 import behaviour.Person;
 import behaviour.Person.State;
+import iot.Event;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -217,6 +220,20 @@ public class Utils {
 	    	System.err.println("ERROR: Person does not contain a valid type.");
 	    	e.printStackTrace();
 	    }
+	}
+	
+	public static String getTemplatePersonName() {
+		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
+	        String line;
+	        if ((line = br.readLine()) != null) {
+	        	return line.split(",")[0];
+	        }
+	        return null;
+	    } catch (IOException e) {
+	    	System.out.println("ERROR: Unable to read events from file.");
+	    	e.printStackTrace();
+	    }
+		return null;
 	}
 	
 	

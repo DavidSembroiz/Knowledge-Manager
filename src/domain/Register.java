@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.Properties;
 
 import domain.Utils;
@@ -199,6 +200,8 @@ public class Register {
 		return cons;
 	}
 	
+	
+	
 	public int getSensorsPerRoom() {
 		return SENSORS_PER_ROOM;
 	}
@@ -212,8 +215,9 @@ public class Register {
 	
 	public void writeConsumptionToFile() {
 		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")))) {
+			DecimalFormat df = new DecimalFormat("#.###");
 			for (int i = 0; i < consumption.length; ++i) {
-				wr.println(consumption[i]);
+				wr.println(df.format((consumption[i])/1000.0));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

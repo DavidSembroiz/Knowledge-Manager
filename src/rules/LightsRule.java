@@ -1,5 +1,9 @@
 package rules;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.easyrules.annotation.*;
@@ -22,12 +26,28 @@ public class LightsRule {
 	
 	private String light;
 	
+	private PrintWriter writer;
+	
 	public LightsRule(ArrayList<Person> people) {
 		reg = Register.getInstance();
 		models = Weather.getInstance();
 		this.people = people;
 		this.light = "off";
 		this.hasChanged = false;
+		try {
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/light.txt")));
+		} catch(IOException e) {
+		}
+	}
+	
+	private void printStatus() {
+		String temp = Utils.getTemplatePersonName();
+		for (Person p : people) {
+			if (p.getName().equals(temp)) {
+				if (light.equals("on")) writer.println("1");
+				else if (light.equals("off")) writer.println("0");
+			}
+		}
 	}
 	
 	public ArrayList<String> getNecessarySensors() {
@@ -51,6 +71,8 @@ public class LightsRule {
 	@Condition
 	public boolean checkLuminosity() {
 		
+		printStatus();
+		
 		/**
 		 * If light is ON:
 		 *  - OFF: room is empty or environmental light is OK
@@ -66,8 +88,11 @@ public class LightsRule {
 		}
 		else if (light.equals("off") && !Utils.emptyRoom(people) && !environmentalLightOK()) {
 			light = "on";
-			luminosity.setValue(Integer.toString(1000));
+			luminosity.setValue(Integer.toString(500));
 			hasChanged = true;
+		}
+		else if (light.equals("off")) {
+			luminosity.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 		}
 		return hasChanged;
 	}

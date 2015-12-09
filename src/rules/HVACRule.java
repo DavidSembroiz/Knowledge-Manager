@@ -1,5 +1,10 @@
 package rules;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.easyrules.annotation.*;
@@ -26,6 +31,8 @@ public class HVACRule {
 	private String action;
 	private boolean hasChanged;
 	
+	private PrintWriter writer;
+	
 	public HVACRule(ArrayList<Person> people) {
 		reg = Register.getInstance();
 		models = Weather.getInstance();
@@ -34,6 +41,10 @@ public class HVACRule {
 		ac = "off";
 		old_ac = "";
 		hasChanged = false;
+		try {
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/hvac.txt")));
+		} catch(IOException e) {
+		}
 	}
 	
 	public ArrayList<String> getNecessarySensors() {
@@ -88,9 +99,9 @@ public class HVACRule {
 		double newTemp = 0;
 		if (roomTemp == environTemp) return;
 		if (roomTemp > environTemp) {
-			newTemp = roomTemp - (roomTemp - environTemp) * 0.1;
+			newTemp = roomTemp - (roomTemp - environTemp) * 0.001;
 		}
-		else newTemp = roomTemp + (environTemp - roomTemp) * 0.1;
+		else newTemp = roomTemp + (environTemp - roomTemp) * 0.001;
 		temperature.setValue(Double.toString(newTemp));
 	}
 	
@@ -98,7 +109,7 @@ public class HVACRule {
 	@Condition
 	public boolean checkConditions() {
 		
-		//System.out.println("Current " + temperature.getValue());
+		printStatus();
 		
 		/**
 		 * If HVAC is ON:
@@ -111,7 +122,7 @@ public class HVACRule {
 		 */
 		
 		if ((ac.equals("on") || ac.equals("maintain")) && 
-		   ((Utils.emptyRoom(people) && !Utils.justWalking(people) && !Utils.eating(people)) || 
+		   ((Utils.emptyRoom(people) && !Utils.justWalking(people)) || 
 		     environmentalTemperatureOK())) {
 			hasChanged = true;
 			old_ac = ac;
@@ -134,6 +145,21 @@ public class HVACRule {
 		return hasChanged;
 	}
 	
+	private void printStatus() {
+		String temp = Utils.getTemplatePersonName();
+		for (Person p : people) {
+			if (p.getName().equals(temp)) {
+				if (ac.equals("on")) writer.println("2");
+				else if (ac.equals("maintain")) writer.println("1");
+				else if (ac.equals("off")) writer.println("0");
+			}
+		}
+		if (Utils.CURRENT_STEP == 8639) {
+			writer.flush();
+			writer.close();
+		}
+	}
+	
 	@Action(order = 1)
 	public void apply() throws Exception {
 		
@@ -152,7 +178,6 @@ public class HVACRule {
 				System.out.println(Utils.CURRENT_STEP + " HVAC switched to off from maintain");
 				reg.switchOffMaintHvac();
 			}
-			System.out.println("HVAC switched off");
 		}
 		else if (ac.equals("on")) {
 			if (old_ac.equals("off")) {
@@ -168,18 +193,22 @@ public class HVACRule {
 			if (action.equals("heat")) {
 				temp += 0.015;
 				temperature.setValue(Double.toString(temp));
-				//System.out.println("HVAC heating the room " + people.get(0).getLocation() + " " + temperature.getValue());
-				
+				System.out.println(Utils.CURRENT_STEP + " HVAC heating the room " + people.get(0).getLocation() + " " + temperature.getValue());
 			}
 			else if (action.equals("cold")) {
 				temp -= 0.015;
 				temperature.setValue(Double.toString(temp));
-				//System.out.println("HVAC cooling the room " + people.get(0).getLocation() + " " + temperature.getValue());
-				
+				System.out.println(Utils.CURRENT_STEP + " HVAC cooling the room " + people.get(0).getLocation() + " " + temperature.getValue());
 			}
 		}
 		else if (ac.equals("maintain")) {
+			/*double cur = Double.parseDouble(temperature.getValue());
+			if (models.getCurrentEnvironmentalTemperature() > cur) {
+				temperature.setValue(Double.toString(cur + 0.05));
+			}
+			else temperature.setValue(Double.toString(cur - 0.05));*/
 			System.out.println(Utils.CURRENT_STEP + " Temperature being maintained");
+			
 			
 			if (old_ac.equals("on")) reg.setMaintainHvacFromOn();
 			else if (old_ac.equals("off")) reg.setMaintainHvacFromOff();

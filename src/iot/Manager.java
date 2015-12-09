@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -125,9 +126,57 @@ public class Manager {
 	private void terminate() {
 		System.exit(0);
 	}
+	
+	PrintWriter temps, lux;
+	
+	private void writeTemperature() {
+		try {
+			temps = new PrintWriter(new BufferedWriter(new FileWriter("res/roomTemp.txt")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void writeLux() {
+		try {
+			lux = new PrintWriter(new BufferedWriter(new FileWriter("res/roomLux.txt")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void printRoomTemp() {
+		DecimalFormat df = new DecimalFormat("#.####");
+		for (Room r : rooms) {
+			if (r.getLocation().equals("upc/campusnord/d6001")) {
+				ArrayList<Sensor> sens = r.getSensors();
+				for (Sensor s : sens) {
+					if (s.getType().equals("temperature")) {
+						temps.println(df.format(Double.parseDouble(s.getValue())));
+					}
+				}
+			}
+		}
+	}
+	
+	private void printRoomLight() {
+		DecimalFormat df = new DecimalFormat("#.####");
+		for (Room r : rooms) {
+			if (r.getLocation().equals("upc/campusnord/d6001")) {
+				ArrayList<Sensor> sens = r.getSensors();
+				for (Sensor s : sens) {
+					if (s.getType().equals("luminosity")) {
+						lux.println(df.format(Double.parseDouble(s.getValue())));
+					}
+				}
+			}
+		}
+	}
 
 	private void simulate() {
 		System.out.println("Starting simulation");
+		writeTemperature();
+		writeLux();
 		
 		if (MODE == 2) {
 			repeatSimulation();
@@ -140,7 +189,8 @@ public class Manager {
 			//System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
 			if (Utils.CURRENT_STEP % 30 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
-			
+			printRoomTemp();
+			printRoomLight();
 			reg.computeConsumption();
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
 			++Utils.CURRENT_STEP;
@@ -153,6 +203,7 @@ public class Manager {
 	
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = readEventFile();
+		writeTemperature();
 		Event e;
 		while(!events.isEmpty() && Utils.CURRENT_STEP < Utils.STEPS) {
 			while (!events.isEmpty() && events.peek().getStep() == Utils.CURRENT_STEP) {
@@ -162,7 +213,8 @@ public class Manager {
 			for (Room r : rooms) r.fireRules();
 			int cur = reg.computeConsumption();
 			System.out.println("Current consumption: " + cur + " Watts");
-			
+			printRoomTemp();
+			printRoomLight();
 			++Utils.CURRENT_STEP;
 		}
 		reg.writeConsumptionToFile();
@@ -183,8 +235,8 @@ public class Manager {
 			 * 
 			 * Initialise sensors with proper data instead of RNG data
 			 */
-			
-			if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
+			if (type.equals("temperature")) s.setValue(Double.toString(16));
+			//if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
 			else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
 			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 			else s.setValue(uts.getValueFromType(message, type));
@@ -203,7 +255,6 @@ public class Manager {
 		String computerMessage = "{\"lastUpdate\":1441174408196,"
 				   			   		+ "\"channels\":{"
 							   		+ "\"computer\":{\"current-value\":0}}}";
-		
 		for (String id : ids) {
 			String topic = "API_KEY/" + id;
 			String model = awsdb.getModel(id);
@@ -357,7 +408,8 @@ public class Manager {
 						activeRooms++;
 					}
 				}
-				wr.println(activeRooms * roomCons * dev);
+				DecimalFormat df = new DecimalFormat("#.###");
+				wr.println(df.format((activeRooms * roomCons)/1000.0));
 				//if (i%100 == 0) System.out.println(i + " " + activeRooms);
 				activeRooms = 0;
 			}
