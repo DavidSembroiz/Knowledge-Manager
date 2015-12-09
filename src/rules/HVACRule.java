@@ -1,6 +1,5 @@
 package rules;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class HVACRule {
 		old_ac = "";
 		hasChanged = false;
 		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/hvac.txt")));
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/results/hvac.txt")));
 		} catch(IOException e) {
 		}
 	}
@@ -154,8 +153,7 @@ public class HVACRule {
 				else if (ac.equals("off")) writer.println("0");
 			}
 		}
-		if (Utils.CURRENT_STEP == 8639) {
-			writer.flush();
+		if (Utils.CURRENT_STEP == 8600) {
 			writer.close();
 		}
 	}

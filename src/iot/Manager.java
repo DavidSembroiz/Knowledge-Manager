@@ -69,6 +69,8 @@ public class Manager {
 	private Register reg;
 	private Weather models;
 	
+	private PrintWriter temps, lux;
+	
 	
 	public Manager() {
 		
@@ -127,51 +129,6 @@ public class Manager {
 		System.exit(0);
 	}
 	
-	PrintWriter temps, lux;
-	
-	private void writeTemperature() {
-		try {
-			temps = new PrintWriter(new BufferedWriter(new FileWriter("res/roomTemp.txt")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void writeLux() {
-		try {
-			lux = new PrintWriter(new BufferedWriter(new FileWriter("res/roomLux.txt")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void printRoomTemp() {
-		DecimalFormat df = new DecimalFormat("#.####");
-		for (Room r : rooms) {
-			if (r.getLocation().equals("upc/campusnord/d6001")) {
-				ArrayList<Sensor> sens = r.getSensors();
-				for (Sensor s : sens) {
-					if (s.getType().equals("temperature")) {
-						temps.println(df.format(Double.parseDouble(s.getValue())));
-					}
-				}
-			}
-		}
-	}
-	
-	private void printRoomLight() {
-		DecimalFormat df = new DecimalFormat("#.####");
-		for (Room r : rooms) {
-			if (r.getLocation().equals("upc/campusnord/d6001")) {
-				ArrayList<Sensor> sens = r.getSensors();
-				for (Sensor s : sens) {
-					if (s.getType().equals("luminosity")) {
-						lux.println(df.format(Double.parseDouble(s.getValue())));
-					}
-				}
-			}
-		}
-	}
 
 	private void simulate() {
 		System.out.println("Starting simulation");
@@ -198,8 +155,10 @@ public class Manager {
 		reg.writeConsumptionToFile();
 		reg.printTotalConsumption();
 		peopleManager.closeFile();
+		closeRoomFiles();
 		terminate();
 	}
+	
 	
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = readEventFile();
@@ -219,6 +178,7 @@ public class Manager {
 		}
 		reg.writeConsumptionToFile();
 		reg.printTotalConsumption();
+		closeRoomFiles();
 		terminate();
 	}
 	
@@ -396,7 +356,7 @@ public class Manager {
 	
 	
 	private void calculateConsumptionHistory(HashMap<String, Integer> timesEnter, HashMap<String, Integer> timesLeave, Double dev) {
-		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")))) {
+		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/results/cons.txt")))) {
 			int roomCons = reg.computeConsumption();
 			int activeRooms = 0;
 			Iterator<Entry<String, Integer>> itEnter;
@@ -436,4 +396,52 @@ public class Manager {
 		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}
 	
+	private void writeTemperature() {
+		try {
+			temps = new PrintWriter(new BufferedWriter(new FileWriter("res/results/roomTemp.txt")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void writeLux() {
+		try {
+			lux = new PrintWriter(new BufferedWriter(new FileWriter("res/results/roomLux.txt")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void printRoomTemp() {
+		DecimalFormat df = new DecimalFormat("#.####");
+		for (Room r : rooms) {
+			if (r.getLocation().equals("upc/campusnord/d6001")) {
+				ArrayList<Sensor> sens = r.getSensors();
+				for (Sensor s : sens) {
+					if (s.getType().equals("temperature")) {
+						temps.println(df.format(Double.parseDouble(s.getValue())));
+					}
+				}
+			}
+		}
+	}
+	
+	private void printRoomLight() {
+		DecimalFormat df = new DecimalFormat("#.####");
+		for (Room r : rooms) {
+			if (r.getLocation().equals("upc/campusnord/d6001")) {
+				ArrayList<Sensor> sens = r.getSensors();
+				for (Sensor s : sens) {
+					if (s.getType().equals("luminosity")) {
+						lux.println(df.format(Double.parseDouble(s.getValue())));
+					}
+				}
+			}
+		}
+	}
+	
+	private void closeRoomFiles() {
+		if (temps != null) temps.close();
+		if (lux != null) lux.close();
+	}
 }

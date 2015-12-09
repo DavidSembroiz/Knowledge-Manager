@@ -35,7 +35,7 @@ public class LightsRule {
 		this.light = "off";
 		this.hasChanged = false;
 		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/light.txt")));
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/results/light.txt")));
 		} catch(IOException e) {
 		}
 	}
@@ -47,6 +47,10 @@ public class LightsRule {
 				if (light.equals("on")) writer.println("1");
 				else if (light.equals("off")) writer.println("0");
 			}
+		}
+		
+		if (Utils.CURRENT_STEP == 8600) {
+			writer.close();
 		}
 	}
 	

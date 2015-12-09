@@ -214,25 +214,29 @@ public class Register {
 	}
 	
 	public void writeConsumptionToFile() {
-		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")))) {
+		PrintWriter wr = null;
+		try {
+			wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")));
 			DecimalFormat df = new DecimalFormat("#.###");
 			for (int i = 0; i < consumption.length; ++i) {
 				wr.println(df.format((consumption[i])/1000.0));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (wr != null) wr.close();
 		}
 	}
 	
 	/**
 	 * Since the consumption is added every step (10 seconds), the
-	 * result must be tuned in order to correctly count Kwh
+	 * result must be tuned in order to correctly count kW
 	 */
 	
 	public void printTotalConsumption() {
 		
-		double kwh = totalConsumption / 360.0;
+		double kw = totalConsumption / 360.0;
 		
-		System.out.println("Total consumption: " + kwh);
+		System.out.println("Total consumption: " + kw);
 	}
 }

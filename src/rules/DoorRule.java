@@ -15,7 +15,7 @@ public class DoorRule {
 	private Sensor door;
 	
 	//TODO change to an actual actuator
-	private String actuator;
+	//private String actuator;
 	
 	public DoorRule(ArrayList<Person> people) {
 		this.people = people;

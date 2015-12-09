@@ -17,7 +17,6 @@ import java.util.Set;
 
 import behaviour.Person;
 import behaviour.Person.State;
-import iot.Event;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
