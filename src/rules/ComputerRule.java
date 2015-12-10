@@ -1,5 +1,9 @@
 package rules;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.easyrules.annotation.*;
@@ -20,11 +24,16 @@ public class ComputerRule {
 	private String comp;
 	private String old_comp;
 	
+	private PrintWriter writer;
 	
 	public ComputerRule(ArrayList<Person> people) {
 		this.people = people;
 		this.reg = Register.getInstance();
 		this.comp = "off";
+		try {
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/results/comp.txt")));
+		} catch(IOException e) {
+		}
 	}
 	
 	public ArrayList<String> getNecessarySensors() {
@@ -42,6 +51,8 @@ public class ComputerRule {
 	@Condition
 	public boolean checkComputer() {
 		
+		printStatus();
+		
 		/**
 		 * If computer is ON:
 		 *  - Suspend: everyone in the room is walking
@@ -56,7 +67,7 @@ public class ComputerRule {
 		
 		if (comp.equals("on")) {
 			old_comp = comp;
-			if (Utils.emptyRoom(people) && Utils.justWalking(people)) {
+			if (Utils.emptyRoom(people) && (Utils.justWalking(people) || Utils.eating(people))) {
 				comp = "suspended";
 				return true;
 			}
@@ -96,6 +107,21 @@ public class ComputerRule {
 				reg.switchComputerOff();
 				System.out.println(Utils.CURRENT_STEP + " Computer switched off");
 			}
+		}
+	}
+	
+	private void printStatus() {
+		String temp = Utils.getTemplatePersonName();
+		for (Person p : people) {
+			if (p.getName().equals(temp)) {
+				if (comp.equals("on")) writer.println("2");
+				if (comp.equals("suspended")) writer.println("1");
+				else if (comp.equals("off")) writer.println("0");
+			}
+		}
+		
+		if (Utils.CURRENT_STEP == 8639) {
+			writer.close();
 		}
 	}
 }

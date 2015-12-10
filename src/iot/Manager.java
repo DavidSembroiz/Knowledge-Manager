@@ -69,7 +69,7 @@ public class Manager {
 	private Register reg;
 	private Weather models;
 	
-	private PrintWriter temps, lux;
+	private PrintWriter temps, lux, envtemp;
 	
 	
 	public Manager() {
@@ -132,8 +132,7 @@ public class Manager {
 
 	private void simulate() {
 		System.out.println("Starting simulation");
-		writeTemperature();
-		writeLux();
+		writeResults();
 		
 		if (MODE == 2) {
 			repeatSimulation();
@@ -143,11 +142,9 @@ public class Manager {
 		if (EVENTS_FILE == 1) peopleManager.enableRecordFile();
 		
 		while (Utils.CURRENT_STEP < Utils.STEPS) {
-			//System.out.println("------------------------------- STEP " + Utils.CURRENT_STEP + " -------------------------------");
 			if (Utils.CURRENT_STEP % 30 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
-			printRoomTemp();
-			printRoomLight();
+			printResults();
 			reg.computeConsumption();
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
 			++Utils.CURRENT_STEP;
@@ -162,7 +159,8 @@ public class Manager {
 	
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = readEventFile();
-		writeTemperature();
+		writeResults();
+		
 		Event e;
 		while(!events.isEmpty() && Utils.CURRENT_STEP < Utils.STEPS) {
 			while (!events.isEmpty() && events.peek().getStep() == Utils.CURRENT_STEP) {
@@ -172,8 +170,7 @@ public class Manager {
 			for (Room r : rooms) r.fireRules();
 			int cur = reg.computeConsumption();
 			System.out.println("Current consumption: " + cur + " Watts");
-			printRoomTemp();
-			printRoomLight();
+			printResults();
 			++Utils.CURRENT_STEP;
 		}
 		reg.writeConsumptionToFile();
@@ -396,24 +393,20 @@ public class Manager {
 		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}
 	
-	private void writeTemperature() {
+	private void writeResults() {
 		try {
 			temps = new PrintWriter(new BufferedWriter(new FileWriter("res/results/roomTemp.txt")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void writeLux() {
-		try {
 			lux = new PrintWriter(new BufferedWriter(new FileWriter("res/results/roomLux.txt")));
+			envtemp = new PrintWriter(new BufferedWriter(new FileWriter("res/results/envTemp.txt")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void printRoomTemp() {
+	
+	private void printResults() {
 		DecimalFormat df = new DecimalFormat("#.####");
+		envtemp.println(df.format(models.getCurrentEnvironmentalTemperature()));
 		for (Room r : rooms) {
 			if (r.getLocation().equals("upc/campusnord/d6001")) {
 				ArrayList<Sensor> sens = r.getSensors();
@@ -421,18 +414,7 @@ public class Manager {
 					if (s.getType().equals("temperature")) {
 						temps.println(df.format(Double.parseDouble(s.getValue())));
 					}
-				}
-			}
-		}
-	}
-	
-	private void printRoomLight() {
-		DecimalFormat df = new DecimalFormat("#.####");
-		for (Room r : rooms) {
-			if (r.getLocation().equals("upc/campusnord/d6001")) {
-				ArrayList<Sensor> sens = r.getSensors();
-				for (Sensor s : sens) {
-					if (s.getType().equals("luminosity")) {
+					else if (s.getType().equals("luminosity")) {
 						lux.println(df.format(Double.parseDouble(s.getValue())));
 					}
 				}
@@ -443,5 +425,6 @@ public class Manager {
 	private void closeRoomFiles() {
 		if (temps != null) temps.close();
 		if (lux != null) lux.close();
+		if (envtemp != null) envtemp.close();
 	}
 }

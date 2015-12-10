@@ -153,7 +153,7 @@ public class HVACRule {
 				else if (ac.equals("off")) writer.println("0");
 			}
 		}
-		if (Utils.CURRENT_STEP == 8600) {
+		if (Utils.CURRENT_STEP == 8639) {
 			writer.close();
 		}
 	}
