@@ -92,7 +92,7 @@ public class Database {
 		}
 	}
 	
-	/*private void createIdTable() {
+	private void createIdTable() {
 		Connection c = null;
 		try {
 			c = poolSource.getConnection();
@@ -109,7 +109,7 @@ public class Database {
 		} finally {
 			closeConnection(c);
 		}
-	}*/
+	}
 	
 	private void createAssociationsTable() {
 		Connection c = null;
@@ -195,7 +195,7 @@ public class Database {
 			pst = c.prepareStatement("SELECT associations FROM " + DB_TABLE + " WHERE servioticy_id = ?");
 			pst.setString(1, soID);
 			ResultSet rs = pst.executeQuery();
-			if (rs.next() && rs.getString("associations") != null) {
+			if (rs.next() && !rs.getString("associations").isEmpty()) {
 				associations = rs.getString("associations").split(",");
 				for (String s : associations) {
 					String t = s.split("/")[0];

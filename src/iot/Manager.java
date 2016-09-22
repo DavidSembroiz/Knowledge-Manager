@@ -19,6 +19,7 @@ import java.util.Properties;
 
 import behaviour.PeopleManager;
 import behaviour.Person;
+import building.Room;
 import domain.DBListener;
 import domain.Database;
 import domain.Mqtt;
@@ -102,7 +103,7 @@ public class Manager {
 		 * If the scenario is set to dumb, simulation can be performed without handling messages
 		 */
 
-		sendInitialMessages();
+		//sendInitialMessages();
 	}
 	
 	private void loadProperties() {
@@ -134,10 +135,15 @@ public class Manager {
 		System.out.println("Starting simulation");
 		writeResults();
 		
-		if (MODE == 2) {
+		if (MODE == 2 || MODE == 3) {
 			repeatSimulation();
 			terminate();
 		}
+		
+		/*if (MODE == 3) {
+			realScenario();
+			terminate();
+		}*/
 		
 		if (EVENTS_FILE == 1) peopleManager.enableRecordFile();
 		
@@ -145,12 +151,14 @@ public class Manager {
 			if (Utils.CURRENT_STEP % 30 == 0) peopleManager.makeStep();
 			for (Room r : rooms) r.fireRules();
 			printResults();
+			reg.writeStatus();
 			reg.computeConsumption();
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
 			++Utils.CURRENT_STEP;
 		}
 		reg.writeConsumptionToFile();
 		reg.printTotalConsumption();
+		reg.closeStatus();
 		peopleManager.closeFile();
 		closeRoomFiles();
 		terminate();
@@ -158,6 +166,7 @@ public class Manager {
 	
 	
 	private void repeatSimulation() {
+		if (MODE == 3) reg.disableHvac();
 		PriorityQueue<Event> events = readEventFile();
 		writeResults();
 		
@@ -169,12 +178,37 @@ public class Manager {
 			}
 			for (Room r : rooms) r.fireRules();
 			int cur = reg.computeConsumption();
-			System.out.println("Current consumption: " + cur + " Watts");
+			//System.out.println("Current consumption: " + cur + " Watts");
 			printResults();
+			reg.writeStatus();
 			++Utils.CURRENT_STEP;
 		}
+		if (MODE == 3) reg.addHvacConsumption();
 		reg.writeConsumptionToFile();
 		reg.printTotalConsumption();
+		reg.closeStatus();
+		closeRoomFiles();
+		terminate();
+	}
+	
+	private void realScenario() {
+		reg.disableHvac();
+		if (EVENTS_FILE == 1) peopleManager.enableRecordFile();
+		
+		while (Utils.CURRENT_STEP < Utils.STEPS) {
+			if (Utils.CURRENT_STEP % 30 == 0) peopleManager.makeStep();
+			for (Room r : rooms) r.fireRules();
+			printResults();
+			reg.writeStatus();
+			reg.computeConsumption();
+			peopleManager.flushData(100, Utils.CURRENT_STEP);
+			++Utils.CURRENT_STEP;
+		}
+		reg.addHvacConsumption();
+		reg.writeConsumptionToFile();
+		reg.printTotalConsumption();
+		reg.closeStatus();
+		peopleManager.closeFile();
 		closeRoomFiles();
 		terminate();
 	}
@@ -316,7 +350,7 @@ public class Manager {
 	 * It assumes that everyone who enter eventually leaves.
 	 */
 	
-	private int checkWorkingHours(Double dev) {
+	private int checkWorkingHours() {
 		HashMap<String, Integer> timesEnter = new HashMap<String, Integer>();
 		HashMap<String, Integer> timesLeave = new HashMap<String, Integer>();
 		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
@@ -341,7 +375,7 @@ public class Manager {
 	        	}
 	        }
 	        
-	        calculateConsumptionHistory(timesEnter, timesLeave, dev);
+	        calculateConsumptionHistory(timesEnter, timesLeave);
 	        
 	        return totalTime;
 	    } catch (IOException e) {
@@ -352,7 +386,7 @@ public class Manager {
 	}
 	
 	
-	private void calculateConsumptionHistory(HashMap<String, Integer> timesEnter, HashMap<String, Integer> timesLeave, Double dev) {
+	private void calculateConsumptionHistory(HashMap<String, Integer> timesEnter, HashMap<String, Integer> timesLeave) {
 		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/results/cons.txt")))) {
 			int roomCons = reg.computeConsumption();
 			int activeRooms = 0;
@@ -367,7 +401,6 @@ public class Manager {
 				}
 				DecimalFormat df = new DecimalFormat("#.###");
 				wr.println(df.format((activeRooms * roomCons)/1000.0));
-				//if (i%100 == 0) System.out.println(i + " " + activeRooms);
 				activeRooms = 0;
 			}
 		} catch (IOException e) {
@@ -382,14 +415,13 @@ public class Manager {
 		 * It firstly calculates the time everyone is inside the building.
 		 */
 		
-		Double dev = 1.0;
 		
 		reg.setNumComputers(1);
 		reg.setNumHvacs(1);
 		reg.setNumLights(1);
 		int cons = reg.computeConsumption();
-		int workingHours = checkWorkingHours(dev);
-		double totalCons = cons * (workingHours/360.0) * dev;
+		int workingHours = checkWorkingHours();
+		double totalCons = cons * (workingHours/360.0);
 		System.out.println("Total dumb consumption: " + totalCons + " W");
 	}
 	

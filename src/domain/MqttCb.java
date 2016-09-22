@@ -13,9 +13,11 @@ import org.eclipse.paho.client.mqttv3.*;
 public class MqttCb implements MqttCallback {
 	
 	private Manager manager;
+	private int messCount;
 	
 	public MqttCb(Manager m) {
 		this.manager = m;
+		this.messCount = 0;
 	}
 
 	@Override
@@ -41,6 +43,8 @@ public class MqttCb implements MqttCallback {
 		System.out.println("| Message: " + mess);
 		System.out.println("-------------------------------------------------");
 		
+		this.messCount++;
 		manager.manageMessage(topic, mess);
+		System.out.println("Message " + messCount);
 	}
 }

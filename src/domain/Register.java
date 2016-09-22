@@ -64,6 +64,8 @@ public class Register {
 	private int numMaintHvacs;
 	private int numRooms;
 	
+	private PrintWriter status;
+	
 	private void loadProperties() {
 		prop = new Properties();
 		try {
@@ -103,6 +105,16 @@ public class Register {
 		this.numLights = 0;
 		this.numHvacs = 0;
 		this.numMaintHvacs = 0;
+		try {
+			status = new PrintWriter(new BufferedWriter(new FileWriter("res/results/status.txt")));
+		} catch(IOException e) {
+			
+		}
+	}
+	
+	public void disableHvac() {
+		this.HVAC_CONSUMPTION = 0;
+		this.HVAC_MAINTAIN_CONSUMPTION = 0;
 	}
 
 	public int getNumComputers() {
@@ -200,7 +212,13 @@ public class Register {
 		return cons;
 	}
 	
+	public void writeStatus() {
+		status.println(numComputers + " " + numSuspComputers + " " + numHvacs + " " + numMaintHvacs + " " + numLights);
+	}
 	
+	public void closeStatus() {
+		if (status != null) status.close();
+	}
 	
 	public int getSensorsPerRoom() {
 		return SENSORS_PER_ROOM;
@@ -216,7 +234,7 @@ public class Register {
 	public void writeConsumptionToFile() {
 		PrintWriter wr = null;
 		try {
-			wr = new PrintWriter(new BufferedWriter(new FileWriter("res/cons.txt")));
+			wr = new PrintWriter(new BufferedWriter(new FileWriter("res/results/cons.txt")));
 			DecimalFormat df = new DecimalFormat("#.###");
 			for (int i = 0; i < consumption.length; ++i) {
 				wr.println(df.format((consumption[i])/1000.0));
@@ -238,5 +256,11 @@ public class Register {
 		double kw = totalConsumption / 360.0;
 		
 		System.out.println("Total consumption: " + kw);
+	}
+
+	public void addHvacConsumption() {
+		for (int i = 7*360; i < 20*360; ++i) {
+			consumption[i] += 1200 * numRooms;
+		}
 	}
 }

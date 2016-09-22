@@ -1,7 +1,7 @@
 package rules;
 
 import domain.Utils;
-import iot.Room;
+import building.Room;
 
 import java.util.ArrayList;
 

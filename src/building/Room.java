@@ -1,9 +1,10 @@
-package iot;
+package building;
 
 import java.util.ArrayList;
 
 import behaviour.Person;
 import domain.Database;
+import iot.Sensor;
 import rules.RuleManager;
 
 public class Room {
@@ -68,13 +69,13 @@ public class Room {
 		Sensor s = new Sensor(soID, type);
 		sensors.add(s);
 		awsdb.updateAssociations(soID, type, location);
-		ruleManager.registerRules(awsdb.getCompletedRules(location));
+		//ruleManager.registerRules(awsdb.getCompletedRules(location));
 		return s;
 	}
 	
 
 	public Sensor getSensor(String soID, String type) {
-		Sensor s = sensorExists(soID, type); 
+		Sensor s = sensorExists(soID, type);
 		if (s == null) s = registerSensor(soID, type, this.location);
 		return s;
 	}

@@ -33,15 +33,18 @@ public class Mqtt {
 	private String APIKEY;
 	private String CLIENTID;
 	private MqttConnectOptions connOpts;
-	private MqttClient client;
+	//private MqttClient client;
+	private MqttAsyncClient client;
 	private MqttCb callback;
 	private ArrayList<String> ids;
 	private String topic;
 	private Utils uts;
 	private Properties prop;
 	private Manager manager;
+	private int subs;
 
 	public Mqtt(Manager m, Database awsdb) {
+		subs = 0;
 		ids = new ArrayList<String>();
 		uts = Utils.getInstance();
 		this.manager = m;
@@ -85,12 +88,13 @@ public class Mqtt {
 		connOpts.setCleanSession(true);
 		connOpts.setUserName(USERNAME);
 		connOpts.setPassword(PASSWORD.toCharArray());
-		connOpts.setKeepAliveInterval(600);
+		//connOpts.setKeepAliveInterval(600);
 		try {
-			client = new MqttClient(ADDRESS, CLIENTID);
+			client = new MqttAsyncClient(ADDRESS, CLIENTID);
 			callback = new MqttCb(manager);
 			client.setCallback(callback);
 			client.connect(connOpts);
+			while (!client.isConnected());
 			if (client.isConnected()) System.out.println("Connected to ServIoTicy");
 		} catch (MqttException e) {
 			e.printStackTrace();
@@ -116,16 +120,34 @@ public class Mqtt {
 		}
 	}*/
 	
-	public void subscribe(ArrayList<String> ids) {
+	/*public void subscribe(ArrayList<String> ids) {
 		for (String id : ids) {
 			topic = APIKEY + "/" + id + "/streams/data/updates";
 			try {
 				client.subscribe(topic);
-				
-				System.out.println("Subscribed to SO " + uts.extractIdFromTopic(topic));
+				subs++;
+				if (subs%100 == 0) System.out.println("Subscribing... " + subs);
+				//System.out.println("Subscribed to SO " + uts.extractIdFromTopic(topic));
 			} catch (MqttException e) {
 				e.printStackTrace();
 			}
+		}
+		System.out.println("Subscriptions: " + subs);
+	}*/
+	
+	public void subscribe(ArrayList<String> ids) {
+		String[] topics = new String[ids.size()];
+		int[] qos = new int[ids.size()];
+		for (int i = 0; i < ids.size(); ++i) {
+			topic = APIKEY + "/" + ids.get(i) + "/streams/data/updates";
+			topics[i] = topic;
+			qos[i] = 0;
+		}
+		try {
+			client.subscribe(topics, qos).isComplete();
+			System.out.println("Subscribed to " + ids.size());
+		} catch (MqttException e) {
+			e.printStackTrace();
 		}
 	}
 	
