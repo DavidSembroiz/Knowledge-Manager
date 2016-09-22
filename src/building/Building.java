@@ -1,11 +1,15 @@
 package building;
 
+import java.util.ArrayList;
+
 public class Building {
 	
 	private int numRooms;
 	private String id;
+	private ArrayList<Room> rooms;
 	
 	public Building(String id, int numRooms){
+		this.rooms = new ArrayList<Room>();
 		this.numRooms = numRooms;
 		this.id = id;
 	}

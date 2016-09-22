@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import behaviour.Person;
 import domain.Database;
+import iot.Actuator;
 import iot.Sensor;
 import rules.RuleManager;
 
@@ -15,18 +16,17 @@ public class Room {
 	
 	
 	private String location;
+	private int size;
 	private ArrayList<Sensor> sensors;
+	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
-	private Database awsdb;
 	private ArrayList<Person> people;
-	private int sensorsPerRoom;
 	
-	public Room(String location, Database awsdb, ArrayList<Person> people, int numSensors) {
+	public Room(String location, int size) {
 		this.location = location;
-		this.awsdb = awsdb;
-		this.people = people;
-		this.sensorsPerRoom = numSensors;
+		this.size = size;
 		sensors = new ArrayList<Sensor>();
+		actuators = new ArrayList<Actuator>();
 		this.ruleManager = new RuleManager(this);
 	}
 	
@@ -68,8 +68,6 @@ public class Room {
 	private Sensor registerSensor(String soID, String type, String location) {
 		Sensor s = new Sensor(soID, type);
 		sensors.add(s);
-		awsdb.updateAssociations(soID, type, location);
-		//ruleManager.registerRules(awsdb.getCompletedRules(location));
 		return s;
 	}
 	
@@ -82,9 +80,5 @@ public class Room {
 
 	public void fireRules() {
 		ruleManager.fireRules();
-	}
-	
-	public boolean allSensorsDefined() {
-		return sensors.size() == sensorsPerRoom;
 	}
 }
