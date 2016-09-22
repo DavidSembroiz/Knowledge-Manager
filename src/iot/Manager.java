@@ -64,9 +64,9 @@ public class Manager {
 		
 		loadProperties();
 		building = uts.loadBuilding();
-		printBuilding();
 		
 		awsdb = Database.getInstance();
+		models = Weather.getInstance();
 		mqtt = new Mqtt(this, awsdb);
 		
 		
@@ -207,7 +207,8 @@ public class Manager {
 			for (String type : types) {
 				System.out.println(type);
 				if (!r.sensorExists(soID, type)) {
-					r.getSensor(awsdb.getModel(soID)).setSoID(soID);
+					Sensor s = r.getSensor(awsdb.getModel(soID));
+					s.setSoID(soID);
 				}
 				Sensor s = r.getSensor(soID, type);
 				//printBuilding();
@@ -217,11 +218,19 @@ public class Manager {
 				 * 
 				 * Initialise sensors with proper data instead of RNG data
 				 */
-				/*if (type.equals("temperature")) s.setValue(Double.toString(16));
-				//if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
-				else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
-				else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
-				else s.setValue(uts.getValueFromType(message, type));*/
+				
+				if (s != null) {
+				
+					if (type.equals("temperature")) s.setValue(Double.toString(16));
+					//if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
+					else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
+					else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
+					else {
+						String val = uts.getValueFromType(message, type);
+						s.setValue(val);
+					}
+				}
+				printBuilding();
 			}
 			//simulate();
 		}
@@ -432,7 +441,7 @@ public class Manager {
 			System.out.println("Size " + r.getSize());
 			ArrayList<Sensor> sensors = r.getSensors();
 			for (Sensor s : sensors) {
-				System.out.println("Sensor " + s.getId() + " " + s.getSoID());
+				System.out.println("Sensor " + s.getId() + " " + s.getSoID() + " " + s.getValue());
 			}	
 		}
 	}

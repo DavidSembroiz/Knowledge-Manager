@@ -37,6 +37,7 @@ public class Sensor {
 	}
 
 	public void setValue(String value) {
+		System.out.println(value);
 		this.value = value;
 	}
 

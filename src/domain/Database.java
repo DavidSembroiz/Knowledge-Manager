@@ -161,7 +161,7 @@ public class Database {
 			pst = c.prepareStatement("SELECT model FROM " + DB_TABLE + " WHERE servioticy_id = ?");
 			pst.setString(1, soID);
 			ResultSet rs = pst.executeQuery();
-			if (rs.next()) res = rs.getString("model");
+			if (rs.next()) res = rs.getString("model").toLowerCase();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {

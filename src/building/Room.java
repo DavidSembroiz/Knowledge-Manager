@@ -74,7 +74,7 @@ public class Room {
 
 	public Sensor getSensor(String soID, String type) {
 		for (Sensor s : sensors) {
-			if (s.getSoID().equals(soID) && s.getType().equals(type)) return s;
+			if (s.getSoID().equals(soID) && s.getType().toLowerCase().equals(type)) return s;
 		}
 		return null;
 	}
@@ -113,8 +113,7 @@ public class Room {
 			 * Currently comparing with type, but model needs to be compared
 			 * with id so multiple sensors of same type are compatible
 			 */
-			
-			if (s.getType().equals(model)) return s;
+			if (s.getType().toLowerCase().equals(model)) return s;
 		}
 		return null;
 	}
