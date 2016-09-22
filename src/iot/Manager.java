@@ -18,9 +18,8 @@ import java.util.PriorityQueue;
 import java.util.Properties;
 
 import behaviour.PeopleManager;
-import behaviour.Person;
+import building.Building;
 import building.Room;
-import domain.DBListener;
 import domain.Database;
 import domain.Mqtt;
 import domain.Utils;
@@ -62,7 +61,7 @@ public class Manager {
 	
 	private Properties prop;
 	
-	private ArrayList<Room> rooms;
+	private Building building;
 	private Mqtt mqtt;
 	private Utils uts;
 	private Database awsdb;
@@ -75,10 +74,14 @@ public class Manager {
 	
 	public Manager() {
 		
-		loadProperties();
-		
 		uts = Utils.getInstance();
-		reg = Register.getInstance();
+		
+		loadProperties();
+		building = uts.loadBuilding();
+		printBuilding();
+		
+		
+		/*reg = Register.getInstance();
 		
 		if (MODE == 1 && NEW_PEOPLE == 1) {
 			uts.generatePeople(PROFESSOR_NUM_ROOMS, STUDENT_NUM_ROOMS, PAS_NUM_ROOMS,
@@ -93,7 +96,6 @@ public class Manager {
 		}
 		
 		
-		rooms = new ArrayList<Room>();
 		models = Weather.getInstance();
 		awsdb = Database.getInstance();
 		mqtt = new Mqtt(this, awsdb);
@@ -102,10 +104,12 @@ public class Manager {
 		/**
 		 * If the scenario is set to dumb, simulation can be performed without handling messages
 		 */
-
 		//sendInitialMessages();
+		
 	}
 	
+	
+
 	private void loadProperties() {
 		prop = new Properties();
 		try {
@@ -149,8 +153,8 @@ public class Manager {
 		
 		while (Utils.CURRENT_STEP < Utils.STEPS) {
 			if (Utils.CURRENT_STEP % 30 == 0) peopleManager.makeStep();
-			for (Room r : rooms) r.fireRules();
-			printResults();
+			//for (Room r : rooms) r.fireRules();
+			//printResults();
 			reg.writeStatus();
 			reg.computeConsumption();
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
@@ -176,10 +180,10 @@ public class Manager {
 				e = events.poll();
 				peopleManager.executeAction(e.getPerson(), e.getAction());
 			}
-			for (Room r : rooms) r.fireRules();
+			//for (Room r : rooms) r.fireRules();
 			int cur = reg.computeConsumption();
 			//System.out.println("Current consumption: " + cur + " Watts");
-			printResults();
+			//printResults();
 			reg.writeStatus();
 			++Utils.CURRENT_STEP;
 		}
@@ -197,8 +201,8 @@ public class Manager {
 		
 		while (Utils.CURRENT_STEP < Utils.STEPS) {
 			if (Utils.CURRENT_STEP % 30 == 0) peopleManager.makeStep();
-			for (Room r : rooms) r.fireRules();
-			printResults();
+			//for (Room r : rooms) r.fireRules();
+			//printResults();
 			reg.writeStatus();
 			reg.computeConsumption();
 			peopleManager.flushData(100, Utils.CURRENT_STEP);
@@ -215,7 +219,7 @@ public class Manager {
 	
 	
 	private void processMessage(String topic, String message, String location, String soID) {
-		Room r = getRoom(location);
+		Room r = new Room("008", "10");
 		ArrayList<String> types = uts.getTypesFromMessage(message);
 		for (String type : types) {
 			System.out.println(type);
@@ -232,7 +236,7 @@ public class Manager {
 			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
 			else s.setValue(uts.getValueFromType(message, type));
 		}
-		if (allRoomsDefined() && peopleManager.isAllPeopleAssigned()) simulate();
+		//simulate();
 	}
 	
 	private void sendInitialMessages() {
@@ -272,33 +276,9 @@ public class Manager {
 			System.out.println("Unable to query room number, message discarded");
 		}
 	}
-	
-	public Room getRoom(String location) {
-		Room r = roomExists(location);
-		if (r == null) r = registerRoom(location, peopleManager.assignPeopleToRoom(location));
-		return r;
-	}
+
 	
 	
-	private Room registerRoom(String location, ArrayList<Person> people) {
-		Room r = new Room(location, awsdb, people, reg.getSensorsPerRoom());
-		rooms.add(r);
-		return r;
-	}
-	
-	private Room roomExists(String location) {
-		for (Room r : rooms) {
-			if (r.getLocation().equals(location)) return r;
-		}
-		return null;
-	}
-	
-	private boolean allRoomsDefined() {
-		for (Room r : rooms) {
-			if (!r.allSensorsDefined()) return false;
-		}
-		return true;
-	}
 	
 	/*private void printRooms() {
 		for (int i = 0; i < rooms.size(); ++i) {
@@ -436,7 +416,7 @@ public class Manager {
 	}
 	
 	
-	private void printResults() {
+	/*private void printResults() {
 		DecimalFormat df = new DecimalFormat("#.####");
 		envtemp.println(df.format(models.getCurrentEnvironmentalTemperature()));
 		for (Room r : rooms) {
@@ -451,6 +431,18 @@ public class Manager {
 					}
 				}
 			}
+		}
+	}*/
+	
+	private void printBuilding() {
+		ArrayList<Room> rooms = building.getRooms();
+		for (Room r : rooms) {
+			System.out.println("ROOM " + r.getLocation());
+			System.out.println("Size " + r.getSize());
+			ArrayList<Sensor> sensors = r.getSensors();
+			for (Sensor s : sensors) {
+				System.out.println("Sensor " + s.getId());
+			}	
 		}
 	}
 	

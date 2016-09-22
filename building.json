@@ -1,0 +1,25 @@
+{
+	"id": "upc_d6",
+	"rooms": [
+		{
+			"id": "008",
+			"size": "140",
+			"sensors": [
+				{"type": "computer",
+				 "quantity": "2"},
+				{"type": "hvac",
+				 "quantity": "1"}
+			]
+		},
+		{
+			"id": "009",
+			"size": "150",
+			"sensors": [
+				{"type": "computer",
+				 "quantity": "1"},
+				{"type": "hvac",
+				 "quantity": "1"}
+			]
+		}
+	]
+}

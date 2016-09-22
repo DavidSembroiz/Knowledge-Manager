@@ -16,13 +16,13 @@ public class Room {
 	
 	
 	private String location;
-	private int size;
+	private String size;
 	private ArrayList<Sensor> sensors;
 	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
 	private ArrayList<Person> people;
 	
-	public Room(String location, int size) {
+	public Room(String location, String size) {
 		this.location = location;
 		this.size = size;
 		sensors = new ArrayList<Sensor>();
@@ -80,5 +80,29 @@ public class Room {
 
 	public void fireRules() {
 		ruleManager.fireRules();
+	}
+	
+	public void addSensor(String id, String type, String val) {
+		this.sensors.add(new Sensor(id, type, val));
+	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	public ArrayList<Actuator> getActuators() {
+		return actuators;
+	}
+
+	public void setActuators(ArrayList<Actuator> actuators) {
+		this.actuators = actuators;
+	}
+
+	public void setRuleManager(RuleManager ruleManager) {
+		this.ruleManager = ruleManager;
 	}
 }

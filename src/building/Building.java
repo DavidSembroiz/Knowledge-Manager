@@ -8,9 +8,9 @@ public class Building {
 	private String id;
 	private ArrayList<Room> rooms;
 	
-	public Building(String id, int numRooms){
-		this.rooms = new ArrayList<Room>();
-		this.numRooms = numRooms;
+	public Building(String id, ArrayList<Room> rooms){
+		this.rooms = rooms;
+		this.numRooms = rooms.size();
 		this.id = id;
 	}
 
@@ -28,6 +28,10 @@ public class Building {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public ArrayList<Room> getRooms() {
+		return this.rooms;
 	}
 	
 	

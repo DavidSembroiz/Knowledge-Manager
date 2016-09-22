@@ -3,6 +3,7 @@ package domain;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,7 +18,10 @@ import java.util.Set;
 
 import behaviour.Person;
 import behaviour.Person.State;
+import building.Building;
+import building.Room;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
@@ -254,4 +258,33 @@ public class Utils {
         else if (id < 1000) res += "d6" + id;
         return res;
     }
+	
+	public Building loadBuilding() {
+		JSONParser parser = new JSONParser();
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		try {
+			FileReader reader = new FileReader("./building.json");
+			JSONObject root = (JSONObject) parser.parse(reader);
+			String id = (String) root.get("id");
+			JSONArray rms = (JSONArray) root.get("rooms");
+			for (int i = 0; i < rms.size(); ++i) {
+				JSONObject rm = (JSONObject) rms.get(i);
+				Room r = new Room((String) rm.get("id"), (String) rm.get("size"));
+				JSONArray sens = (JSONArray) rm.get("sensors");
+				for (int j = 0; j < sens.size(); ++j) {
+					JSONObject sen = (JSONObject) sens.get(j);
+					String qtt = (String) sen.get("quantity");
+					String type = (String) sen.get("type");
+					for (int z = 0; z < Integer.parseInt(qtt); ++z) {
+						r.addSensor(type + "_" + z, type, "-1");
+					}
+				}
+				rooms.add(r);
+			}
+			return new Building(id, rooms);
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
