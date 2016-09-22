@@ -2,22 +2,34 @@
 	"id": "upc_d6",
 	"rooms": [
 		{
-			"id": "008",
+			"id": "upc/campusnord/d6001",
 			"size": "140",
 			"sensors": [
-				{"type": "computer",
+				{"type": "XM1000",
 				 "quantity": "2"},
-				{"type": "hvac",
+				{"type": "Light",
+				 "quantity": "1"},
+				{"type": "Presence",
+				 "quantity": "1"},
+				{"type": "Power",
+				 "quantity": "1"},
+				{"type": "AirQuality",
 				 "quantity": "1"}
 			]
 		},
 		{
-			"id": "009",
+			"id": "upc/campusnord/d6002",
 			"size": "150",
 			"sensors": [
-				{"type": "computer",
+				{"type": "XM1000",
+				 "quantity": "2"},
+				{"type": "Light",
 				 "quantity": "1"},
-				{"type": "hvac",
+				{"type": "Presence",
+				 "quantity": "1"},
+				{"type": "Power",
+				 "quantity": "1"},
+				{"type": "AirQuality",
 				 "quantity": "1"}
 			]
 		}

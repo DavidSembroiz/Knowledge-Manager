@@ -43,21 +43,7 @@ public class Manager {
 	 */
 	
 	private int EVENTS_FILE;
-	
-	
-	/**
-	 * If NEW_PEOPLE == 1, then a new group of people is generated before the simulation
-	 */
-	
-	private int NEW_PEOPLE;
-	
-	private int PROFESSOR_NUM_ROOMS;
-	private int STUDENT_NUM_ROOMS;
-	private int PAS_NUM_ROOMS;
-	
-	private int PROFESSORS_PER_ROOM;
-	private int STUDENTS_PER_ROOM;
-	private int PAS_PER_ROOM;
+
 	
 	private Properties prop;
 	
@@ -79,6 +65,9 @@ public class Manager {
 		loadProperties();
 		building = uts.loadBuilding();
 		printBuilding();
+		
+		awsdb = Database.getInstance();
+		mqtt = new Mqtt(this, awsdb);
 		
 		
 		/*reg = Register.getInstance();
@@ -117,13 +106,6 @@ public class Manager {
 			prop.load(is);
 			MODE = Integer.parseInt(prop.getProperty("mode"));
 			EVENTS_FILE = Integer.parseInt(prop.getProperty("events_file"));getClass();
-			NEW_PEOPLE = Integer.parseInt(prop.getProperty("new_people"));
-			PROFESSOR_NUM_ROOMS = Integer.parseInt(prop.getProperty("professor_num_rooms"));
-			STUDENT_NUM_ROOMS = Integer.parseInt(prop.getProperty("student_num_rooms"));
-			PAS_NUM_ROOMS = Integer.parseInt(prop.getProperty("pas_num_rooms"));
-			PROFESSORS_PER_ROOM = Integer.parseInt(prop.getProperty("professors_per_room"));
-			STUDENTS_PER_ROOM = Integer.parseInt(prop.getProperty("students_per_room"));
-			PAS_PER_ROOM = Integer.parseInt(prop.getProperty("pas_per_room"));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -219,24 +201,33 @@ public class Manager {
 	
 	
 	private void processMessage(String topic, String message, String location, String soID) {
-		Room r = new Room("008", "10");
-		ArrayList<String> types = uts.getTypesFromMessage(message);
-		for (String type : types) {
-			System.out.println(type);
-			Sensor s = r.getSensor(soID, type);	
-			
-			/**
-			 * Currently changed to fit the simulation
-			 * 
-			 * Initialise sensors with proper data instead of RNG data
-			 */
-			if (type.equals("temperature")) s.setValue(Double.toString(16));
-			//if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
-			else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
-			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
-			else s.setValue(uts.getValueFromType(message, type));
+		Room r = building.getRoom(location);
+		if (r != null) {
+			ArrayList<String> types = uts.getTypesFromMessage(message);
+			for (String type : types) {
+				System.out.println(type);
+				if (!r.sensorExists(soID, type)) {
+					r.getSensor(awsdb.getModel(soID)).setSoID(soID);
+				}
+				Sensor s = r.getSensor(soID, type);
+				//printBuilding();
+				
+				/**
+				 * Currently changed to fit the simulation
+				 * 
+				 * Initialise sensors with proper data instead of RNG data
+				 */
+				/*if (type.equals("temperature")) s.setValue(Double.toString(16));
+				//if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
+				else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
+				else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
+				else s.setValue(uts.getValueFromType(message, type));*/
+			}
+			//simulate();
 		}
-		//simulate();
+		else {
+			System.out.println("Unable to find the ROOM, message discarded");
+		}
 	}
 	
 	private void sendInitialMessages() {
@@ -441,7 +432,7 @@ public class Manager {
 			System.out.println("Size " + r.getSize());
 			ArrayList<Sensor> sensors = r.getSensors();
 			for (Sensor s : sensors) {
-				System.out.println("Sensor " + s.getId());
+				System.out.println("Sensor " + s.getId() + " " + s.getSoID());
 			}	
 		}
 	}

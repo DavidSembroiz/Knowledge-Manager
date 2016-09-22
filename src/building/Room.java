@@ -58,14 +58,14 @@ public class Room {
 		this.people = people;
 	}
 
-	private Sensor sensorExists(String soID, String type) {
+	public boolean sensorExists(String soID, String type) {
 		for (Sensor s : sensors) {
-			if (s.getSoID().equals(soID) && s.getType().equals(type)) return s;
+			if (s.getSoID().equals(soID) && s.getType().equals(type)) return true;
 		}
-		return null;
+		return false;
 	}
 	
-	private Sensor registerSensor(String soID, String type, String location) {
+	private Sensor assignCloudId(String soID, String type, String location) {
 		Sensor s = new Sensor(soID, type);
 		sensors.add(s);
 		return s;
@@ -73,9 +73,10 @@ public class Room {
 	
 
 	public Sensor getSensor(String soID, String type) {
-		Sensor s = sensorExists(soID, type);
-		if (s == null) s = registerSensor(soID, type, this.location);
-		return s;
+		for (Sensor s : sensors) {
+			if (s.getSoID().equals(soID) && s.getType().equals(type)) return s;
+		}
+		return null;
 	}
 
 	public void fireRules() {
@@ -104,5 +105,17 @@ public class Room {
 
 	public void setRuleManager(RuleManager ruleManager) {
 		this.ruleManager = ruleManager;
+	}
+
+	public Sensor getSensor(String model) {
+		for (Sensor s : sensors) {
+			/*
+			 * Currently comparing with type, but model needs to be compared
+			 * with id so multiple sensors of same type are compatible
+			 */
+			
+			if (s.getType().equals(model)) return s;
+		}
+		return null;
 	}
 }

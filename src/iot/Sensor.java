@@ -7,6 +7,10 @@ public class Sensor {
 	private String type;
 	private String value;
 	
+	/**
+	 * Consumption values
+	 */
+	
 	
 	public Sensor(String soID, String type) {
 		this.soID = soID;
@@ -14,6 +18,7 @@ public class Sensor {
 	}
 	
 	public Sensor(String id, String type, String val) {
+		this.soID = "";
 		this.id = id;
 		this.type = type;
 		this.value = val;

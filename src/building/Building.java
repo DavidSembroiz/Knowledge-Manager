@@ -33,6 +33,13 @@ public class Building {
 	public ArrayList<Room> getRooms() {
 		return this.rooms;
 	}
+
+	public Room getRoom(String location) {
+		for (Room r : rooms) {
+			if (r.getLocation().equals(location)) return r;
+		}
+		return null;
+	}
 	
 	
 
