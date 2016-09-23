@@ -20,6 +20,7 @@ import behaviour.Person;
 import behaviour.Person.State;
 import building.Building;
 import building.Room;
+import iot.Sensor;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -273,11 +274,10 @@ public class Utils {
 				JSONArray sens = (JSONArray) rm.get("sensors");
 				for (int j = 0; j < sens.size(); ++j) {
 					JSONObject sen = (JSONObject) sens.get(j);
-					String qtt = (String) sen.get("quantity");
-					String type = (String) sen.get("type");
-					for (int z = 0; z < Integer.parseInt(qtt); ++z) {
-						r.addSensor(type + "_" + z, type, "-1");
-					}
+					String mode = (String) sen.get("mode");
+					if (mode.equals("single")) r.addSensor(loadSingleSensor(sen));
+					else if (mode.equals("multiple")) r.addSensor(loadMultipleSensor(sen));
+					
 				}
 				rooms.add(r);
 			}
@@ -286,5 +286,30 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private ArrayList<Sensor> loadMultipleSensor(JSONObject sen) {
+		ArrayList<Sensor> ret = new ArrayList<Sensor>();
+		String mainType = (String) sen.get("type");
+		JSONArray motes = (JSONArray) sen.get("motes");
+		for (int i = 0; i < motes.size(); ++i) {
+			JSONObject mote = (JSONObject) motes.get(i);
+			String type = (String) mote.get("type");
+			String qtt = (String) mote.get("quantity");
+			for (int j = 0; j < Integer.parseInt(qtt); ++j) {
+				ret.add(new Sensor(type + "_" + i + "_" + j, mainType, "-1"));
+			}
+		}
+		return ret;
+	}
+
+	private ArrayList<Sensor> loadSingleSensor(JSONObject sen) {
+		ArrayList<Sensor> ret = new ArrayList<Sensor>();
+		String qtt = (String) sen.get("quantity");
+		String type = (String) sen.get("type");
+		for (int z = 0; z < Integer.parseInt(qtt); ++z) {
+			ret.add(new Sensor(type + "_" + z, type, "-1"));
+		}
+		return ret;
 	}
 }

@@ -83,6 +83,10 @@ public class Room {
 		ruleManager.fireRules();
 	}
 	
+	public void addSensor(ArrayList<Sensor> s) {
+		for (Sensor sen : s) sensors.add(sen);
+	}
+	
 	public void addSensor(String id, String type, String val) {
 		this.sensors.add(new Sensor(id, type, val));
 	}
@@ -107,13 +111,13 @@ public class Room {
 		this.ruleManager = ruleManager;
 	}
 
-	public Sensor getSensor(String model) {
+	public Sensor fetchSensor(String type, String mote) {
 		for (Sensor s : sensors) {
 			/*
 			 * Currently comparing with type, but model needs to be compared
 			 * with id so multiple sensors of same type are compatible
 			 */
-			if (s.getType().toLowerCase().equals(model)) return s;
+			if (s.getType().toLowerCase().equals(type) && s.getMote().toLowerCase().equals(mote)) return s;
 		}
 		return null;
 	}

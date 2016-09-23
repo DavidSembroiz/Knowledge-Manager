@@ -6,6 +6,7 @@ public class Sensor {
 	private String id;
 	private String type;
 	private String value;
+	private String mote;
 	
 	/**
 	 * Consumption values
@@ -22,6 +23,15 @@ public class Sensor {
 		this.id = id;
 		this.type = type;
 		this.value = val;
+		this.mote = id.split("_")[0];
+	}
+
+	public String getMote() {
+		return mote;
+	}
+
+	public void setMote(String mote) {
+		this.mote = mote;
 	}
 
 	public String getId() {

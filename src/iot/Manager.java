@@ -207,7 +207,7 @@ public class Manager {
 			for (String type : types) {
 				System.out.println(type);
 				if (!r.sensorExists(soID, type)) {
-					Sensor s = r.getSensor(awsdb.getModel(soID));
+					Sensor s = r.fetchSensor(awsdb.getModel(soID), type);
 					s.setSoID(soID);
 				}
 				Sensor s = r.getSensor(soID, type);
