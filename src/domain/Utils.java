@@ -291,13 +291,17 @@ public class Utils {
 	private ArrayList<Sensor> loadMultipleSensor(JSONObject sen) {
 		ArrayList<Sensor> ret = new ArrayList<Sensor>();
 		String mainType = (String) sen.get("type");
+		String qt = (String) sen.get("quantity");
 		JSONArray motes = (JSONArray) sen.get("motes");
+		
 		for (int i = 0; i < motes.size(); ++i) {
 			JSONObject mote = (JSONObject) motes.get(i);
 			String type = (String) mote.get("type");
 			String qtt = (String) mote.get("quantity");
-			for (int j = 0; j < Integer.parseInt(qtt); ++j) {
-				ret.add(new Sensor(type + "_" + i + "_" + j, mainType, "-1"));
+			for (int k = 0; k < Integer.parseInt(qt); ++k) {
+				for (int j = 0; j < Integer.parseInt(qtt); ++j) {
+					ret.add(new Sensor(type + "_" + k + "_" + j, mainType, "-1"));
+				}
 			}
 		}
 		return ret;

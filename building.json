@@ -9,12 +9,12 @@
 				 "type": "XM1000",
 				 "motes": [
 				 	{"type": "temperature",
-				 	 "quantity": "1"},
+				 	 "quantity": "2"},
 				 	{"type": "humidity",
 				 	 "quantity": "1"},
 				 	{"type": "luminosity",
-				 	 "quantity": "1"},
-				 ],
+				 	 "quantity": "1"}
+				],
 				 "quantity": "2"},
 				{"mode":"single",
 				 "type": "Light",
@@ -42,7 +42,7 @@
 				 	{"type": "humidity",
 				 	 "quantity": "1"},
 				 	{"type": "luminosity",
-				 	 "quantity": "1"},
+				 	 "quantity": "1"}
 				 ],
 				 "quantity": "2"},
 				{"mode":"single",
