@@ -3,7 +3,6 @@ package building;
 import java.util.ArrayList;
 
 import behaviour.Person;
-import domain.Database;
 import iot.Actuator;
 import iot.Sensor;
 import rules.RuleManager;
@@ -65,16 +64,10 @@ public class Room {
 		return false;
 	}
 	
-	private Sensor assignCloudId(String soID, String type, String location) {
-		Sensor s = new Sensor(soID, type);
-		sensors.add(s);
-		return s;
-	}
-	
 
-	public Sensor getSensor(String soID, String type) {
+	public Sensor getSensor(String soID, String mote) {
 		for (Sensor s : sensors) {
-			if (s.getSoID().equals(soID) && s.getType().toLowerCase().equals(type)) return s;
+			if (s.getSoID().equals(soID) && s.getMote().toLowerCase().equals(mote)) return s;
 		}
 		return null;
 	}

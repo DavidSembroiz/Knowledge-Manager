@@ -220,7 +220,7 @@ public class Manager {
 				 */
 				
 				if (s != null) {
-				
+					System.out.println("GOT SENSOR " + s.getType());
 					if (type.equals("temperature")) s.setValue(Double.toString(16));
 					//if (type.equals("temperature")) s.setValue(Double.toString(models.getCurrentEnvironmentalTemperature()));
 					else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
