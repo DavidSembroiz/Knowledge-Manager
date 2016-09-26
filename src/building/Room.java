@@ -65,9 +65,9 @@ public class Room {
 	}
 	
 
-	public Sensor getSensor(String soID, String mote) {
+	public Sensor getSensor(String soID, String type) {
 		for (Sensor s : sensors) {
-			if (s.getSoID().equals(soID) && s.getMote().toLowerCase().equals(mote)) return s;
+			if (s.getSoID().equals(soID) && s.getType().toLowerCase().equals(type)) return s;
 		}
 		return null;
 	}
@@ -104,13 +104,14 @@ public class Room {
 		this.ruleManager = ruleManager;
 	}
 
-	public Sensor fetchSensor(String type, String mote) {
+	public Sensor fetchSensor(String id, String type) {
 		for (Sensor s : sensors) {
 			/*
 			 * Currently comparing with type, but model needs to be compared
 			 * with id so multiple sensors of same type are compatible
 			 */
-			if (s.getType().toLowerCase().equals(type) && s.getMote().toLowerCase().equals(mote)) return s;
+			
+			if (s.getId().toLowerCase().equals(id) && s.getType().toLowerCase().equals(type)) return s;
 		}
 		return null;
 	}

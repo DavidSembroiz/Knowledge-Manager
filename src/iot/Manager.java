@@ -211,7 +211,7 @@ public class Manager {
 					s.setSoID(soID);
 				}
 				Sensor s = r.getSensor(soID, type);
-				//printBuilding();
+				printBuilding();
 				
 				/**
 				 * Currently changed to fit the simulation
@@ -441,7 +441,7 @@ public class Manager {
 			System.out.println("Size " + r.getSize());
 			ArrayList<Sensor> sensors = r.getSensors();
 			for (Sensor s : sensors) {
-				System.out.println("Sensor " + s.getId() + " " + s.getSoID() + " " + s.getValue());
+				System.out.println("Sensor " + s.getType() + " " + s.getSoID() + " " + s.getValue());
 			}	
 		}
 	}

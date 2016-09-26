@@ -299,9 +299,12 @@ public class Utils {
 			String type = (String) mote.get("type");
 			String qtt = (String) mote.get("quantity");
 			for (int k = 0; k < Integer.parseInt(qt); ++k) {
-				for (int j = 0; j < Integer.parseInt(qtt); ++j) {
-					ret.add(new Sensor(type + "_" + k + "_" + j, mainType, "-1"));
+				if (Integer.parseInt(qtt) > 1) {
+					for (int j = 0; j < Integer.parseInt(qtt); ++j) {
+						ret.add(new Sensor(mainType + "_" + k, type + "_" + j, "-1"));
+					}
 				}
+				else ret.add(new Sensor(mainType + "_" + k, type, "-1"));
 			}
 		}
 		return ret;

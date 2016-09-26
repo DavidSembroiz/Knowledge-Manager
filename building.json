@@ -9,7 +9,7 @@
 				 "type": "XM1000",
 				 "motes": [
 				 	{"type": "temperature",
-				 	 "quantity": "2"},
+				 	 "quantity": "1"},
 				 	{"type": "humidity",
 				 	 "quantity": "1"},
 				 	{"type": "luminosity",

@@ -17,11 +17,19 @@ public class Sensor {
 		}
 	}
 	
+	/* ServIoTicy identifier */
+	
 	private String soID;
+	
+	/* Unique sensor identifier, for instance XM000_0 */
+	
 	private String id;
+	
+	/* Type of the sensor, for instance temperature */
+	
 	private String type;
 	private String value;
-	private String mote;
+	
 	private State currentState;
 	
 	
@@ -41,7 +49,6 @@ public class Sensor {
 		this.id = id;
 		this.type = type;
 		this.value = val;
-		this.mote = id.split("_")[0];
 		this.currentState = State.ON;
 	}
 
@@ -51,14 +58,6 @@ public class Sensor {
 
 	public void setCurrentState(State currentState) {
 		this.currentState = currentState;
-	}
-
-	public String getMote() {
-		return mote;
-	}
-
-	public void setMote(String mote) {
-		this.mote = mote;
 	}
 
 	public String getId() {
