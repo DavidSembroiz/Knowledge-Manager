@@ -68,6 +68,7 @@ public class Manager {
 		awsdb = Database.getInstance();
 		models = Weather.getInstance();
 		mqtt = new Mqtt(this, awsdb);
+		//reg = Register.getInstance();
 		
 		
 		/*reg = Register.getInstance();
@@ -433,6 +434,10 @@ public class Manager {
 			}
 		}
 	}*/
+	
+	private void computeConsumption() {
+	
+	}
 	
 	private void printBuilding() {
 		ArrayList<Room> rooms = building.getRooms();
