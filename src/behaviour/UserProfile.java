@@ -1,19 +1,25 @@
 package behaviour;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 
-import behaviour.Person.Type;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-public class UserProfile {
+import behaviour.PeopleManager.Type;
+
+public class UserProfile implements Cloneable {
 	
 	private Probability entrance;
 	private Probability randomWalks;
-	//private Probability randomWalksDuration;
 	private Probability lunch;
-	//private Probability lunchDuration;
 	private Probability exit;
 	
 	private int[] lunchDurationRange;
@@ -24,8 +30,8 @@ public class UserProfile {
 	
 	public UserProfile(Type t) {
 		this.type = t;
-		loadProfileFromFile();
 		rand = new Random();
+		loadProfileFromFile(t);
 	}
 	
 	
@@ -42,21 +48,10 @@ public class UserProfile {
 		this.randomWalks = randomWalks;
 	}
 	
-	/*public Probability getRandomWalksDuration() {
-		return randomWalksDuration;
-	}
-	public void setRandomWalksDuration(Probability randomWalksDuration) {
-		this.randomWalksDuration = randomWalksDuration;
-	}
-	public Probability getLunchDuration() {
-		return lunchDuration;
-	}
-	public void setLunchDuration(Probability lunchDuration) {
-		this.lunchDuration = lunchDuration;
-	}*/
 	public Probability getLunch() {
 		return lunch;
 	}
+	
 	public void setLunch(Probability lunch) {
 		this.lunch = lunch;
 	}
@@ -93,38 +88,39 @@ public class UserProfile {
 	 * probabilityName
 	 * value,value,value,value...
 	 * 
-	 * For the actions that requiere a range instead of a probability, the format is the following:
+	 * For the actions that require a range instead of a probability, the format is the following:
 	 * 
 	 * actionName
 	 * minValue,maxValue
 	 */
 	
-	private void loadProfileFromFile() {
-		String path = "res/profile/" + this.type.toString().toLowerCase() + ".txt";
-		try(BufferedReader br = new BufferedReader(new FileReader(path))) {
-	        String line;
-	        while ((line = br.readLine()) != null) {
-	        	String[] values = br.readLine().split(",");
-	        	/**
-	        	 * Reading duration action
-	        	 */
-	        	if (values.length == 2) {
-	        		assignDuration(line, values);
-	        	}
-	        	/**
-	        	 * Reading probability distribution of an action
-	        	 */
-	        	else {
-	        		Probability p = new Probability(values);
-	        		assignProbability(line, p);
-	        	}
-	        	
-	        }
-	        br.close();
-	    } catch (IOException e) {
-	    	System.err.println("ERROR: Unable to read probability from file.");
-	    	e.printStackTrace();
-	    }
+	protected void loadProfileFromFile(Type t) {
+		JSONParser parser = new JSONParser();
+		try {
+			FileReader reader = new FileReader("./res/profiles.json");
+			JSONObject root = (JSONObject) parser.parse(reader);
+			JSONObject prof = (JSONObject) root.get(t.toString().toLowerCase());
+			if (prof == null) return;
+			@SuppressWarnings("unchecked")
+			Iterator<String> keys = prof.keySet().iterator();
+			while (keys.hasNext()) {
+				String k = (String) keys.next();
+				JSONArray values = (JSONArray) prof.get(k);
+				String[] vals = new String[values.size()];
+				for (int i = 0; i < values.size(); ++i) {
+					vals[i] =  (String) values.get(i);
+				}
+				if (vals.length == 2) {
+					assignDuration(k, vals);
+				}
+				else {
+					Probability p = new Probability(vals);
+					assignProbability(k, p);
+				}
+			}
+		} catch(IOException | ParseException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private int[] arrayStringToInt(String[] values) {
@@ -158,18 +154,21 @@ public class UserProfile {
 		case "lunch":
 			lunch = p;
 			break;
-		/*case "lunchDuration":
-			lunchDuration = p;
-			break;*/
 		case "randomWalks":
 			randomWalks = p;
 			break;
-		/*case "randomWalksDuration":
-			randomWalksDuration = p;
-			break;*/
 		default:
 			System.err.println("ERROR: profile file wrongly formatted");
 			break;
 		}
+	}
+	
+	protected Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

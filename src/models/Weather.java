@@ -1,6 +1,6 @@
 package models;
 
-import domain.Utils;
+import iot.Manager;
 
 
 public class Weather {
@@ -20,9 +20,9 @@ public class Weather {
 	
 	private double getWeightedValue(double val1, double val2) {
 		if (val1 > val2) {
-			return val1 - (val1 - val2) * (Utils.CURRENT_STEP%360/360.0);
+			return val1 - (val1 - val2) * (Manager.CURRENT_STEP%360/360.0);
 		}
-		return val1 + (val2 - val1) * (Utils.CURRENT_STEP%360/360.0);
+		return val1 + (val2 - val1) * (Manager.CURRENT_STEP%360/360.0);
 	}
 	
 	/**
@@ -45,13 +45,13 @@ public class Weather {
 	
 	/**
 	 * Returns the current environmental temperature. If the current time is between two values,
-	 * it calculates the weighted value inbetween both of them.
+	 * it calculates the weighted value in between both of them.
 	 */
 	
 	public double getCurrentEnvironmentalTemperature() {
-		int p1 = Utils.CURRENT_STEP/360;
+		int p1 = Manager.CURRENT_STEP/360;
 		double val1 = environmentalTemperature[p1];
-		if (Utils.CURRENT_STEP%360 == 0) return val1;
+		if (Manager.CURRENT_STEP%360 == 0) return val1;
 			
 		int p2 = (p1 + 1)%24;
 		double val2 = environmentalTemperature[p2];
@@ -70,9 +70,9 @@ public class Weather {
 	};
 	
 	public double getCurrentEnvironmentalHumidity() {
-		int p1 = Utils.CURRENT_STEP/360;
+		int p1 = Manager.CURRENT_STEP/360;
 		double val1 = environmentalHumidity[p1];
-		if (Utils.CURRENT_STEP%360 != 0) {
+		if (Manager.CURRENT_STEP%360 != 0) {
 			int p2 = (p1 + 1)%24;
 			double val2 = environmentalHumidity[p2];
 			return getWeightedValue(val1, val2);
@@ -92,9 +92,9 @@ public class Weather {
 	};
 	
 	public double getCurrentEnvironmentalLight() {
-		int p1 = Utils.CURRENT_STEP/360;
+		int p1 = Manager.CURRENT_STEP/360;
 		double val1 = environmentalLight[p1];
-		if (Utils.CURRENT_STEP%360 != 0) {
+		if (Manager.CURRENT_STEP%360 != 0) {
 			int p2 = (p1 + 1)%24;
 			double val2 = environmentalLight[p2];
 			return getWeightedValue(val1, val2);

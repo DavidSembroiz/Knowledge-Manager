@@ -1,6 +1,10 @@
 package rules;
 
 import domain.Utils;
+import entity.Computer;
+import entity.HVAC;
+import entity.Lamp;
+import iot.Sensor;
 import building.Room;
 
 import java.util.ArrayList;
@@ -26,83 +30,47 @@ public class RuleManager {
 	}
 	
 	
-	public void registerRules(ArrayList<RuleDAO> rules) {
-		for (RuleDAO rule : rules) {
-			if (rule.getRuleName().equals("HVAC")) {
-				createHVACRule(rule.getActuator(), rule.getSensors());
-			}
-			else if (rule.getRuleName().equals("Lights")) {
-				createLightsRule(rule.getActuator(), rule.getSensors());
-			}
-			else if (rule.getRuleName().equals("Door")) {
-				createDoorRule(rule.getActuator(), rule.getSensors());
-			}
-			else if (rule.getRuleName().equals("Window")) {
-				createWindowRule(rule.getActuator(), rule.getSensors());
-			}
-			else if (rule.getRuleName().equals("Computer")) {
-				createComputerRule(rule.getActuator(), rule.getSensors());
-			}
-		}
-	}
-	
-	private void createHVACRule(String actuator, String sensors) {
-		HVACRule ac = new HVACRule(r.getPeople());
-		ArrayList<String> necessary = ac.getNecessarySensors();
-		for (String n : necessary) {
-			String soID = uts.getIdFromType(n, sensors);
-			ac.setSensor(n, r.getSensor(soID, n));
-		}
-		rulesEngine.registerRule(ac);
-		System.out.println("Rule " + ac.getClass().getName() + " registered");
-	}
-	
-	private void createLightsRule(String actuator, String sensors) {
-		LightsRule sol = new LightsRule(r.getPeople());
-		ArrayList<String> necessary = sol.getNecessarySensors();
-		for (String n : necessary) {
-			String soID = uts.getIdFromType(n, sensors);
-			sol.setSensor(n, r.getSensor(soID, n));
-		}
-		rulesEngine.registerRule(sol);
-		System.out.println("Rule " + sol.getClass().getName() + " registered");
-	}
-	
-	private void createDoorRule(String actuator, String sensors) {
-		DoorRule d = new DoorRule(r.getPeople());
-		ArrayList<String> necessary = d.getNecessarySensors();
-		for (String n : necessary) {
-			String soID = uts.getIdFromType(n, sensors);
-			d.setSensor(n, r.getSensor(soID, n));
-		}
-		rulesEngine.registerRule(d);
-		System.out.println("Rule " + d.getClass().getName() + " registered");
-	}
-	
-	private void createWindowRule(String actuator, String sensors) {
-		WindowRule w = new WindowRule(r.getPeople());
-		ArrayList<String> necessary = w.getNecessarySensors();
-		for (String n : necessary) {
-			String soID = uts.getIdFromType(n, sensors);
-			w.setSensor(n, r.getSensor(soID, n));
-		}
-		rulesEngine.registerRule(w);
-		System.out.println("Rule " + w.getClass().getName() + " registered");
-	}
-	
-	private void createComputerRule(String actuator, String sensors) {
-		ComputerRule c = new ComputerRule(r.getPeople());
-		ArrayList<String> necessary = c.getNecessarySensors();
-		for (String n : necessary) {
-			String soID = uts.getIdFromType(n, sensors);
-			c.setSensor(n, r.getSensor(soID, n));
-		}
-		rulesEngine.registerRule(c);
-		System.out.println("Rule " + c.getClass().getName() + " registered");
-	}
-	
 	public void fireRules() {
 		rulesEngine.fireRules();
+	}
+
+	public void addComputerRule(Computer c) {
+		ArrayList<Sensor> sens = r.getSensors();
+		for (Sensor s : sens) {
+			if (!s.isAssigned() && s.getType().toLowerCase().equals("power")) {
+				ComputerRule cr = new ComputerRule(r, c, s);
+				s.setAssigned(true);
+				rulesEngine.registerRule(cr);
+			}
+		}
+	}
+	
+	public void addHVACRule(HVAC h) {
+		ArrayList<Sensor> sens = r.getSensors();
+		Sensor temp = null, hum = null;
+		for (Sensor s : sens) {
+			if (!s.isAssigned()) {
+				if (s.getType().equals("temperature")) temp = s;
+				else if (s.getType().equals("humidity")) hum = s;
+			}
+		}
+		if (temp != null && hum != null) {
+			HVACRule hr = new HVACRule(r, h, temp, hum);
+			temp.setAssigned(true);
+			hum.setAssigned(true);
+			rulesEngine.registerRule(hr);
+		}
+	}
+
+	public void addLampRule(Lamp l) {
+		ArrayList<Sensor> sens = r.getSensors();
+		for (Sensor s : sens) {
+			if (!s.isAssigned() && s.getType().toLowerCase().equals("luminosity")) {
+				LampRule lr = new LampRule(r, l, s);
+				s.setAssigned(true);
+				rulesEngine.registerRule(lr);
+			}
+		}
 	}
 
 }

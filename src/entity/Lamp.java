@@ -1,6 +1,6 @@
 package entity;
 
-public class Computer {
+public class Lamp {
 	
 	private State currentState;
 	private double accPowerUsage;
@@ -19,7 +19,7 @@ public class Computer {
 	}
 	
 	
-	public Computer() {
+	public Lamp() {
 		this.currentState = State.OFF;
 	}
 

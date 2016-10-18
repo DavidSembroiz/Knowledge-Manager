@@ -17,21 +17,10 @@ public class DoorRule {
 	//TODO change to an actual actuator
 	//private String actuator;
 	
-	public DoorRule(ArrayList<Person> people) {
-		this.people = people;
+	public DoorRule() {
+		this.people = new ArrayList<Person>();
 	}
-	
-	public ArrayList<String> getNecessarySensors() {
-		ArrayList<String> ret = new ArrayList<String>();
-		if (door == null) ret.add("door");
-		return ret;
-	}
-	
-	public void setSensor(String ruleSens, Sensor s) {
-		if (ruleSens.equals("door")) {
-			door = s;
-		}
-	}
+
 	
 	@Condition
 	public boolean checkDoor() {

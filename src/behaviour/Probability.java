@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import domain.Utils;
+import iot.Manager;
 
 public class Probability {
 	
@@ -36,7 +37,7 @@ public class Probability {
 	}
 	
 	public boolean triggerStatus(int currentTime) {
-		return rand.nextDouble() < getProbability(currentTime)/Math.max(10 - Utils.CURRENT_STEP / 756, 0);
+		return rand.nextDouble() < getProbability(currentTime)/Math.max(10 - Manager.CURRENT_STEP / 756, 0);
 	}
 	
 	public boolean triggerStatusWithPrint(int currentTime) {

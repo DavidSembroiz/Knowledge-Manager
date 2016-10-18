@@ -4,21 +4,18 @@ import java.util.ArrayList;
 
 import org.easyrules.annotation.*;
 
-import behaviour.Person;
 import iot.Sensor;
 
 @Rule(name = "Window Management Rule")
 public class WindowRule {
 	
-	private ArrayList<Person> people;
 	
 	private Sensor window;
 	
 	//TODO change to an actual actuator
 	private String actuator;
 	
-	public WindowRule(ArrayList<Person> people) {
-		this.people = people;
+	public WindowRule() {
 	}
 	
 	public ArrayList<String> getNecessarySensors() {

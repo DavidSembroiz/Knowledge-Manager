@@ -4,8 +4,6 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-import rules.RuleDAO;
-
 import org.postgresql.ds.PGPoolingDataSource;
 
 public class Database {
@@ -42,7 +40,6 @@ public class Database {
 		loadPoolSource();
 		//createIdTable();
 		createAssociationsTable();
-		readRelationsFromFile();
 		initialiseCounters();
 	}
 	
@@ -275,34 +272,7 @@ public class Database {
 		}
 	}
 	
-	public ArrayList<RuleDAO> getCompletedRules(String location) {
-		Connection c = null;
-		ArrayList<RuleDAO> rules = new ArrayList<RuleDAO>();
-		try {
-			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT actuator, sensors, rule FROM associations WHERE location = ? AND registrations_left = 0");
-			pst.setString(1, location);
-			ResultSet rs = pst.executeQuery();
-			String actuator = null, sensors = null, rule = null;
-			
-			while (rs.next()) {
-				actuator = rs.getString("actuator");
-				sensors = rs.getString("sensors");
-				rule = rs.getString("rule");
-				rules.add(new RuleDAO(actuator, sensors, rule));
-			}
-			pst = c.prepareStatement("UPDATE associations SET registrations_left = -1 WHERE actuator = ? AND location = ? AND rule = ?");
-			pst.setString(1, actuator);
-			pst.setString(2, location);
-			pst.setString(3, rule);
-			pst.executeUpdate();
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConnection(c);
-		}
-		return rules;
-	}
+	
 	
 	private void initialiseCounters() {
 		Connection c = null;
@@ -324,25 +294,5 @@ public class Database {
 			closeConnection(c);
 		}
 	}
-	
-	/**
-	 * Create the label relation between actuators and rules
-	 * The number references how many sensors are needed for that rule.
-	 * TODO change the number for a predefined map
-	 */
-	
-	private void readRelationsFromFile() {
-		try(BufferedReader br = new BufferedReader(new FileReader("res/relations.txt"))) {
-	        String line;
-	        while ((line = br.readLine()) != null) {
-	        	String[] values = line.split(",");
-	        	ruleAssociations.put(values[1] + "/" + values[0], 
-	        						 Integer.parseInt(values[2]));
-	        }
-	        br.close();
-	    } catch (IOException e) {
-	    	System.err.println("ERROR: Unable to read people from file.");
-	    	e.printStackTrace();
-	    }
-	}
+
 }

@@ -1,8 +1,12 @@
 package building;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import behaviour.Person;
+import entity.Computer;
+import entity.HVAC;
+import entity.Lamp;
 import iot.Actuator;
 import iot.Sensor;
 import rules.RuleManager;
@@ -20,12 +24,14 @@ public class Room {
 	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
 	private ArrayList<Person> people;
+	private HashSet<Object> entities;
 	
 	public Room(String location, String size) {
 		this.location = location;
 		this.size = size;
 		sensors = new ArrayList<Sensor>();
 		actuators = new ArrayList<Actuator>();
+		this.entities = new HashSet<>();
 		this.ruleManager = new RuleManager(this);
 	}
 	
@@ -115,4 +121,35 @@ public class Room {
 		}
 		return null;
 	}
+
+	public void addEntity(String type, String qtt) {
+		for (int i = 0; i < Integer.parseInt(qtt); ++i) {
+			if (type.equals("computer")) {
+				Computer c = new Computer();
+				entities.add(c);
+				ruleManager.addComputerRule(c);
+				
+			}
+			else if (type.equals("lamp")) {
+				Lamp l = new Lamp();
+				entities.add(l);
+				ruleManager.addLampRule(l);
+			}
+			else if (type.equals("hvac")) {
+				HVAC hvac = new HVAC();
+				entities.add(hvac);
+				ruleManager.addHVACRule(hvac);
+			}
+		}
+	}
+
+	public HashSet<Object> getEntities() {
+		return entities;
+	}
+
+	public void setEntities(HashSet<Object> entities) {
+		this.entities = entities;
+	}
+	
+	
 }

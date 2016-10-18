@@ -4,6 +4,14 @@
 		{
 			"id": "upc/campusnord/d6001",
 			"size": "140",
+			"entities": [
+				{"type":"computer",
+				 "quantity":"1"},
+				{"type":"hvac",
+				 "quantity":"1"},
+				{"type":"lamp",
+				 "quantity": "1"}
+			],
 			"sensors": [
 				{"mode":"multiple",
 				 "type": "XM1000",
@@ -33,6 +41,14 @@
 		{
 			"id": "upc/campusnord/d6002",
 			"size": "150",
+			"entities": [
+				{"type":"computer",
+				 "quantity":"1"},
+				{"type":"hvac",
+				 "quantity":"1"},
+				{"type":"lamp",
+				 "quantity": "1"}
+			],
 			"sensors": [
 				{"mode":"multiple",
 				 "type": "XM1000",

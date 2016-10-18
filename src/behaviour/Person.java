@@ -1,52 +1,53 @@
 package behaviour;
 
-import domain.Utils;
+import behaviour.PeopleManager.Action;
+import behaviour.PeopleManager.State;
 
 public class Person {
 	
-	public enum State {
-		OUTSIDE, INSIDE, RANDOM_WALKS, LUNCH, UNASSIGNED
-	}
-	
-	public enum Type {
-		PROFESSOR, PAS, STUDENT
-	}
-	
 	private String name;
-	private String location;
-	private State state;
-	private Type type;
-	private boolean changed;
-	private boolean eaten;
-	private boolean entered;
-	private int lunchReturn;
-	private int randomWalksReturn;
-	private int numRandomWalks;
+	private State currentState;
+	private Action currentAction;
+	private UserProfile profile;
+	private UserParams params;
+	private int nextActionSteps;
+	private int remainingSteps;
+	private boolean acting;
 	
-	private int insideTime;
-	
-	public Person(String name, String location, State state, Type type) {
+	public Person(String name, UserProfile prof, UserParams param) {
+		this.currentState = State.OUTSIDE;
 		this.name = name;
-		this.location = location;
-		this.state = state;
-		this.type = type;
-		this.changed = false;
-		this.eaten = false;
-		this.entered = false;
-		this.lunchReturn = -1;
-		this.randomWalksReturn = -1;
-		this.numRandomWalks = 0;
-		this.insideTime = 0;
+		this.profile = prof;
+		this.params = param;
+		acting = false;
 	}
 	
-	
-
-	public int getInsideTime() {
-		return insideTime;
+	public void assignState(State st) {
+		this.currentState = st;
 	}
 
-	public void setInsideTime(int insideTime) {
-		this.insideTime = insideTime;
+	public int getRemainingSteps() {
+		return remainingSteps;
+	}
+
+	public void setRemainingSteps(int remainingSteps) {
+		this.remainingSteps = remainingSteps;
+	}
+	
+	public void decreaseRemainingSteps() {
+		--remainingSteps;
+	}
+
+	public int getNextActionSteps() {
+		return nextActionSteps;
+	}
+
+	public void setNextActionSteps(int nextActionSteps) {
+		this.nextActionSteps = nextActionSteps;
+	}
+	
+	public void decreaseNextActionSteps() {
+		--nextActionSteps;
 	}
 
 	public String getName() {
@@ -57,75 +58,46 @@ public class Person {
 		this.name = name;
 	}
 
-	public String getLocation() {
-		return location;
+	public State getCurrentState() {
+		return currentState;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setCurrentState(State currentState) {
+		this.currentState = currentState;
 	}
 
-	public State getState() {
-		return state;
+	public UserProfile getProfile() {
+		return profile;
 	}
 
-	public void setState(State state) {
-		this.state = state;
+	public void setProfile(UserProfile profile) {
+		this.profile = profile;
 	}
 
-	public Type getType() {
-		return type;
+	public boolean isActing() {
+		return acting;
 	}
 
-	public void setType(Type type) {
-		this.type = type;
+	public void setActing(boolean acting) {
+		this.acting = acting;
 	}
 
-	public boolean hasChanged() {
-		return changed;
+	public Action getCurrentAction() {
+		return currentAction;
 	}
 
-	public void setChanged(boolean changed) {
-		this.changed = changed;
+	public void setCurrentAction(Action currentAction) {
+		this.currentAction = currentAction;
+	}
+
+	public UserParams getParams() {
+		return params;
+	}
+
+	public void setParams(UserParams params) {
+		this.params = params;
 	}
 	
-	public boolean hasEaten() {
-		return eaten;
-	}
+	
 
-	public void setEaten(boolean eaten) {
-		this.eaten = eaten;
-	}
-	
-	public boolean hasEntered() {
-		return entered;
-	}
-
-	public void setEntered(boolean entered) {
-		this.entered = entered;
-	}
-	
-	public int getLunchReturn() {
-		return lunchReturn;
-	}
-	
-	public void setLunchReturn(int current, int duration) {
-		this.lunchReturn = current + duration;
-	}
-	
-	public int getRandomWalksReturn() {
-		return randomWalksReturn;
-	}
-	
-	public void setRandomWalksReturn(int current, int duration) {
-		this.randomWalksReturn = current + duration;
-	}
-	
-	public void addRandomWalk() {
-		this.numRandomWalks++;
-	}
-	
-	public boolean canRandomWalk() {
-		return numRandomWalks < Utils.MAX_RANDOM_WALKS;
-	}
 }

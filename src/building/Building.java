@@ -1,6 +1,9 @@
 package building;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import entity.Computer;
 
 public class Building {
 	
@@ -39,6 +42,20 @@ public class Building {
 			if (r.getLocation().equals(location)) return r;
 		}
 		return null;
+	}
+
+	public void updateConsumption() {
+		for (Room r : rooms) {
+			HashSet<Object> ents = r.getEntities();
+			for (Object e : ents) {
+				if (e instanceof Computer) {
+					int cons = ((Computer) e).getCurrentState().getConsumption();
+					/* Current  */
+					((Computer) e).addConsumption(cons);
+					
+				}
+			}
+		}
 	}
 	
 	

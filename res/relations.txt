@@ -1,5 +1,0 @@
-HVAC,hvac,2
-Lights,light,1
-Door,door,1
-Window,window,1
-Computer,computer,1

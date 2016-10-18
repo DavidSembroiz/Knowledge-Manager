@@ -1,14 +1,11 @@
 package domain;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,8 +13,6 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
-import behaviour.Person;
-import behaviour.Person.State;
 import building.Building;
 import building.Room;
 import iot.Sensor;
@@ -40,20 +35,10 @@ public class Utils {
 	
 	private Properties prop;
 	
-	/**
-	 * 10 second steps
-	 */
-	
-	public static int STEPS;
 	
 	public static int MAX_RANDOM_WALKS;
 	public static boolean RANDOM_WALKS;
-	
-	public static int CURRENT_STEP = 0;
-	private static int CURRENT_ROOM_NO = 1;
 
-	
-	
 
 	private void loadProperties() {
 		prop = new Properties();
@@ -61,7 +46,6 @@ public class Utils {
 			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
 			
-			STEPS = Integer.parseInt(prop.getProperty("steps"));
 			
 			MAX_RANDOM_WALKS = Integer.parseInt(prop.getProperty("max_random_walks"));
 			RANDOM_WALKS = Boolean.parseBoolean(prop.getProperty("random_walks"));
@@ -163,67 +147,24 @@ public class Utils {
 		return -1;
 	}
 	
-	public static boolean emptyRoom(ArrayList<Person> people) {
-		for (Person p : people) {
-			if (p.getState().equals(State.INSIDE)) return false;
-		}
-		return true;
-	}
-
-	public static boolean justWalking(ArrayList<Person> people) {
-		for (Person p : people) {
-			if (!p.getState().equals(State.RANDOM_WALKS)) return false;
-		}
-		return true;
-	}
 	
-	public static boolean eating(ArrayList<Person> people) {
-		for (Person p : people) {
-			if (!p.getState().equals(State.LUNCH)) return false;
-		}
-		return true;
-	}
 	
-	public void generatePeople(int numProfRooms, int numStudRooms, int numPasRooms,
-							   int professorsPerRoom, int studentsPerRoom, int pasPerRoom) {
-		try(PrintWriter wr = new PrintWriter(new BufferedWriter(new FileWriter("res/people.txt")))) {
-			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numProfRooms; ++i) {
-				String room = getProperRoomName(i);
-				for (int j = 0; j < professorsPerRoom; ++j) {
-					String name = getRandomName();
-		        	String type = "professor";
-		        	wr.println(name + "," + room + "," + type);
-				}
-	        }
-			CURRENT_ROOM_NO += numProfRooms;
-			
-			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numStudRooms; ++i) {
-				String room = getProperRoomName(i);
-				for (int j = 0; j < studentsPerRoom; ++j) {
-					String name = getRandomName();
-		        	String type = "student";
-		        	wr.println(name + "," + room + "," + type);
-				}
+	@SuppressWarnings("unchecked")
+	public void generatePeople() {
+		try (FileWriter writer = new FileWriter("./res/people.json")) {
+			JSONObject root = new JSONObject();
+			JSONArray people = new JSONArray();
+			for (int i = 0; i < 50; ++i) {
+				JSONObject person = new JSONObject();
+				person.put("name", this.getRandomName());
+				person.put("profile", "professor");
+				people.add(person);
 			}
-			CURRENT_ROOM_NO += numStudRooms;
-			
-			for (int i = CURRENT_ROOM_NO; i < CURRENT_ROOM_NO + numPasRooms; ++i) {
-				String room = getProperRoomName(i);
-				for (int j = 0; j < pasPerRoom; ++j) {
-					String name = getRandomName();
-		        	String type = "pas";
-		        	wr.println(name + "," + room + "," + type);
-				}
-			}
-			CURRENT_ROOM_NO += numPasRooms;
-			
-	    } catch (IOException e) {
-	    	System.err.println("ERROR: Unable to read people from file.");
-	    	e.printStackTrace();
-	    } catch(IllegalArgumentException e) {
-	    	System.err.println("ERROR: Person does not contain a valid type.");
-	    	e.printStackTrace();
-	    }
+			root.put("people", people);
+			writer.write(root.toJSONString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static String getTemplatePersonName() {
@@ -252,19 +193,11 @@ public class Utils {
 		return sb.toString();
 	}
 	
-	private String getProperRoomName(int id) {
-        String res = "upc/campusnord/";
-        if (id < 10) res += "d600" + id;
-        else if (id < 100) res += "d60" + id;
-        else if (id < 1000) res += "d6" + id;
-        return res;
-    }
-	
 	public Building loadBuilding() {
 		JSONParser parser = new JSONParser();
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		try {
-			FileReader reader = new FileReader("./building.json");
+			FileReader reader = new FileReader("./res/building.json");
 			JSONObject root = (JSONObject) parser.parse(reader);
 			String id = (String) root.get("id");
 			JSONArray rms = (JSONArray) root.get("rooms");
@@ -278,6 +211,11 @@ public class Utils {
 					if (mode.equals("single")) r.addSensor(loadSingleSensor(sen));
 					else if (mode.equals("multiple")) r.addSensor(loadMultipleSensor(sen));
 					
+				}
+				JSONArray ents = (JSONArray) rm.get("entities");
+				for (int j = 0; j < ents.size(); ++j) {
+					JSONObject ent = (JSONObject) ents.get(j);
+					r.addEntity((String) ent.get("type"), (String) ent.get("quantity"));
 				}
 				rooms.add(r);
 			}

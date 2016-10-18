@@ -3,7 +3,7 @@ package iot;
 public class Sensor {
 	
 	
-	private enum State {
+	public enum State {
 		OFF (0),
 		IDLE (5),
 		ON (25),
@@ -32,6 +32,8 @@ public class Sensor {
 	
 	private State currentState;
 	
+	private boolean assigned;
+	
 	
 	/**
 	 * Consumption values
@@ -42,6 +44,7 @@ public class Sensor {
 		this.soID = soID;
 		this.type = type;
 		this.currentState = State.ON;
+		this.assigned = false;
 	}
 	
 	public Sensor(String id, String type, String val) {
@@ -91,5 +94,15 @@ public class Sensor {
 
 	public void setType(String type) {
 		this.type = type;
-	}	
+	}
+
+	public boolean isAssigned() {
+		return assigned;
+	}
+
+	public void setAssigned(boolean assigned) {
+		this.assigned = assigned;
+	}
+	
+	
 }
