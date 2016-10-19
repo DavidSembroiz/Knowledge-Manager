@@ -4,10 +4,12 @@ public class UserParams {
 	
 	private double temperature;
 	private double light;
+	private boolean hadLunch;
 	
 	public UserParams(double t, double l) {
 		temperature = t;
 		light = l;
+		this.hadLunch = false;
 	}
 
 	public double getTemperature() {
@@ -25,7 +27,13 @@ public class UserParams {
 	public void setLight(double light) {
 		this.light = light;
 	}
-	
-	
+
+	public boolean hadLunch() {
+		return hadLunch;
+	}
+
+	public void setHadLunch(boolean hadLunch) {
+		this.hadLunch = hadLunch;
+	}
 
 }

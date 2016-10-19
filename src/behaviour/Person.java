@@ -2,12 +2,14 @@ package behaviour;
 
 import behaviour.PeopleManager.Action;
 import behaviour.PeopleManager.State;
+import domain.Debugger;
 
 public class Person {
 	
 	private String name;
 	private State currentState;
 	private Action currentAction;
+	private String location;
 	private UserProfile profile;
 	private UserParams params;
 	private int nextActionSteps;
@@ -15,10 +17,14 @@ public class Person {
 	private boolean acting;
 	
 	public Person(String name, UserProfile prof, UserParams param) {
+		this.currentAction = Action.MOVE;
 		this.currentState = State.OUTSIDE;
 		this.name = name;
 		this.profile = prof;
 		this.params = param;
+		this.nextActionSteps = -1;
+		this.remainingSteps = -1;
+		this.location = "";
 		acting = false;
 	}
 	
@@ -97,7 +103,65 @@ public class Person {
 	public void setParams(UserParams params) {
 		this.params = params;
 	}
-	
-	
 
+	public void assignAction(Action a, String dest, int next, int duration) {
+		this.currentAction = a;
+		this.location = dest;
+		this.nextActionSteps = next;
+		this.remainingSteps = duration;
+		if (Debugger.isEnabled()) Debugger.log("Action " + a.toString() +
+											   " assigned to Person " + this.getName() +
+											   " next " + next +
+											   " duration " + duration);
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public void changeState() {
+		if (Debugger.isEnabled()) Debugger.log("Executing action...");
+		if (currentAction.equals(Action.MOVE)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.ROOM.toString());
+			currentState = State.ROOM;
+			
+		}
+		else if (currentAction.equals(Action.ENTER)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.INSIDE.toString());
+			currentState = State.INSIDE;
+		}
+		else if (currentAction.equals(Action.EXIT)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.OUTSIDE.toString());
+			currentState = State.OUTSIDE;
+		}
+		else if (currentAction.equals(Action.LUNCH)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.SALON.toString());
+			currentState = State.SALON;
+		}
+	}
+
+	public boolean isInside() {
+		if (currentState.equals(State.OUTSIDE)) return false;
+		return true;
+	}
+	
+	public boolean hadLunch() {
+		return params.hadLunch();
+	}
+
+	public void setHadLunch(boolean b) {
+		params.setHadLunch(b);
+	}
 }

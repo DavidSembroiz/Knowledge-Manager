@@ -13,6 +13,7 @@ import behaviour.PeopleManager;
 import building.Building;
 import building.Room;
 import domain.Database;
+import domain.Debugger;
 import domain.Mqtt;
 import domain.Utils;
 import models.Weather;
@@ -61,6 +62,7 @@ public class Manager {
 		building = uts.loadBuilding();
 		uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
+		peopleManager.setBuilding(building);
 		
 		simulate();
 	}
@@ -126,7 +128,9 @@ public class Manager {
 
 
 	private void simulate() {
-		while (CURRENT_STEP < STEPS) {
+		peopleManager.enterPeople();
+		while (CURRENT_STEP < 20) {
+			if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
 			peopleManager.updateActions();
 			building.updateConsumption();
 			++CURRENT_STEP;

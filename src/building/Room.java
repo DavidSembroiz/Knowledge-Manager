@@ -33,6 +33,7 @@ public class Room {
 		actuators = new ArrayList<Actuator>();
 		this.entities = new HashSet<>();
 		this.ruleManager = new RuleManager(this);
+		this.people = new ArrayList<Person>();
 	}
 	
 	public RuleManager getRuleManager() {
@@ -149,6 +150,14 @@ public class Room {
 
 	public void setEntities(HashSet<Object> entities) {
 		this.entities = entities;
+	}
+
+	public void removePerson(Person p) {
+		if (people.contains(p)) people.remove(p);
+	}
+
+	public void addPerson(Person p) {
+		people.add(p);
 	}
 	
 	

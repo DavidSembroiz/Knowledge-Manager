@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 import org.json.simple.JSONArray;
@@ -13,11 +14,21 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import building.Building;
+
 
 public class PeopleManager {
 	
 	public enum Action {
-		MOVE, LUNCH, ENTER, EXIT
+		MOVE, LUNCH, ENTER, EXIT;
+		
+		private static final Action[] ACTIONS = values();
+		private static final Random rand = new Random();
+		
+		public static Action randomAction() {
+			return ACTIONS[rand.nextInt(ACTIONS.length)];
+		}
+		
 	}
 	
 	public enum State {
@@ -30,6 +41,7 @@ public class PeopleManager {
 	
 	private static PeopleManager instance = new PeopleManager();
 	
+	
 	private PeopleManager() {
 		initComponents();
 	}
@@ -40,6 +52,8 @@ public class PeopleManager {
 	
 	private ArrayList<Person> people;
 	private ArrayList<UserProfile> defaultProfiles;
+	private Building building;
+	private Random rand;
 	
 	private boolean writeToFile = false;
 	private PrintWriter writer;
@@ -49,6 +63,7 @@ public class PeopleManager {
 	 */
 	
 	private void initComponents() {
+		rand = new Random();
 		fetchProfiles();
 		getPeopleFromFile();
 	}
@@ -123,20 +138,30 @@ public class PeopleManager {
 
 	public void updateActions() {
 		for (Person p : people) {
-			if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
-			else if (!p.isActing() && p.getNextActionSteps() == 0) {
-				executeAction(p);
+			if (!p.isActing()) {
+				if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
+				else if (p.getNextActionSteps() == 0) {
+					
+					/**
+					 * Action is executed and nextActionSteps is set to -1
+					 */
+					p.decreaseNextActionSteps();
+					executeAction(p);
+				}
+				else if (p.getNextActionSteps() < 0) {
+					assignNewAction(p);
+				}
 			}
-			else {
+			else if (p.isActing()) {
 				if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
-				else assignNewAction(p);
+				else if(p.getRemainingSteps() == 0) assignNewAction(p);
 			}
 		}
 	}
 	
 	private void executeAction(Person p) {
 		p.setActing(true);
-		// FINISH
+		p.changeState();
 		
 	}
 
@@ -148,6 +173,61 @@ public class PeopleManager {
 		 * Assign action time and duration (next and remaining)
 		 * 
 		 */
+		Action a = Action.randomAction();
+		if (a.equals(Action.MOVE)) {
+			if (p.isInside()) {
+				String dest = getRandomDestination();
+				int next = 1 + rand.nextInt(1);
+				int duration = 1 + rand.nextInt(1);
+				String currentLoc = p.getLocation();
+				p.assignAction(a, dest, next, duration);
+				building.movePerson(p, currentLoc);
+			}
+		}
+		else if (a.equals(Action.ENTER)) {
+			if (!p.isInside()) {
+				int next = 1 + rand.nextInt(1);
+				int duration = 1;
+				p.assignAction(a, "inside", next, duration);
+				building.movePerson(p, "outside");
+			}
+		}
+		else if (a.equals(Action.EXIT)) {
+			if (p.isInside()) {
+				int next = 1 + rand.nextInt(1);
+				int duration = 1;
+				p.assignAction(a, "outside", next, duration);
+				building.movePerson(p, "inside");
+			}
+		}
+		else if (a.equals(Action.LUNCH)) {
+			if (p.isInside() && !p.hadLunch()) {
+				int next = 1 + rand.nextInt(1);
+				int duration = 1 + rand.nextInt(1);
+				String currentLoc = p.getLocation();
+				p.setHadLunch(true);
+				p.assignAction(a, "salon", next, duration);
+				building.movePerson(p, currentLoc);
+			}
+		}
+	}
+
+	private String getRandomDestination() {
+		String[] locs = building.getLocations();
+		return locs[rand.nextInt(locs.length)];
+	}
+
+	public void enterPeople() {
+		for (Person p : people) {
+			int next = 1 + rand.nextInt(1);
+			int duration = 1;
+			p.assignAction(Action.ENTER, "inside", next, duration);
+			building.movePerson(p, "outside");
+		}
+	}
+
+	public void setBuilding(Building b) {
+		this.building = b;
 	}
 	
 }
