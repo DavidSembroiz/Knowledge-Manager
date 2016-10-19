@@ -30,7 +30,7 @@ public class Building {
 	private void parseLocations() {
 		HashSet<String> locs = new HashSet<String>();
 		for (Room r : rooms) {
-			locs.add(r.getLocation());
+			if (Integer.parseInt(r.getSize()) > 0) locs.add(r.getLocation());
 		}
 		locations = locs.toArray(new String[locs.size()]);
 	}

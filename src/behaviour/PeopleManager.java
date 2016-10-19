@@ -1,6 +1,7 @@
 package behaviour;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,9 +55,9 @@ public class PeopleManager {
 	private ArrayList<UserProfile> defaultProfiles;
 	private Building building;
 	private Random rand;
-	
-	private boolean writeToFile = false;
 	private PrintWriter writer;
+	
+	private boolean writeToFile = true;
 	
 	/**
 	 * Initialize all the components required to manage people.
@@ -64,6 +65,7 @@ public class PeopleManager {
 	
 	private void initComponents() {
 		rand = new Random();
+		if (writeToFile) enableRecordFile();
 		fetchProfiles();
 		getPeopleFromFile();
 	}
@@ -82,16 +84,15 @@ public class PeopleManager {
 	 */
 	
 	public void enableRecordFile() {
-		writeToFile = true;
 		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.txt")));
+			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.log")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void flushData(int steps, int current) {
-		if (writer != null && current % steps == 0) writer.flush();
+	public void flushData() {
+		if (writer != null) writer.flush();
 	}
 	
 	public UserProfile getProfile(String s) {
@@ -174,40 +175,56 @@ public class PeopleManager {
 		 * 
 		 */
 		Action a = Action.randomAction();
+		String dest = null, currentLoc = null;
+		int next = 0, duration = 0;
+		boolean assigned = false;
 		if (a.equals(Action.MOVE)) {
 			if (p.isInside()) {
-				String dest = getRandomDestination();
-				int next = 1 + rand.nextInt(30);
-				int duration = 1 + rand.nextInt(30);
-				String currentLoc = p.getLocation();
-				p.assignAction(a, dest, next, duration);
-				building.movePerson(p, currentLoc);
+				assigned = true;
+				dest = getRandomDestination();
+				next = 1 + rand.nextInt(30);
+				duration = 1 + rand.nextInt(30);
+				currentLoc = p.getLocation();
 			}
 		}
 		else if (a.equals(Action.ENTER)) {
 			if (!p.isInside()) {
-				int next = 1 + rand.nextInt(20);
-				int duration = 1;
-				p.assignAction(a, "inside", next, duration);
-				building.movePerson(p, "outside");
+				assigned = true;
+				dest = "inside";
+				next = 1 + rand.nextInt(20);
+				duration = 1;
+				currentLoc = p.getLocation();
 			}
 		}
 		else if (a.equals(Action.EXIT)) {
 			if (p.isInside()) {
-				int next = 1 + rand.nextInt(20);
-				int duration = 1;
-				p.assignAction(a, "outside", next, duration);
-				building.movePerson(p, "inside");
+				assigned = true;
+				dest = "outside";
+				next = 1 + rand.nextInt(20);
+				duration = 1;
+				currentLoc = p.getLocation();
 			}
 		}
 		else if (a.equals(Action.LUNCH)) {
 			if (p.isInside() && !p.hadLunch()) {
-				int next = 1 + rand.nextInt(10);
-				int duration = 1 + rand.nextInt(40);
-				String currentLoc = p.getLocation();
+				assigned = true;
+				dest = "salon";
+				next = 1 + rand.nextInt(10);
+				duration = 1 + rand.nextInt(40);
+				currentLoc = p.getLocation();
 				p.setHadLunch(true);
-				p.assignAction(a, "salon", next, duration);
-				building.movePerson(p, currentLoc);
+			}
+		}
+		if (assigned) {
+			p.assignAction(a, dest, next, duration);
+			building.movePerson(p, currentLoc);
+			if (writeToFile) {
+				writer.println(p.getName() + "," +
+							 p.getCurrentAction().toString() + "," +
+						     p.getNextActionSteps() + "," +
+						     p.getRemainingSteps() + "," +
+						     p.getLocation());
+				flushData();
 			}
 		}
 	}
@@ -222,6 +239,15 @@ public class PeopleManager {
 			int next = 1 + rand.nextInt(1);
 			int duration = 1;
 			p.assignAction(Action.ENTER, "inside", next, duration);
+			if (writeToFile) {
+				writer.println(p.getName() + "," +
+							 Action.ENTER.toString() + "," +
+						     next + "," +
+						     duration + "," +
+						     p.getLocation());
+				flushData();
+			}
+										  
 			building.movePerson(p, "outside");
 		}
 	}

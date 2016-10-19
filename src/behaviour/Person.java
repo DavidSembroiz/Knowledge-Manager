@@ -109,10 +109,13 @@ public class Person {
 		this.location = dest;
 		this.nextActionSteps = next;
 		this.remainingSteps = duration;
-		if (Debugger.isEnabled()) Debugger.log("Action " + a.toString() +
-											   " assigned to Person " + this.getName() +
-											   " next " + next +
-											   " duration " + duration);
+		if (Debugger.isEnabled()) {
+			Debugger.log("Action " + a.toString() +
+						 " assigned to Person " + this.getName() +
+					     " next " + next +
+					     " duration " + duration);
+		}
+											   
 	}
 
 	public String getLocation() {

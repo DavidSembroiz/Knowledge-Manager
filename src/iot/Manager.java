@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Properties;
@@ -20,12 +21,13 @@ import models.Weather;
 
 public class Manager {
 	
+
 	
 	/**
 	 * The record file saves all the actions in events.txt
 	 */
 	
-	private int EVENTS_FILE;
+	private int LOG_EVENTS;
 	
 	private int GENERATE_PEOPLE;
 	
@@ -68,7 +70,7 @@ public class Manager {
 			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
 			STEPS = Integer.parseInt(prop.getProperty("steps"));
-			EVENTS_FILE = Integer.parseInt(prop.getProperty("events_file"));
+			LOG_EVENTS = Integer.parseInt(prop.getProperty("log_events"));
 			GENERATE_PEOPLE = Integer.parseInt(prop.getProperty("generate_people"));
 			
 			
@@ -148,7 +150,7 @@ public class Manager {
 	
 
 	
-	private PriorityQueue<Event> readEventFile() {
+	/*private PriorityQueue<Event> readEventFile() {
 		PriorityQueue<Event> events = new PriorityQueue<Event>();
 		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
 	        String line;
@@ -162,50 +164,8 @@ public class Manager {
 	    	e.printStackTrace();
 	    }
 		return events;
-	}
-	
-	
-	/**
-	 * Calculates the number of hours that everyone has been inside the building.
-	 * It assumes that everyone who enter eventually leaves.
-	 */
-	
-	/*private int checkWorkingHours() {
-		HashMap<String, Integer> timesEnter = new HashMap<String, Integer>();
-		HashMap<String, Integer> timesLeave = new HashMap<String, Integer>();
-		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
-	        String line;
-	        while ((line = br.readLine()) != null) {
-	        	String[] values = line.split(",");
-	        	if (values[1].equals("enter")) {
-	        		String room = getRoomFromPeople(values[0]);
-	        		timesEnter.put(room, Math.min(timesEnter.containsKey(room) ? timesEnter.get(room) : 10000, Integer.parseInt(values[2])));
-	        	}
-	        	else if (values[1].equals("leave")) {
-	        		String room = getRoomFromPeople(values[0]);
-	        		timesLeave.put(room, Math.max(timesLeave.containsKey(room) ? timesLeave.get(room) : 0, Integer.parseInt(values[2])));
-	        	}
-	        }
-	        int totalTime = 0;
-	        Iterator<Entry<String, Integer>> it = timesEnter.entrySet().iterator();
-	        while (it.hasNext()) {
-	        	Map.Entry<String, Integer> pair = it.next();
-	        	if (timesLeave.containsKey(pair.getKey())) {
-	        		totalTime +=  timesLeave.get(pair.getKey()) - pair.getValue();
-	        	}
-	        }
-	        
-	        calculateConsumptionHistory(timesEnter, timesLeave);
-	        
-	        return totalTime;
-	    } catch (IOException e) {
-	    	System.out.println("ERROR: Unable to read events from file.");
-	    	e.printStackTrace();
-	    }
-		return 0;
 	}*/
 	
-
 	private void printBuilding() {
 		ArrayList<Room> rooms = building.getRooms();
 		for (Room r : rooms) {
