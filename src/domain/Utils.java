@@ -26,34 +26,12 @@ public class Utils {
 	private static Utils instance = new Utils();
 	
 	private Utils() {
-		loadProperties();
 	}
 	
 	public static Utils getInstance() {
 		return instance;
 	}
 	
-	private Properties prop;
-	
-	
-	public static int MAX_RANDOM_WALKS;
-	public static boolean RANDOM_WALKS;
-
-
-	private void loadProperties() {
-		prop = new Properties();
-		try {
-			InputStream is = new FileInputStream("manager.properties");
-			prop.load(is);
-			
-			
-			MAX_RANDOM_WALKS = Integer.parseInt(prop.getProperty("max_random_walks"));
-			RANDOM_WALKS = Boolean.parseBoolean(prop.getProperty("random_walks"));
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}	
 	
 	/**
 	 * Gets the soID from a topic string

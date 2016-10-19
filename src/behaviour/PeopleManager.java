@@ -177,8 +177,8 @@ public class PeopleManager {
 		if (a.equals(Action.MOVE)) {
 			if (p.isInside()) {
 				String dest = getRandomDestination();
-				int next = 1 + rand.nextInt(1);
-				int duration = 1 + rand.nextInt(1);
+				int next = 1 + rand.nextInt(30);
+				int duration = 1 + rand.nextInt(30);
 				String currentLoc = p.getLocation();
 				p.assignAction(a, dest, next, duration);
 				building.movePerson(p, currentLoc);
@@ -186,7 +186,7 @@ public class PeopleManager {
 		}
 		else if (a.equals(Action.ENTER)) {
 			if (!p.isInside()) {
-				int next = 1 + rand.nextInt(1);
+				int next = 1 + rand.nextInt(20);
 				int duration = 1;
 				p.assignAction(a, "inside", next, duration);
 				building.movePerson(p, "outside");
@@ -194,7 +194,7 @@ public class PeopleManager {
 		}
 		else if (a.equals(Action.EXIT)) {
 			if (p.isInside()) {
-				int next = 1 + rand.nextInt(1);
+				int next = 1 + rand.nextInt(20);
 				int duration = 1;
 				p.assignAction(a, "outside", next, duration);
 				building.movePerson(p, "inside");
@@ -202,8 +202,8 @@ public class PeopleManager {
 		}
 		else if (a.equals(Action.LUNCH)) {
 			if (p.isInside() && !p.hadLunch()) {
-				int next = 1 + rand.nextInt(1);
-				int duration = 1 + rand.nextInt(1);
+				int next = 1 + rand.nextInt(10);
+				int duration = 1 + rand.nextInt(40);
 				String currentLoc = p.getLocation();
 				p.setHadLunch(true);
 				p.assignAction(a, "salon", next, duration);

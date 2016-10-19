@@ -20,21 +20,14 @@ import models.Weather;
 
 public class Manager {
 	
-	/**
-	 * MODE to run the different version alternatives:
-	 * 
-	 *  0: dumb scenario, everything is on throughout working hours
-	 *  2: repeat simulation
-	 *  Rest: normal simulation
-	 */
-	
-	private int MODE;
 	
 	/**
 	 * The record file saves all the actions in events.txt
 	 */
 	
 	private int EVENTS_FILE;
+	
+	private int GENERATE_PEOPLE;
 	
 	private int STEPS;
 	public static int CURRENT_STEP;
@@ -60,7 +53,7 @@ public class Manager {
 		mqtt = new Mqtt(this, awsdb);
 		
 		building = uts.loadBuilding();
-		uts.generatePeople();
+		if (GENERATE_PEOPLE == 1) uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 		
@@ -74,9 +67,10 @@ public class Manager {
 		try {
 			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
-			MODE = Integer.parseInt(prop.getProperty("mode"));
 			STEPS = Integer.parseInt(prop.getProperty("steps"));
 			EVENTS_FILE = Integer.parseInt(prop.getProperty("events_file"));
+			GENERATE_PEOPLE = Integer.parseInt(prop.getProperty("generate_people"));
+			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -129,7 +123,7 @@ public class Manager {
 
 	private void simulate() {
 		peopleManager.enterPeople();
-		while (CURRENT_STEP < 20) {
+		while (CURRENT_STEP < 1000) {
 			if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
 			peopleManager.updateActions();
 			building.updateConsumption();
