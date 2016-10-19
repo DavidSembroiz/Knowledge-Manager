@@ -16,6 +16,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import building.Building;
+import iot.Manager;
 
 
 public class PeopleManager {
@@ -181,7 +182,7 @@ public class PeopleManager {
 		if (a.equals(Action.MOVE)) {
 			if (p.isInside()) {
 				assigned = true;
-				dest = getRandomDestination();
+				dest = getRandomDestination(p.getLocation());
 				next = 1 + rand.nextInt(30);
 				duration = 1 + rand.nextInt(30);
 				currentLoc = p.getLocation();
@@ -219,19 +220,24 @@ public class PeopleManager {
 			p.assignAction(a, dest, next, duration);
 			building.movePerson(p, currentLoc);
 			if (writeToFile) {
-				writer.println(p.getName() + "," +
-							 p.getCurrentAction().toString() + "," +
-						     p.getNextActionSteps() + "," +
-						     p.getRemainingSteps() + "," +
-						     p.getLocation());
+				writer.println(Manager.CURRENT_STEP + "," +
+							   p.getName() + "," +
+							   p.getCurrentAction().toString() + "," +
+						       p.getNextActionSteps() + "," +
+						       p.getRemainingSteps() + "," +
+						       p.getLocation());
 				flushData();
 			}
 		}
 	}
 
-	private String getRandomDestination() {
+	private String getRandomDestination(String currentLoc) {
 		String[] locs = building.getLocations();
-		return locs[rand.nextInt(locs.length)];
+		String nextLoc = locs[rand.nextInt(locs.length)];
+		while (nextLoc == currentLoc) {
+			nextLoc = locs[rand.nextInt(locs.length)];
+		}
+		return nextLoc;
 	}
 
 	public void enterPeople() {
@@ -240,11 +246,12 @@ public class PeopleManager {
 			int duration = 1;
 			p.assignAction(Action.ENTER, "inside", next, duration);
 			if (writeToFile) {
-				writer.println(p.getName() + "," +
-							 Action.ENTER.toString() + "," +
-						     next + "," +
-						     duration + "," +
-						     p.getLocation());
+				writer.println(Manager.CURRENT_STEP + "," +
+							   p.getName() + "," +
+							   Action.ENTER.toString() + "," +
+						       next + "," +
+						       duration + "," +
+						       p.getLocation());
 				flushData();
 			}
 										  

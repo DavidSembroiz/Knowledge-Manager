@@ -1,13 +1,10 @@
 package iot;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Properties;
 
 import behaviour.PeopleManager;
@@ -31,7 +28,7 @@ public class Manager {
 	
 	private int GENERATE_PEOPLE;
 	
-	private int STEPS;
+	public static int STEPS;
 	public static int CURRENT_STEP;
 
 	
