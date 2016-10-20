@@ -1,27 +1,51 @@
 package behaviour;
 
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-
+import building.Building;
+import domain.Debugger;
+import iot.Manager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import building.Building;
-import iot.Manager;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class PeopleManager {
-	
-	public enum Action {
+
+    public Person getPerson(String name) {
+        for (Person p : people) {
+            if (p.getName().equals(name)) return p;
+        }
+        return null;
+    }
+
+    public void executeActions() {
+        for (Person p : people) {
+            if (!p.isActing()) {
+                if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
+                else if (p.getNextActionSteps() == 0) {
+                    p.decreaseNextActionSteps();
+                    executeAction(p);
+                }
+            }
+            else if (p.isActing()){
+                if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
+                else if (p.getRemainingSteps() == 0) {
+                    p.decreaseRemainingSteps();
+                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                                                           " " + p.getCurrentAction().toString());
+                    p.setActing(false);
+                }
+
+            }
+
+        }
+    }
+
+    public enum Action {
 		MOVE, LUNCH, ENTER, EXIT;
 		
 		private static final Action[] ACTIONS = values();
@@ -66,7 +90,7 @@ public class PeopleManager {
 	
 	private void initComponents() {
 		rand = new Random();
-		if (writeToFile) enableRecordFile();
+		if (Manager.MODE == 0 && writeToFile) enableRecordFile();
 		fetchProfiles();
 		getPeopleFromFile();
 	}
@@ -156,16 +180,30 @@ public class PeopleManager {
 			}
 			else if (p.isActing()) {
 				if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
-				else if(p.getRemainingSteps() == 0) assignNewAction(p);
+				else if(p.getRemainingSteps() == 0) {
+                    p.decreaseRemainingSteps();
+                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                            " " + p.getCurrentAction().toString());
+                    assignNewAction(p);
+                }
 			}
 		}
 	}
 	
 	private void executeAction(Person p) {
 		p.setActing(true);
+        /**
+         * TODO modify room state
+         */
 		p.changeState();
 		
 	}
+
+	public void assignSpecificAction(Person p, Event e) {
+        String currentLoc = p.getLocation();
+        p.assignAction(e.getAction(), e.getDest(), e.getNext(), e.getDuration());
+        building.movePerson(p, currentLoc);
+    }
 
 	private void assignNewAction(Person p) {
 		p.setActing(false);

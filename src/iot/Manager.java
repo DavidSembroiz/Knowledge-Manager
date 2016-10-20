@@ -1,13 +1,8 @@
 package iot;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.Properties;
-
+import behaviour.Event;
 import behaviour.PeopleManager;
+import behaviour.Person;
 import building.Building;
 import building.Room;
 import domain.Database;
@@ -16,18 +11,24 @@ import domain.Mqtt;
 import domain.Utils;
 import models.Weather;
 
-public class Manager {
-	
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Properties;
 
-	
+public class Manager {
+
 	/**
 	 * The record file saves all the actions in events.txt
 	 */
-	
+
 	private int LOG_EVENTS;
-	
+
 	private int GENERATE_PEOPLE;
-	
+
+    public static int MODE;
 	public static int STEPS;
 	public static int CURRENT_STEP;
 
@@ -56,7 +57,8 @@ public class Manager {
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 		
-		simulate();
+		if (MODE == 0) simulate();
+        else if (MODE == 1) repeatSimulation();
 	}
 	
 	
@@ -67,6 +69,7 @@ public class Manager {
 			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
 			STEPS = Integer.parseInt(prop.getProperty("steps"));
+            MODE = Integer.parseInt(prop.getProperty("mode"));
 			LOG_EVENTS = Integer.parseInt(prop.getProperty("log_events"));
 			GENERATE_PEOPLE = Integer.parseInt(prop.getProperty("generate_people"));
 			
@@ -128,6 +131,23 @@ public class Manager {
 			building.updateConsumption();
 			++CURRENT_STEP;
 		}
+	}
+
+	private void repeatSimulation() {
+		PriorityQueue<Event> events = uts.fetchEventsFromFile();
+        while (!events.isEmpty() && CURRENT_STEP < 1000) {
+            if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
+            while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
+                Event e = events.poll();
+                if (Debugger.isEnabled()) Debugger.log("Event " + e.getAction().toString() + " for " + e.getName());
+                Person p = peopleManager.getPerson(e.getName());
+                peopleManager.assignSpecificAction(p, e);
+
+            }
+            peopleManager.executeActions();
+            building.updateConsumption();
+            ++CURRENT_STEP;
+        }
 	}
 	
 	public void manageMessage(String topic, String message) {

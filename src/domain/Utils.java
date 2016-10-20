@@ -1,25 +1,20 @@
 package domain;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-
+import behaviour.Event;
+import behaviour.PeopleManager.Action;
 import building.Building;
 import building.Room;
 import iot.Sensor;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 public class Utils {
 	
@@ -145,20 +140,6 @@ public class Utils {
 		}
 	}
 	
-	public static String getTemplatePersonName() {
-		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
-	        String line;
-	        if ((line = br.readLine()) != null) {
-	        	return line.split(",")[0];
-	        }
-	        return null;
-	    } catch (IOException e) {
-	    	System.out.println("ERROR: Unable to read events from file.");
-	    	e.printStackTrace();
-	    }
-		return null;
-	}
-	
 	
 	private String getRandomName() {
 		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
@@ -235,4 +216,26 @@ public class Utils {
 		}
 		return ret;
 	}
+
+    public PriorityQueue<Event> fetchEventsFromFile() {
+        PriorityQueue<Event> events = new PriorityQueue<Event>();
+        try(BufferedReader br = new BufferedReader(new FileReader("res/events.log"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                int step = Integer.parseInt(values[0]);
+                String name = values[1];
+                Action a = Action.valueOf(values[2]);
+                int next = Integer.parseInt(values[3]);
+                int duration = Integer.parseInt(values[4]);
+                String dest = values[5];
+                events.add(new Event(step, name, a, dest, next, duration));
+            }
+            return events;
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to read events from file.");
+            e.printStackTrace();
+        }
+        return events;
+    }
 }

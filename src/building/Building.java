@@ -1,10 +1,13 @@
 package building;
 
+import behaviour.Person;
+import domain.Debugger;
+import entity.Computer;
+import entity.HVAC;
+import entity.Lamp;
+
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import behaviour.Person;
-import entity.Computer;
 
 public class Building {
 	
@@ -80,10 +83,17 @@ public class Building {
 			for (Object e : ents) {
 				if (e instanceof Computer) {
 					int cons = ((Computer) e).getCurrentState().getConsumption();
-					/* Current  */
 					((Computer) e).addConsumption(cons);
 					
 				}
+				else if (e instanceof HVAC) {
+                    int cons = ((HVAC) e).getCurrentState().getConsumption();
+                    ((HVAC) e).addConsumption(cons);
+                }
+                else if (e instanceof Lamp) {
+                    int cons = ((Lamp) e).getCurrentState().getConsumption();
+                    ((Lamp) e).addConsumption(cons);
+                }
 			}
 		}
 	}
@@ -92,9 +102,11 @@ public class Building {
 		for (Room r : rooms) {
 			String roomLoc = r.getLocation();
 			if (currentLoc.equals(roomLoc)) {
+                if (Debugger.isEnabled()) Debugger.log("Person " + p.getName() + " removed from " + roomLoc);
 				r.removePerson(p);
 			}
 			else if (p.getLocation().equals(roomLoc)) {
+                if (Debugger.isEnabled()) Debugger.log("Person " + p.getName() + " added to " + roomLoc);
 				r.addPerson(p);
 			}
 		}
