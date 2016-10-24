@@ -48,9 +48,9 @@ public class Manager {
 		CURRENT_STEP = 0;
 		loadProperties();
 		uts = Utils.getInstance();
-		awsdb = Database.getInstance();
+		//awsdb = Database.getInstance();
 		models = Weather.getInstance();
-		mqtt = new Mqtt(this, awsdb);
+		//mqtt = new Mqtt(this, awsdb);
 		
 		building = uts.loadBuilding();
 		if (GENERATE_PEOPLE == 1) uts.generatePeople();
@@ -124,7 +124,6 @@ public class Manager {
 
 
 	private void simulate() {
-		peopleManager.enterPeople();
 		while (CURRENT_STEP < 1000) {
 			if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
 			peopleManager.updateActions();
@@ -137,6 +136,8 @@ public class Manager {
 		PriorityQueue<Event> events = uts.fetchEventsFromFile();
         while (!events.isEmpty() && CURRENT_STEP < 1000) {
             if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
+            peopleManager.executeActions();
+            building.updateConsumption();
             while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
                 Event e = events.poll();
                 if (Debugger.isEnabled()) Debugger.log("Event " + e.getAction().toString() + " for " + e.getName());
@@ -144,8 +145,6 @@ public class Manager {
                 peopleManager.assignSpecificAction(p, e);
 
             }
-            peopleManager.executeActions();
-            building.updateConsumption();
             ++CURRENT_STEP;
         }
 	}

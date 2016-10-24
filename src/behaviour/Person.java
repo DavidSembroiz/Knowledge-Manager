@@ -22,10 +22,10 @@ public class Person {
 		this.name = name;
 		this.profile = prof;
 		this.params = param;
-		this.nextActionSteps = -1;
-		this.remainingSteps = -1;
+		this.nextActionSteps = -9999;
+		this.remainingSteps = -9999;
 		this.location = "";
-		acting = false;
+		this.acting = false;
 	}
 	
 	public void assignState(State st) {
@@ -109,6 +109,7 @@ public class Person {
 		this.location = dest;
 		this.nextActionSteps = next;
 		this.remainingSteps = duration;
+        this.setActing(false);
 		if (Debugger.isEnabled()) {
 			Debugger.log("Action " + a.toString() +
 						 " assigned to Person " + this.getName() +
