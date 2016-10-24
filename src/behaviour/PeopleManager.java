@@ -158,10 +158,6 @@ public class PeopleManager {
 		return new UserParams(t, l);
 	}
 
-	public void closeFile() {
-		if (writer != null) writer.close();
-	}
-
 	public void updateActions() {
 		for (Person p : people) {
 			if (!p.isActing()) {
@@ -192,11 +188,7 @@ public class PeopleManager {
 	
 	private void executeAction(Person p) {
 		p.setActing(true);
-        /**
-         * TODO modify room state
-         */
-		p.changeState();
-		
+        p.changeState();
 	}
 
 	public void assignSpecificAction(Person p, Event e) {
@@ -239,8 +231,8 @@ public class PeopleManager {
 			if (p.isInside()) {
 				assigned = true;
 				dest = "outside";
-				next = 1 + rand.nextInt(20);
-				duration = 1;
+                next = 1;
+				duration = 1 + rand.nextInt(20);
 				currentLoc = p.getLocation();
 			}
 		}
@@ -276,25 +268,6 @@ public class PeopleManager {
 			nextLoc = locs[rand.nextInt(locs.length)];
 		}
 		return nextLoc;
-	}
-
-	public void enterPeople() {
-		for (Person p : people) {
-			int next = 1 + rand.nextInt(1);
-			int duration = 1;
-			p.assignAction(Action.ENTER, "inside", next, duration);
-			if (writeToFile) {
-				writer.println(Manager.CURRENT_STEP + "," +
-							   p.getName() + "," +
-							   Action.ENTER.toString() + "," +
-						       next + "," +
-						       duration + "," +
-						       p.getLocation());
-				flushData();
-			}
-										  
-			building.movePerson(p, "outside");
-		}
 	}
 
 	public void setBuilding(Building b) {

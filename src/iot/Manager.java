@@ -53,7 +53,7 @@ public class Manager {
 		//mqtt = new Mqtt(this, awsdb);
 		
 		building = uts.loadBuilding();
-		if (GENERATE_PEOPLE == 1) uts.generatePeople();
+		if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 		
@@ -127,16 +127,19 @@ public class Manager {
 		while (CURRENT_STEP < 1000) {
 			if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
 			peopleManager.updateActions();
+            building.fireRules();
 			building.updateConsumption();
 			++CURRENT_STEP;
 		}
+        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateFinalConsumption() + " kWh");
 	}
 
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = uts.fetchEventsFromFile();
-        while (!events.isEmpty() && CURRENT_STEP < 1000) {
+        while (CURRENT_STEP < 1000) {
             if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
             peopleManager.executeActions();
+            building.fireRules();
             building.updateConsumption();
             while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
                 Event e = events.poll();
@@ -147,6 +150,7 @@ public class Manager {
             }
             ++CURRENT_STEP;
         }
+        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateFinalConsumption() + " kWh");
 	}
 	
 	public void manageMessage(String topic, String message) {
@@ -161,26 +165,6 @@ public class Manager {
 			System.out.println("Unable to query room number, message discarded");
 		}
 	}
-
-	
-	
-
-	
-	/*private PriorityQueue<Event> readEventFile() {
-		PriorityQueue<Event> events = new PriorityQueue<Event>();
-		try(BufferedReader br = new BufferedReader(new FileReader("res/events.txt"))) {
-	        String line;
-	        while ((line = br.readLine()) != null) {
-	        	String[] values = line.split(",");
-	        	events.add(new Event(values[0], values[1], Integer.parseInt(values[2])));
-	        }
-	        return events;
-	    } catch (IOException e) {
-	    	System.out.println("ERROR: Unable to read events from file.");
-	    	e.printStackTrace();
-	    }
-		return events;
-	}*/
 	
 	private void printBuilding() {
 		ArrayList<Room> rooms = building.getRooms();

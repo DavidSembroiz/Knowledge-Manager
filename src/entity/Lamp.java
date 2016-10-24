@@ -38,4 +38,8 @@ public class Lamp {
 		this.accPowerUsage += cons;
 	}
 
+    public double getCons() {
+        return accPowerUsage;
+    }
+
 }

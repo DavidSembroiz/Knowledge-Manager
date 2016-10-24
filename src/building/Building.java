@@ -5,6 +5,7 @@ import domain.Debugger;
 import entity.Computer;
 import entity.HVAC;
 import entity.Lamp;
+import iot.Manager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -112,6 +113,25 @@ public class Building {
 		}
 	}
 	
-	
+	public double calculateFinalConsumption() {
+        double fcons = 0;
+        for (Room r : rooms) {
+            HashSet<Object> ents = r.getEntities();
+            for (Object e : ents) {
+                if (e instanceof Computer) fcons += ((Computer) e).getCons();
+                else if (e instanceof HVAC) fcons += ((HVAC) e).getCons();
+                else if (e instanceof Lamp) fcons += ((Lamp) e).getCons();
+            }
+        }
+        /**
+         * Every step equivals to 10 seconds, and consumption is added every step.
+         * Thus, (fcons/(STEPS))*(STEPS/360) gives kWh
+         */
 
+        return ((fcons/Manager.STEPS)*(Manager.STEPS/360))/1000;
+	}
+
+    public void fireRules() {
+        for (Room r : rooms) r.fireRules();
+    }
 }

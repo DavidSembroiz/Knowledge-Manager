@@ -38,4 +38,8 @@ public class Computer {
 		this.accPowerUsage += cons;
 	}
 
+	public double getCons() {
+        return accPowerUsage;
+    }
+
 }

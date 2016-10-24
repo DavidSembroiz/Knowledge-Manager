@@ -93,7 +93,7 @@ public class UserProfile implements Cloneable {
 	protected void loadProfileFromFile(Type t) {
 		JSONParser parser = new JSONParser();
 		try {
-			FileReader reader = new FileReader("./profiles.json");
+			FileReader reader = new FileReader("./res/profiles.json");
 			JSONObject root = (JSONObject) parser.parse(reader);
 			JSONObject prof = (JSONObject) root.get(t.toString().toLowerCase());
 			if (prof == null) return;

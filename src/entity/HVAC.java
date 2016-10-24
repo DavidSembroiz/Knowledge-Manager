@@ -38,4 +38,8 @@ public class HVAC {
 		this.accPowerUsage += cons;
 	}
 
+    public double getCons() {
+        return accPowerUsage;
+    }
+
 }

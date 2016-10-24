@@ -71,56 +71,6 @@ public class Utils {
 	}
 
 
-	@SuppressWarnings("unchecked")
-	public String addToJSON(String soID, String type, String json) {
-		JSONParser parser = new JSONParser();
-		try {
-			JSONObject obj = (JSONObject) parser.parse(json);
-			obj.put(type, soID);
-			return obj.toString();
-		} catch(ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-
-	public String getIdFromType(String s, String sensors) {
-		String res = null;
-		JSONParser parser = new JSONParser();
-		try {
-			JSONObject obj = (JSONObject) parser.parse(sensors);
-			res = obj.get(s).toString();
-			
-		} catch(ParseException e) {
-			e.printStackTrace();
-		}
-		return res;
-	}
-
-
-	public String getRuleByActuator(Map<String, Integer> ruleAssociations, String actuator) {
-		for (Map.Entry<String, Integer> entry : ruleAssociations.entrySet()) {
-			String[] n = entry.getKey().split("/");
-			if (actuator.equals(n[0])) {
-				return n[1];
-			}
-		}
-		return null;
-	}
-
-
-	public int getRegsByActuator(Map<String, Integer> ruleAssociations, String actuator) {
-		for (Map.Entry<String, Integer> entry : ruleAssociations.entrySet()) {
-			String[] n = entry.getKey().split("/");
-			if (actuator.equals(n[0])) {
-				return entry.getValue();
-			}
-		}
-		return -1;
-	}
-	
-	
 	
 	@SuppressWarnings("unchecked")
 	public void generatePeople() {
