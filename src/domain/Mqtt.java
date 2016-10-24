@@ -1,22 +1,15 @@
 package domain;
 
 import iot.Manager;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
-
-import org.eclipse.paho.client.mqttv3.*;
-
-/**
- * 
- * @author David
- *
- *TODO utils might not be necessary
- *
- */
 
 
 public class Mqtt {
@@ -93,8 +86,7 @@ public class Mqtt {
 			client = new MqttAsyncClient(ADDRESS, CLIENTID);
 			callback = new MqttCb(manager);
 			client.setCallback(callback);
-			client.connect(connOpts);
-			while (!client.isConnected());
+			//while (!client.isConnected());
 			if (client.isConnected()) System.out.println("Connected to ServIoTicy");
 		} catch (MqttException e) {
 			e.printStackTrace();

@@ -1,19 +1,15 @@
 package behaviour;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Set;
-
+import behaviour.PeopleManager.Type;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import behaviour.PeopleManager.Type;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Random;
 
 public class UserProfile implements Cloneable {
 	
@@ -97,7 +93,7 @@ public class UserProfile implements Cloneable {
 	protected void loadProfileFromFile(Type t) {
 		JSONParser parser = new JSONParser();
 		try {
-			FileReader reader = new FileReader("./res/profiles.json");
+			FileReader reader = new FileReader("./profiles.json");
 			JSONObject root = (JSONObject) parser.parse(reader);
 			JSONObject prof = (JSONObject) root.get(t.toString().toLowerCase());
 			if (prof == null) return;

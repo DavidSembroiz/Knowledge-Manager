@@ -1,10 +1,13 @@
 package domain;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-
 import org.postgresql.ds.PGPoolingDataSource;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Properties;
 
 public class Database {
 	
@@ -30,17 +33,13 @@ public class Database {
 	
 	private Properties prop;
 	private PGPoolingDataSource poolSource;
-	private Map<String, Integer> ruleAssociations;
 	
 	
 	private void initComponents() {
 		this.uts = Utils.getInstance();
-		ruleAssociations = new HashMap<String, Integer>();
 		loadProperties();
 		loadPoolSource();
 		//createIdTable();
-		createAssociationsTable();
-		initialiseCounters();
 	}
 	
 	public Connection getConnectionListener() {
@@ -168,131 +167,20 @@ public class Database {
 	}
 	
 	public String getLocation(String soID) {
-		Connection c = null;
-		String res = null;
-		try {
-			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT location FROM " + DB_TABLE + " WHERE servioticy_id = ?");
-			pst.setString(1, soID);
-			ResultSet rs = pst.executeQuery();
-			if (rs.next()) res = rs.getString("location");
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConnection(c);
-		}
-		return res;
-	}
-	
-	public void updateAssociations(String soID, String type, String location) {
-		Connection c = null;
-		String[] associations = null;
-		try {
-			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT associations FROM " + DB_TABLE + " WHERE servioticy_id = ?");
-			pst.setString(1, soID);
-			ResultSet rs = pst.executeQuery();
-			if (rs.next() && !rs.getString("associations").isEmpty()) {
-				associations = rs.getString("associations").split(",");
-				for (String s : associations) {
-					String t = s.split("/")[0];
-					String actuator = s.split("/")[1];
-					if (t.equals(type)) updateActuator(location, actuator, type, soID);
-				}
-			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConnection(c);
-		}
-	}
-	
-	private void updateActuator(String location, String actuator, String type, String soID) {
-		Connection c = null;
-		try {
-			c = poolSource.getConnection();
-			pst = c.prepareStatement("SELECT sensors, registrations_left FROM associations WHERE location = ? AND actuator = ?");
-			pst.setString(1, location);
-			pst.setString(2, actuator);
-			ResultSet rs = pst.executeQuery();
-			if (rs.next()) {
-				if (rs.getInt("registrations_left") > 0) {
-					String res = uts.addToJSON(soID, type, rs.getString("sensors"));
-					pst = c.prepareStatement("UPDATE associations SET sensors = ?, registrations_left = ? WHERE location = ? AND actuator = ?");
-					pst.setString(1, res);
-					pst.setInt(2, rs.getInt("registrations_left") - 1);
-					pst.setString(3, location);
-					pst.setString(4, actuator);
-					pst.executeUpdate();
-				}
-			}
-			else {
-				System.out.println("Rule not found, adding it...");
-				insertNewAssociationRule(location, actuator, soID, type);
-			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConnection(c);
-		}
-	}
-	
-	private void insertNewAssociationRule(String location, String actuator, String soID, String type) {
-		Connection c = null;
-		String rule = uts.getRuleByActuator(ruleAssociations, actuator);
-		/**
-		 * Unable to find the rule
-		 */
-		if (rule == null) return;
-		/**
-		 * Rule found, insert can be done
-		 */
-		try {
-			c = poolSource.getConnection();
-			pst = c.prepareStatement("INSERT INTO associations VALUES(?,?,?,?,?,?)");
-			pst.setString(1, location);
-			pst.setString(2, actuator);
-			
-			String json = uts.addToJSON(soID, type, "{}");
-			pst.setString(3, json);
-			pst.setString(4, rule);
-			
-			int regs = uts.getRegsByActuator(ruleAssociations, actuator);
-			pst.setInt(5, regs - 1);
-			
-			/**
-			 * Set initial actuator state
-			 */
-			pst.setString(6, "undefined");
-			pst.executeUpdate();
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConnection(c);
-		}
-	}
-	
-	
-	
-	private void initialiseCounters() {
-		Connection c = null;
-		try {
-			c = poolSource.getConnection();
-			pst = c.prepareStatement("UPDATE associations SET sensors = ?, registrations_left = ?, state = ? WHERE rule = ?");
-			
-			for (Map.Entry<String, Integer> entry : ruleAssociations.entrySet()) {
-				pst.setString(1, "{}");
-				pst.setInt(2, entry.getValue());
-				pst.setString(3, "undefined");
-				String rule = entry.getKey().split("/")[1];
-				pst.setString(4, rule);
-				pst.executeUpdate();
-			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConnection(c);
-		}
-	}
+        Connection c = null;
+        String res = null;
+        try {
+            c = poolSource.getConnection();
+            pst = c.prepareStatement("SELECT location FROM " + DB_TABLE + " WHERE servioticy_id = ?");
+            pst.setString(1, soID);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) res = rs.getString("location");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(c);
+        }
+        return res;
+    }
 
 }
