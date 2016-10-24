@@ -1,19 +1,23 @@
 package rules;
 
+import building.Room;
 import domain.Utils;
 import entity.Computer;
 import entity.HVAC;
 import entity.Lamp;
 import iot.Sensor;
-import building.Room;
+import org.easyrules.api.RulesEngine;
 
 import java.util.ArrayList;
-
-import org.easyrules.api.RulesEngine;
 
 import static org.easyrules.core.RulesEngineBuilder.aNewRulesEngine;
 
 public class RuleManager {
+
+    private final String DEFAULT_TEMPERATURE = "20";
+    private final String DEFAULT_LIGHT = "200";
+    private final String DEFAULT_HUMIDITY = "30";
+
 	
 	private RulesEngine rulesEngine;
 	private Utils uts;
@@ -56,7 +60,9 @@ public class RuleManager {
 		}
 		if (temp != null && hum != null) {
 			HVACRule hr = new HVACRule(r, h, temp, hum);
+            temp.setValue(DEFAULT_TEMPERATURE);
 			temp.setAssigned(true);
+            hum.setValue(DEFAULT_HUMIDITY);
 			hum.setAssigned(true);
 			rulesEngine.registerRule(hr);
 		}
@@ -67,6 +73,7 @@ public class RuleManager {
 		for (Sensor s : sens) {
 			if (!s.isAssigned() && s.getType().toLowerCase().equals("luminosity")) {
 				LampRule lr = new LampRule(r, l, s);
+                s.setValue(DEFAULT_LIGHT);
 				s.setAssigned(true);
 				rulesEngine.registerRule(lr);
 			}

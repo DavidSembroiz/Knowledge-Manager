@@ -1,15 +1,16 @@
 package rules;
 
-import java.util.ArrayList;
-
-import org.easyrules.annotation.*;
-
-import iot.Sensor;
-import models.Weather;
 import behaviour.Person;
 import building.Room;
 import entity.HVAC;
 import entity.HVAC.State;
+import iot.Sensor;
+import models.Weather;
+import org.easyrules.annotation.Action;
+import org.easyrules.annotation.Condition;
+import org.easyrules.annotation.Rule;
+
+import java.util.ArrayList;
 
 @Rule(name = "HVAC Management Rule")
 public class HVACRule {
@@ -87,25 +88,33 @@ public class HVACRule {
 		double environTemp = models.getCurrentEnvironmentalTemperature();
 		double newTemp = 0;
 		if (roomTemp == environTemp) return;
-		if (roomTemp > environTemp) {
-			newTemp = roomTemp - (roomTemp - environTemp) * 0.001;
-		}
+		if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.001;
 		else newTemp = roomTemp + (environTemp - roomTemp) * 0.001;
 		temperature.setValue(Double.toString(newTemp));
 	}
+
+	private void adjustTmperature() {
+        double roomTemp = Double.parseDouble(temperature.getValue());
+        double pplTemp = getPeopleTemperature();
+        double newTemp = 0;
+        if (roomTemp < pplTemp) newTemp = roomTemp + (pplTemp - roomTemp) * 0.001;
+        else if (pplTemp < roomTemp) newTemp = roomTemp - (roomTemp - pplTemp) * 0.001;
+        temperature.setValue(Double.toString(newTemp));
+    }
 	
 	
 	@Condition
 	public boolean checkConditions() {
-		
 		State st = hvac.getCurrentState();
 		
 		if (st.equals(State.OFF)) {
+            moderateTemperature();
 			if (!isEmpty() && !currentTemperatureOK() && !environmentalTemperatureOK()) return true;
 		}
 		
 		
 		if (st.equals(State.ON)) {
+            adjustTmperature();
 			if (!isEmpty() && currentTemperatureOK()) return true;
 			else if (isEmpty()) return true;
 		}
