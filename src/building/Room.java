@@ -1,6 +1,7 @@
 package building;
 
 import behaviour.Person;
+import domain.Debugger;
 import entity.Computer;
 import entity.Door;
 import entity.HVAC;
@@ -24,7 +25,8 @@ public class Room {
 	private ArrayList<Sensor> sensors;
 	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
-	private ArrayList<Person> people;
+	private ArrayList<Person> peopleActing;
+    private ArrayList<Person> peopleComing;
 	private HashSet<Object> entities;
 	
 	public Room(String location, String size) {
@@ -34,7 +36,8 @@ public class Room {
 		actuators = new ArrayList<Actuator>();
 		this.entities = new HashSet<>();
 		this.ruleManager = new RuleManager(this);
-		this.people = new ArrayList<Person>();
+		this.peopleActing = new ArrayList<Person>();
+        this.peopleComing = new ArrayList<Person>();
 	}
 	
 	public RuleManager getRuleManager() {
@@ -56,14 +59,7 @@ public class Room {
 	public void setSensors(ArrayList<Sensor> sensors) {
 		this.sensors = sensors;
 	}
-	
-	public ArrayList<Person> getPeople() {
-		return people;
-	}
 
-	public void setPeople(ArrayList<Person> people) {
-		this.people = people;
-	}
 
 	public boolean sensorExists(String soID, String type) {
 		for (Sensor s : sensors) {
@@ -158,12 +154,28 @@ public class Room {
 		this.entities = entities;
 	}
 
-	public void removePerson(Person p) {
-		if (people.contains(p)) people.remove(p);
+    public ArrayList<Person> getPeopleActing() {
+        return peopleActing;
+    }
+
+    public void setPeopleActing(ArrayList<Person> peopleActing) {
+        this.peopleActing = peopleActing;
+    }
+
+    public ArrayList<Person> getPeopleComing() {
+        return peopleComing;
+    }
+
+    public void setPeopleComing(ArrayList<Person> peopleComing) {
+        this.peopleComing = peopleComing;
+    }
+
+    public void removePerson(Person p) {
+		if (peopleActing.contains(p)) peopleActing.remove(p);
 	}
 
 	public void addPerson(Person p) {
-		people.add(p);
+		peopleComing.add(p);
 	}
 
     public boolean isPeopleComing() {
@@ -172,14 +184,25 @@ public class Room {
          * If someone comes in the next 5 minutes, some actions might be anticipated
          */
 
-        for (Person p : people) {
+        for (Person p : peopleComing) {
             if (p.getNextActionSteps() < 30) return true;
         }
         return false;
     }
 
     public boolean isPeopleInside() {
-        return people.size() > 0;
+        return peopleActing.size() > 0;
     }
-	
+
+    public boolean isEmpty() {
+        return peopleActing.size() == 0;
+    }
+
+    public void shiftPerson(Person p) {
+        if (peopleComing.contains(p)) {
+            if (Debugger.isEnabled()) Debugger.log("Person " + p.getName() + " shifted to ACTING " + this.getLocation());
+            peopleComing.remove(p);
+            peopleActing.add(p);
+        }
+    }
 }

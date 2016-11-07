@@ -12,6 +12,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static iot.Manager.LOG_EVENTS;
+
 
 public class PeopleManager {
 
@@ -46,15 +48,7 @@ public class PeopleManager {
     }
 
     public enum Action {
-		MOVE, LUNCH, ENTER, EXIT;
-		
-		private static final Action[] ACTIONS = values();
-		private static final Random rand = new Random();
-		
-		public static Action randomAction() {
-			return ACTIONS[rand.nextInt(ACTIONS.length)];
-		}
-		
+		MOVE, LUNCH, ENTER, EXIT
 	}
 	
 	public enum State {
@@ -82,21 +76,19 @@ public class PeopleManager {
 	private Random rand;
 	private PrintWriter writer;
 	
-	private boolean writeToFile = true;
-	
 	/**
 	 * Initialize all the components required to manage people.
 	 */
 	
 	private void initComponents() {
 		rand = new Random();
-		if (Manager.MODE == 0 && writeToFile) enableRecordFile();
+		if (Manager.MODE == 0 && LOG_EVENTS) enableRecordFile();
 		fetchProfiles();
 		getPeopleFromFile();
 	}
 
 	public void fetchProfiles() {
-		defaultProfiles = new ArrayList<UserProfile>();
+		defaultProfiles = new ArrayList<>();
 		for (Type t : Type.values()) {
 			defaultProfiles.add(new UserProfile(t));
 		}
@@ -108,7 +100,7 @@ public class PeopleManager {
 	 * further repetitions.
 	 */
 	
-	public void enableRecordFile() {
+	private void enableRecordFile() {
 		try {
 			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.log")));
 		} catch (IOException e) {
@@ -116,11 +108,11 @@ public class PeopleManager {
 		}
 	}
 	
-	public void flushData() {
+	private void flushData() {
 		if (writer != null) writer.flush();
 	}
 	
-	public UserProfile getProfile(String s) {
+	private UserProfile getProfile(String s) {
 		for (UserProfile up : defaultProfiles) {
 			if (up.getType().equals(Type.valueOf(s.toUpperCase()))) {
 				return (UserProfile) up.clone();
@@ -130,7 +122,7 @@ public class PeopleManager {
 	}
 	
 	
-	public void getPeopleFromFile() {
+	private void getPeopleFromFile() {
 		JSONParser parser = new JSONParser();
 		people = new ArrayList<Person>();
 		try {
@@ -164,9 +156,10 @@ public class PeopleManager {
 				if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
 				else if (p.getNextActionSteps() == 0) {
 					
-					/**
+					/*
 					 * Action is executed and nextActionSteps is set to -1
 					 */
+
 					p.decreaseNextActionSteps();
 					executeAction(p);
 				}
@@ -188,6 +181,7 @@ public class PeopleManager {
 	
 	private void executeAction(Person p) {
 		p.setActing(true);
+        building.getRoom(p.getLocation()).shiftPerson(p);
         p.changeState();
 	}
 
@@ -199,12 +193,7 @@ public class PeopleManager {
 
 	private void assignNewAction(Person p) {
 		p.setActing(false);
-		/**
-		 * Randomly get a new action (MOVE, LUNCH, ENTER...)
-		 * Assign Person p to new destination (room)
-		 * Assign action time and duration (next and remaining)
-		 * 
-		 */
+
 		Action a = getNextAction(p);
         if (a == null) return;
 		String dest = null, currentLoc = null;
@@ -251,7 +240,7 @@ public class PeopleManager {
 		if (assigned) {
 			p.assignAction(a, dest, next, duration);
 			building.movePerson(p, currentLoc);
-			if (writeToFile) {
+			if (LOG_EVENTS) {
 				writer.println(Manager.CURRENT_STEP + "," +
 							   p.getName() + "," +
 							   p.getCurrentAction().toString() + "," +
@@ -275,7 +264,7 @@ public class PeopleManager {
     private String getRandomDestination(String currentLoc) {
 		String[] locs = building.getLocations();
 		String nextLoc = locs[rand.nextInt(locs.length)];
-		while (nextLoc == currentLoc) {
+		while (nextLoc.equals(currentLoc)) {
 			nextLoc = locs[rand.nextInt(locs.length)];
 		}
 		return nextLoc;

@@ -24,7 +24,7 @@ public class Manager {
 	 * The record file saves all the actions in events.txt
 	 */
 
-	private int LOG_EVENTS;
+	public static boolean LOG_EVENTS;
 
 	private int GENERATE_PEOPLE;
 
@@ -70,10 +70,8 @@ public class Manager {
 			prop.load(is);
 			STEPS = Integer.parseInt(prop.getProperty("steps"));
             MODE = Integer.parseInt(prop.getProperty("mode"));
-			LOG_EVENTS = Integer.parseInt(prop.getProperty("log_events"));
+			LOG_EVENTS = Boolean.parseBoolean(prop.getProperty("log_events"));
 			GENERATE_PEOPLE = Integer.parseInt(prop.getProperty("generate_people"));
-			
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

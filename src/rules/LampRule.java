@@ -1,8 +1,10 @@
 package rules;
 
+import domain.Debugger;
 import org.easyrules.annotation.*;
 
 import entity.Lamp;
+import entity.Lamp.State;
 import building.Room;
 import iot.Sensor;
 import models.Weather;
@@ -15,9 +17,7 @@ public class LampRule {
 	
 	private Sensor luminosity;
 	private Lamp lamp;
-	
-	private String light;
-	
+
 	
 	public LampRule(Room r, Lamp l, Sensor light) {
 		models = Weather.getInstance();
@@ -43,12 +43,27 @@ public class LampRule {
 		 * If light is OFF:
 		 *  - ON: someone has entered the room or the environmental light is BAD
 		 */
-		
-		return true;
+
+		State st = lamp.getCurrentState();
+        if (st.equals(State.OFF)) {
+            if (!room.isEmpty() && !environmentalLightOK()) return true;
+        }
+        if (st.equals(State.ON)) {
+            if (room.isEmpty()) return true;
+        }
+		return false;
 	}
 	
 	@Action(order = 1)
 	public void changeState() throws Exception {
-		
+        State st = lamp.getCurrentState();
+        if (st.equals(State.OFF)) {
+            if (Debugger.isEnabled()) Debugger.log("Lamp switched ON in room " + room.getLocation());
+            lamp.setCurrentState(State.ON);
+        }
+        else if (st.equals(State.OFF)) {
+            if (Debugger.isEnabled()) Debugger.log("Lamp switched OFF in room " + room.getLocation());
+            lamp.setCurrentState(State.ON);
+        }
 	}
 }

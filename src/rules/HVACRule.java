@@ -2,6 +2,7 @@ package rules;
 
 import behaviour.Person;
 import building.Room;
+import domain.Debugger;
 import entity.HVAC;
 import entity.HVAC.State;
 import iot.Sensor;
@@ -36,13 +37,9 @@ public class HVACRule {
 		return hum < 45 ? 23.0 : 22.0;
 	}
 	
-	private boolean isEmpty() {
-		return room.getPeople().size() == 0;
-	}
-	
 	private Double getPeopleTemperature() {
 		double accTemp = 0;
-		ArrayList<Person> people = room.getPeople();
+		ArrayList<Person> people = room.getPeopleActing();
 		for (Person p : people) accTemp += p.getParams().getTemperature();
 		return people.size() > 0 ? (accTemp/people.size()) : -1.0;
 	}
@@ -109,14 +106,14 @@ public class HVACRule {
 		
 		if (st.equals(State.OFF)) {
             moderateTemperature();
-			if (!isEmpty() && !currentTemperatureOK() && !environmentalTemperatureOK()) return true;
+			if (!room.isEmpty() && !currentTemperatureOK() && !environmentalTemperatureOK()) return true;
 		}
 		
 		
 		if (st.equals(State.ON)) {
             adjustTemperature();
-			if (!isEmpty() && currentTemperatureOK()) return true;
-			else if (isEmpty()) return true;
+			if (!room.isEmpty() && currentTemperatureOK()) return true;
+			else if (room.isEmpty()) return true;
 		}
 		
 		return false;
@@ -127,10 +124,19 @@ public class HVACRule {
 	@Action(order = 1)
 	public void apply() throws Exception {
 		State st = hvac.getCurrentState();
-		if (st.equals(State.OFF)) hvac.setCurrentState(State.ON);
+		if (st.equals(State.OFF)) {
+            if (Debugger.isEnabled()) Debugger.log("HVAC switched ON in room " + room.getLocation());
+            hvac.setCurrentState(State.ON);
+        }
 		else if (st.equals(State.ON)) {
-			if (isEmpty()) hvac.setCurrentState(State.OFF);
-			else hvac.setCurrentState(State.SUSPEND);
+			if (room.isEmpty()) {
+                if (Debugger.isEnabled()) Debugger.log("HVAC switched OFF in room " + room.getLocation());
+                hvac.setCurrentState(State.OFF);
+            }
+			else {
+                if (Debugger.isEnabled()) Debugger.log("HVAC SUSPENDED in room " + room.getLocation());
+                hvac.setCurrentState(State.SUSPEND);
+            }
 		}
 		
 	}

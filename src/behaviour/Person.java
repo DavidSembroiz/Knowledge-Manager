@@ -27,17 +27,9 @@ public class Person {
 		this.location = "";
 		this.acting = false;
 	}
-	
-	public void assignState(State st) {
-		this.currentState = st;
-	}
 
 	public int getRemainingSteps() {
 		return remainingSteps;
-	}
-
-	public void setRemainingSteps(int remainingSteps) {
-		this.remainingSteps = remainingSteps;
 	}
 	
 	public void decreaseRemainingSteps() {
@@ -46,10 +38,6 @@ public class Person {
 
 	public int getNextActionSteps() {
 		return nextActionSteps;
-	}
-
-	public void setNextActionSteps(int nextActionSteps) {
-		this.nextActionSteps = nextActionSteps;
 	}
 	
 	public void decreaseNextActionSteps() {
@@ -68,16 +56,8 @@ public class Person {
 		return currentState;
 	}
 
-	public void setCurrentState(State currentState) {
-		this.currentState = currentState;
-	}
-
 	public UserProfile getProfile() {
 		return profile;
-	}
-
-	public void setProfile(UserProfile profile) {
-		this.profile = profile;
 	}
 
 	public boolean isActing() {
@@ -92,16 +72,8 @@ public class Person {
 		return currentAction;
 	}
 
-	public void setCurrentAction(Action currentAction) {
-		this.currentAction = currentAction;
-	}
-
 	public UserParams getParams() {
 		return params;
-	}
-
-	public void setParams(UserParams params) {
-		this.params = params;
 	}
 
 	public void assignAction(Action a, String dest, int next, int duration) {
@@ -121,10 +93,6 @@ public class Person {
 
 	public String getLocation() {
 		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public void changeState() {
@@ -157,8 +125,7 @@ public class Person {
 	}
 
 	public boolean isInside() {
-		if (currentState.equals(State.OUTSIDE)) return false;
-		return true;
+		return !(currentState.equals(State.OUTSIDE));
 	}
 	
 	public boolean hadLunch() {

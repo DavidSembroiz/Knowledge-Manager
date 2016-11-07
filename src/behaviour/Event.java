@@ -25,10 +25,6 @@ public class Event implements Comparable<Event> {
         return step;
     }
 
-    public void setStep(int step) {
-        this.step = step;
-    }
-
     public String getName() {
         return name;
     }
@@ -41,32 +37,16 @@ public class Event implements Comparable<Event> {
         return action;
     }
 
-    public void setAction(Action action) {
-        this.action = action;
-    }
-
     public String getDest() {
         return dest;
-    }
-
-    public void setDest(String dest) {
-        this.dest = dest;
     }
 
     public int getNext() {
         return next;
     }
 
-    public void setNext(int next) {
-        this.next = next;
-    }
-
     public int getDuration() {
         return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
     @Override
