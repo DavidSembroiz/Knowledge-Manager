@@ -168,4 +168,12 @@ public class Person {
 	public void setHadLunch(boolean b) {
 		params.setHadLunch(b);
 	}
+
+    public boolean hadEntered() {
+        return params.hadEntered();
+    }
+
+    public void sethadEntered(boolean b) {
+        params.setHadEntered(b);
+    }
 }

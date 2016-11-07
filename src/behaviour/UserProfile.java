@@ -81,13 +81,18 @@ public class UserProfile implements Cloneable {
 	/**
 	 * Profile file is divided in blocks of two lines with the following format:
 	 * 
-	 * probabilityName
-	 * value,value,value,value...
+	 * "profileName": {
+     *     "action": ["prob0", "prob1", ... ],
+     *     "action": ["prob0", "prob1", ... ],
+     * }
+     *
 	 * 
-	 * For the actions that require a range instead of a probability, the format is the following:
+	 * For the actions that require a range (duration) instead of a probability, the format is the following:
 	 * 
-	 * actionName
-	 * minValue,maxValue
+	 * "profileName": {
+     *     "actionDuration": ["min", "max"]
+     * }
+     *
 	 */
 	
 	protected void loadProfileFromFile(Type t) {

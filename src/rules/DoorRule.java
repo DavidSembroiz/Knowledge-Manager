@@ -1,35 +1,47 @@
 package rules;
 
-import java.util.ArrayList;
-
-import org.easyrules.annotation.*;
-
-import behaviour.Person;
+import building.Room;
+import entity.Door;
+import entity.Door.State;
 import iot.Sensor;
+import org.easyrules.annotation.Action;
+import org.easyrules.annotation.Condition;
+import org.easyrules.annotation.Rule;
 
 @Rule(name = "Door Management Rule")
 public class DoorRule {
 	
-	private ArrayList<Person> people;
-	
-	private Sensor door;
+	private Room room;
+
+    private Sensor electro;
+	private Door door;
 	
 	//TODO change to an actual actuator
 	//private String actuator;
 	
-	public DoorRule() {
-		this.people = new ArrayList<Person>();
+	public DoorRule(Room r, Door d, Sensor s) {
+		this.room = r;
+        this.door = d;
+        this.electro = s;
 	}
 
 	
 	@Condition
 	public boolean checkDoor() {
-		int val = Integer.parseInt(door.getValue());
-		return val > 0;
+		State st = door.getCurrentState();
+        if (st.equals(State.CLOSE)) {
+            if (room.isPeopleComing()) return true;
+        }
+        if (st.equals(State.OPEN)) {
+            if (!room.isPeopleComing() && !room.isPeopleInside()) return true;
+        }
+        return false;
 	}
 	
 	@Action(order = 1)
-	public void switchOffLight() throws Exception {
-		System.out.println("Door triggered");
+	public void switchDoor() throws Exception {
+        State st = door.getCurrentState();
+        if (st.equals(State.CLOSE)) door.setCurrentState(State.OPEN);
+        else if (st.equals(State.OPEN)) door.setCurrentState(State.CLOSE);
 	}
 }

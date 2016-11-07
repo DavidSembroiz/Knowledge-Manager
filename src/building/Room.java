@@ -1,15 +1,16 @@
 package building;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import behaviour.Person;
 import entity.Computer;
+import entity.Door;
 import entity.HVAC;
 import entity.Lamp;
 import iot.Actuator;
 import iot.Sensor;
 import rules.RuleManager;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Room {
 	
@@ -141,6 +142,11 @@ public class Room {
 				entities.add(hvac);
 				ruleManager.addHVACRule(hvac);
 			}
+            else if (type.equals("door")) {
+                Door door = new Door();
+                entities.add(door);
+                ruleManager.addDoorRule(door);
+            }
 		}
 	}
 
@@ -159,6 +165,21 @@ public class Room {
 	public void addPerson(Person p) {
 		people.add(p);
 	}
-	
+
+    public boolean isPeopleComing() {
+
+        /**
+         * If someone comes in the next 5 minutes, some actions might be anticipated
+         */
+
+        for (Person p : people) {
+            if (p.getNextActionSteps() < 30) return true;
+        }
+        return false;
+    }
+
+    public boolean isPeopleInside() {
+        return people.size() > 0;
+    }
 	
 }

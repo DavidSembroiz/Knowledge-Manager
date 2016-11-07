@@ -48,7 +48,7 @@ public class Manager {
 		CURRENT_STEP = 0;
 		loadProperties();
 		uts = Utils.getInstance();
-		//awsdb = Database.getInstance();
+		awsdb = Database.getInstance();
 		models = Weather.getInstance();
 		//mqtt = new Mqtt(this, awsdb);
 		
@@ -124,8 +124,8 @@ public class Manager {
 
 
 	private void simulate() {
-		while (CURRENT_STEP < 1000) {
-			if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
+		while (CURRENT_STEP < STEPS) {
+			if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) Debugger.log("Step " + CURRENT_STEP);
 			peopleManager.updateActions();
             building.fireRules();
 			building.updateConsumption();
@@ -136,7 +136,7 @@ public class Manager {
 
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = uts.fetchEventsFromFile();
-        while (CURRENT_STEP < 1000) {
+        while (CURRENT_STEP < STEPS) {
             if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
             peopleManager.executeActions();
             building.fireRules();

@@ -3,6 +3,7 @@ package rules;
 import building.Room;
 import domain.Utils;
 import entity.Computer;
+import entity.Door;
 import entity.HVAC;
 import entity.Lamp;
 import iot.Sensor;
@@ -68,16 +69,27 @@ public class RuleManager {
 		}
 	}
 
-	public void addLampRule(Lamp l) {
-		ArrayList<Sensor> sens = r.getSensors();
-		for (Sensor s : sens) {
-			if (!s.isAssigned() && s.getType().toLowerCase().equals("luminosity")) {
-				LampRule lr = new LampRule(r, l, s);
+    public void addLampRule(Lamp l) {
+        ArrayList<Sensor> sens = r.getSensors();
+        for (Sensor s : sens) {
+            if (!s.isAssigned() && s.getType().toLowerCase().equals("luminosity")) {
+                LampRule lr = new LampRule(r, l, s);
                 s.setValue(DEFAULT_LIGHT);
-				s.setAssigned(true);
-				rulesEngine.registerRule(lr);
-			}
-		}
-	}
+                s.setAssigned(true);
+                rulesEngine.registerRule(lr);
+            }
+        }
+    }
+
+    public void addDoorRule(Door d) {
+        ArrayList<Sensor> sens = r.getSensors();
+        for (Sensor s : sens) {
+            if (!s.isAssigned() && s.getType().toLowerCase().equals("electromagnetic")) {
+                DoorRule dr = new DoorRule(r, d, s);
+                s.setAssigned(true);
+                rulesEngine.registerRule(dr);
+            }
+        }
+    }
 
 }

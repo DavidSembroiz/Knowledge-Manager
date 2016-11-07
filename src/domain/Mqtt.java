@@ -86,7 +86,7 @@ public class Mqtt {
 			client = new MqttAsyncClient(ADDRESS, CLIENTID);
 			callback = new MqttCb(manager);
 			client.setCallback(callback);
-			//while (!client.isConnected());
+			while (!client.isConnected());
 			if (client.isConnected()) System.out.println("Connected to ServIoTicy");
 		} catch (MqttException e) {
 			e.printStackTrace();

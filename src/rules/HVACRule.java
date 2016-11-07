@@ -86,14 +86,14 @@ public class HVACRule {
 	private void moderateTemperature() {
 		double roomTemp = Double.parseDouble(temperature.getValue());
 		double environTemp = models.getCurrentEnvironmentalTemperature();
-		double newTemp = 0;
+		double newTemp;
 		if (roomTemp == environTemp) return;
 		if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.001;
 		else newTemp = roomTemp + (environTemp - roomTemp) * 0.001;
 		temperature.setValue(Double.toString(newTemp));
 	}
 
-	private void adjustTmperature() {
+	private void adjustTemperature() {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double pplTemp = getPeopleTemperature();
         double newTemp = 0;
@@ -114,7 +114,7 @@ public class HVACRule {
 		
 		
 		if (st.equals(State.ON)) {
-            adjustTmperature();
+            adjustTemperature();
 			if (!isEmpty() && currentTemperatureOK()) return true;
 			else if (isEmpty()) return true;
 		}

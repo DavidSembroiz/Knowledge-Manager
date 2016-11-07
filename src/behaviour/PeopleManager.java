@@ -205,7 +205,8 @@ public class PeopleManager {
 		 * Assign action time and duration (next and remaining)
 		 * 
 		 */
-		Action a = Action.randomAction();
+		Action a = getNextAction(p);
+        if (a == null) return;
 		String dest = null, currentLoc = null;
 		int next = 0, duration = 0;
 		boolean assigned = false;
@@ -214,17 +215,18 @@ public class PeopleManager {
 				assigned = true;
 				dest = getRandomDestination(p.getLocation());
 				next = 1 + rand.nextInt(30);
-				duration = 1 + rand.nextInt(30);
+				duration = p.getProfile().getRandomWalksDuration();
 				currentLoc = p.getLocation();
 			}
 		}
 		else if (a.equals(Action.ENTER)) {
-			if (!p.isInside()) {
+			if (!p.isInside() && !p.hadEntered()) {
 				assigned = true;
 				dest = "inside";
 				next = 1 + rand.nextInt(20);
 				duration = 1;
 				currentLoc = p.getLocation();
+                p.sethadEntered(true);
 			}
 		}
 		else if (a.equals(Action.EXIT)) {
@@ -241,7 +243,7 @@ public class PeopleManager {
 				assigned = true;
 				dest = "salon";
 				next = 1 + rand.nextInt(10);
-				duration = 1 + rand.nextInt(40);
+				duration = p.getProfile().getLunchDuration();
 				currentLoc = p.getLocation();
 				p.setHadLunch(true);
 			}
@@ -261,7 +263,16 @@ public class PeopleManager {
 		}
 	}
 
-	private String getRandomDestination(String currentLoc) {
+    private Action getNextAction(Person p) {
+        UserProfile up = p.getProfile();
+        if (up.getEntrance().triggerStatus(Manager.CURRENT_STEP)) return Action.ENTER;
+        if (up.getRandomWalks().triggerStatus(Manager.CURRENT_STEP)) return Action.MOVE;
+        if (up.getLunch().triggerStatus(Manager.CURRENT_STEP)) return Action.LUNCH;
+        if (up.getExit().triggerStatus(Manager.CURRENT_STEP)) return Action.EXIT;
+        return null;
+    }
+
+    private String getRandomDestination(String currentLoc) {
 		String[] locs = building.getLocations();
 		String nextLoc = locs[rand.nextInt(locs.length)];
 		while (nextLoc == currentLoc) {

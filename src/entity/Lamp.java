@@ -7,8 +7,7 @@ public class Lamp {
 	
 	public enum State {
 		OFF(0),
-		ON(100),
-		SUSPEND(50);
+		ON(100);
 		
 		private final int cons;
 		public int getConsumption() {return cons;}

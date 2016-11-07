@@ -1,11 +1,10 @@
 package behaviour;
 
+import iot.Manager;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import domain.Utils;
-import iot.Manager;
 
 public class Probability {
 	
@@ -42,8 +41,8 @@ public class Probability {
 	
 	public boolean triggerStatusWithPrint(int currentTime) {
 		double next = rand.nextDouble();
-		double real = getProbability(currentTime);
-		System.out.println("Next: " + next + "     |     " + "Real: " + real + "(" + currentTime + ")");
+		double real = getProbability(currentTime)/Math.max(10 - Manager.CURRENT_STEP / 756, 0);
+		System.out.println("Next: " + next + "     |     " + "Real: " + real + " (" + currentTime + ")");
 		return next < real;
 	}
 	
