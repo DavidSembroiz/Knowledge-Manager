@@ -5,6 +5,7 @@ import building.Room;
 import domain.Debugger;
 import entity.HVAC;
 import entity.HVAC.State;
+import iot.Manager;
 import iot.Sensor;
 import models.Weather;
 import org.easyrules.annotation.Action;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 
 @Rule(name = "HVAC Management Rule")
 public class HVACRule {
+
+    private int PREDICTION_THRESHOLD = 60;
 	
 	private Room room;
 	private Weather models;
@@ -29,12 +32,6 @@ public class HVACRule {
 		humidity = hum;
 		hvac = h;
 		this.room = r;
-	}
-	
-	
-	private Double getDefaultTemperature() {
-		Double hum = Double.parseDouble(humidity.getValue());
-		return hum < 45 ? 23.0 : 22.0;
 	}
 	
 	private Double getPeopleTemperature() {
@@ -75,28 +72,40 @@ public class HVACRule {
 		
 		*/
 	}
-	
-	/**
-	 * It usually takes up to 3 hours to modify 10 degrees
-	 */
+
+	private boolean temperatureOK() {
+        return environmentalTemperatureOK() || currentTemperatureOK();
+    }
+
 	
 	private void moderateTemperature() {
 		double roomTemp = Double.parseDouble(temperature.getValue());
 		double environTemp = models.getCurrentEnvironmentalTemperature();
 		double newTemp;
 		if (roomTemp == environTemp) return;
-		if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.001;
-		else newTemp = roomTemp + (environTemp - roomTemp) * 0.001;
+		if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.005;
+		else newTemp = roomTemp + (environTemp - roomTemp) * 0.005;
+        if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC OFF");
 		temperature.setValue(Double.toString(newTemp));
 	}
+
+    /**
+     * When HVAC is ON, temperature is adjusted at a 10 degree every 30 minutes ratio
+     */
 
 	private void adjustTemperature() {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double pplTemp = getPeopleTemperature();
         double newTemp = 0;
-        if (roomTemp < pplTemp) newTemp = roomTemp + (pplTemp - roomTemp) * 0.001;
-        else if (pplTemp < roomTemp) newTemp = roomTemp - (roomTemp - pplTemp) * 0.001;
+        if (roomTemp < pplTemp) newTemp = roomTemp + (pplTemp - roomTemp) * 0.01;
+        else if (pplTemp < roomTemp) newTemp = roomTemp - (roomTemp - pplTemp) * 0.01;
+        if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC ON");
         temperature.setValue(Double.toString(newTemp));
+    }
+
+    private void suspendTemperature() {
+        if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled())
+            Debugger.log(temperature.getValue() + " ºC in room " + room.getLocation() + " with HVAC Suspended");
     }
 	
 	
@@ -106,16 +115,20 @@ public class HVACRule {
 		
 		if (st.equals(State.OFF)) {
             moderateTemperature();
-			if (!room.isEmpty() && !currentTemperatureOK() && !environmentalTemperatureOK()) return true;
+			if ((room.arePeopleInside() || room.arePeopleComing(PREDICTION_THRESHOLD))
+                    && !temperatureOK()) return true;
 		}
-		
 		
 		if (st.equals(State.ON)) {
             adjustTemperature();
-			if (!room.isEmpty() && currentTemperatureOK()) return true;
-			else if (room.isEmpty()) return true;
+			if (currentTemperatureOK()) return true;
+			else if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
 		}
-		
+
+		if (st.equals(State.SUSPEND)) {
+            suspendTemperature();
+            if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
+        }
 		return false;
 	}
 	
@@ -138,6 +151,9 @@ public class HVACRule {
                 hvac.setCurrentState(State.SUSPEND);
             }
 		}
-		
+		else if (st.equals(State.SUSPEND)) {
+            if (Debugger.isEnabled()) Debugger.log("HVAC switched from SUSPENDED to OFF in room " + room.getLocation());
+            hvac.setCurrentState(State.OFF);
+        }
 	}
 }

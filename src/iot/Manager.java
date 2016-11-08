@@ -135,7 +135,7 @@ public class Manager {
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = uts.fetchEventsFromFile();
         while (CURRENT_STEP < STEPS) {
-            if (Debugger.isEnabled()) Debugger.log("Step " + CURRENT_STEP);
+            if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) Debugger.log("Step " + CURRENT_STEP);
             peopleManager.executeActions();
             building.fireRules();
             building.updateConsumption();

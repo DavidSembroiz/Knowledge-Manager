@@ -11,6 +11,8 @@ import org.easyrules.annotation.Rule;
 
 @Rule(name = "Computer Management Rule")
 public class ComputerRule {
+
+    private int PREDICTION_THRESHOLD = 30;
 	
 	private Room room;
 	
@@ -29,10 +31,10 @@ public class ComputerRule {
 	public boolean checkComputer() {
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
-			if (room.isPeopleComing()) return true;
+			if (room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
 		}
 		if (st.equals(State.ON)) {
-			if (!room.isPeopleComing() && !room.isPeopleInside()) return true;
+			if (!room.arePeopleComing(PREDICTION_THRESHOLD) && room.isEmpty()) return true;
 		}
 		return false;
 	}

@@ -124,7 +124,7 @@ public class PeopleManager {
 	
 	private void getPeopleFromFile() {
 		JSONParser parser = new JSONParser();
-		people = new ArrayList<Person>();
+		people = new ArrayList<>();
 		try {
 			FileReader reader = new FileReader("./res/people.json");
 			JSONObject root = (JSONObject) parser.parse(reader);
@@ -145,7 +145,8 @@ public class PeopleManager {
 	
 	private UserParams generateUserParams() {
 		Random r = new Random();
-		double t = 20 + (23 - 20) * r.nextDouble();
+        double t = 21;
+		//double t = 20 + (23 - 20) * r.nextDouble();
 		double l = 100 + (800 - 100) * r.nextDouble();
 		return new UserParams(t, l);
 	}

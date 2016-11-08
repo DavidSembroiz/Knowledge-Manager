@@ -11,6 +11,9 @@ import models.Weather;
 
 @Rule(name = "Lights Management Rule")
 public class LampRule {
+
+    private int PREDICTION_THRESHOLD = 5;
+    private int ENVIRONMENTAL_LIGHT_THRESHOLD = 500;
 	
 	private Room room;
 	private Weather models;
@@ -28,28 +31,28 @@ public class LampRule {
 	
 	
 	private boolean environmentalLightOK() {
-		int threshold = 500;
 		double modelValue = models.getCurrentEnvironmentalLight();
-		return modelValue > threshold;
+		return modelValue > ENVIRONMENTAL_LIGHT_THRESHOLD;
 	}
 	
 	@Condition
 	public boolean checkLuminosity() {
-		
-		/**
+
+		/*
 		 * If light is ON:
 		 *  - OFF: room is empty or environmental light is OK
 		 * 
 		 * If light is OFF:
-		 *  - ON: someone has entered the room or the environmental light is BAD
+		 *  - ON: people inside or coming to the room and environmental light is bad
 		 */
 
 		State st = lamp.getCurrentState();
         if (st.equals(State.OFF)) {
-            if (!room.isEmpty() && !environmentalLightOK()) return true;
+            if ((room.arePeopleInside() || room.arePeopleComing(PREDICTION_THRESHOLD))
+                    && !environmentalLightOK()) return true;
         }
         if (st.equals(State.ON)) {
-            if (room.isEmpty()) return true;
+            if (room.isEmpty() || environmentalLightOK()) return true;
         }
 		return false;
 	}

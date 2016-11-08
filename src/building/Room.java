@@ -178,19 +178,19 @@ public class Room {
 		peopleComing.add(p);
 	}
 
-    public boolean isPeopleComing() {
+    public boolean arePeopleComing(int threshold) {
 
         /**
-         * If someone comes in the next 5 minutes, some actions might be anticipated
+         * If someone comes in the next threshold steps, some actions might be anticipated
          */
 
         for (Person p : peopleComing) {
-            if (p.getNextActionSteps() < 30) return true;
+            if (p.getNextActionSteps() < threshold) return true;
         }
         return false;
     }
 
-    public boolean isPeopleInside() {
+    public boolean arePeopleInside() {
         return peopleActing.size() > 0;
     }
 

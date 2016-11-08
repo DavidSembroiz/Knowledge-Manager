@@ -1,39 +1,37 @@
 package rules;
 
-import java.util.ArrayList;
-
-import org.easyrules.annotation.*;
-
+import building.Room;
+import entity.Window;
+import entity.Window.State;
 import iot.Sensor;
+import org.easyrules.annotation.Action;
+import org.easyrules.annotation.Condition;
+import org.easyrules.annotation.Rule;
 
 @Rule(name = "Window Management Rule")
 public class WindowRule {
-	
-	
-	private Sensor window;
-	
-	//TODO change to an actual actuator
-	private String actuator;
-	
-	public WindowRule() {
-	}
-	
-	public ArrayList<String> getNecessarySensors() {
-		ArrayList<String> ret = new ArrayList<String>();
-		if (window == null) ret.add("window");
-		return ret;
-	}
-	
-	public void setSensor(String ruleSens, Sensor s) {
-		if (ruleSens.equals("window")) {
-			window = s;
-		}
-	}
+
+    private int PREDICTION_THRESHOLD = 10;
+
+    private Room room;
+
+    private Sensor electro;
+    private Window window;
+
+
+    public WindowRule(Room r, Window d, Sensor s) {
+        this.room = r;
+        this.window = d;
+        this.electro = s;
+    }
+
 	
 	@Condition
 	public boolean checkWindow() {
-		int val = Integer.parseInt(window.getValue());
-		return val > 0;
+		State st = window.getCurrentState();
+        if (st.equals(State.OPEN)) {
+        }
+        return false;
 	}
 	
 	@Action(order = 1)

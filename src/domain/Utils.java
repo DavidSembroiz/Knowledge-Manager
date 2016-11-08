@@ -77,7 +77,7 @@ public class Utils {
 		try (FileWriter writer = new FileWriter("./res/people.json")) {
 			JSONObject root = new JSONObject();
 			JSONArray people = new JSONArray();
-			for (int i = 0; i < 5; ++i) {
+			for (int i = 0; i < 3; ++i) {
 				JSONObject person = new JSONObject();
 				person.put("name", this.getRandomName());
 				person.put("profile", "professor");

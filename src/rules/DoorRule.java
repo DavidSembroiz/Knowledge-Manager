@@ -11,14 +11,14 @@ import org.easyrules.annotation.Rule;
 
 @Rule(name = "Door Management Rule")
 public class DoorRule {
+
+    private int PREDICTION_THRESHOLD = 10;
 	
 	private Room room;
 
     private Sensor electro;
 	private Door door;
-	
-	//TODO change to an actual actuator
-	//private String actuator;
+
 	
 	public DoorRule(Room r, Door d, Sensor s) {
 		this.room = r;
@@ -31,10 +31,10 @@ public class DoorRule {
 	public boolean checkDoor() {
 		State st = door.getCurrentState();
         if (st.equals(State.CLOSE)) {
-            if (room.isPeopleComing()) return true;
+            if (room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
         }
         if (st.equals(State.OPEN)) {
-            if (!room.isPeopleComing() && !room.isPeopleInside()) return true;
+            if (!room.arePeopleComing(PREDICTION_THRESHOLD) && room.isEmpty()) return true;
         }
         return false;
 	}
