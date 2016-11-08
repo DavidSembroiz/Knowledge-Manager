@@ -48,7 +48,7 @@ public class PeopleManager {
     }
 
     public enum Action {
-		MOVE, LUNCH, ENTER, EXIT
+		MOVE, LUNCH, ENTER, EXIT, MEETING
 	}
 	
 	public enum State {
@@ -200,15 +200,24 @@ public class PeopleManager {
 		String dest = null, currentLoc = null;
 		int next = 0, duration = 0;
 		boolean assigned = false;
-		if (a.equals(Action.MOVE)) {
-			if (p.isInside()) {
-				assigned = true;
-				dest = getRandomDestination(p.getLocation());
-				next = 1 + rand.nextInt(30);
-				duration = p.getProfile().getRandomWalksDuration();
-				currentLoc = p.getLocation();
-			}
-		}
+        if (a.equals(Action.MOVE)) {
+            if (p.isInside()) {
+                assigned = true;
+                dest = getRandomOfficeDestination(p.getLocation());
+                next = 1 + rand.nextInt(30);
+                duration = p.getProfile().getRandomWalksDuration();
+                currentLoc = p.getLocation();
+            }
+        }
+        if (a.equals(Action.MEETING)) {
+            if (p.isInside()) {
+                assigned = true;
+                dest = getRandomMeetingDestination(p.getLocation());
+                next = 1 + rand.nextInt(30);
+                duration = p.getProfile().getRandomWalksDuration();
+                currentLoc = p.getLocation();
+            }
+        }
 		else if (a.equals(Action.ENTER)) {
 			if (!p.isInside() && !p.hadEntered()) {
 				assigned = true;
@@ -253,17 +262,27 @@ public class PeopleManager {
 		}
 	}
 
+    private String getRandomMeetingDestination(String currentLoc) {
+        String[] locs = building.getMeetingLocations();
+        String nextLoc = locs[rand.nextInt(locs.length)];
+        while (nextLoc.equals(currentLoc)) {
+            nextLoc = locs[rand.nextInt(locs.length)];
+        }
+        return nextLoc;
+    }
+
     private Action getNextAction(Person p) {
         UserProfile up = p.getProfile();
         if (up.getEntrance().triggerStatus(Manager.CURRENT_STEP)) return Action.ENTER;
         if (up.getRandomWalks().triggerStatus(Manager.CURRENT_STEP)) return Action.MOVE;
         if (up.getLunch().triggerStatus(Manager.CURRENT_STEP)) return Action.LUNCH;
         if (up.getExit().triggerStatus(Manager.CURRENT_STEP)) return Action.EXIT;
+        if (up.getMeeting().triggerStatus(Manager.CURRENT_STEP)) return Action.MEETING;
         return null;
     }
 
-    private String getRandomDestination(String currentLoc) {
-		String[] locs = building.getLocations();
+    private String getRandomOfficeDestination(String currentLoc) {
+		String[] locs = building.getOfficeLocations();
 		String nextLoc = locs[rand.nextInt(locs.length)];
 		while (nextLoc.equals(currentLoc)) {
 			nextLoc = locs[rand.nextInt(locs.length)];

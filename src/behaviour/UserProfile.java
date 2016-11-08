@@ -15,6 +15,7 @@ public class UserProfile implements Cloneable {
 	
 	private Probability entrance;
 	private Probability randomWalks;
+    private Probability meeting;
 	private Probability lunch;
 	private Probability exit;
 	
@@ -65,8 +66,16 @@ public class UserProfile implements Cloneable {
 	public void setType(Type t) {
 		this.type = t;
 	}
-	
-	/**
+
+    public Probability getMeeting() {
+        return meeting;
+    }
+
+    public void setMeeting(Probability meeting) {
+        this.meeting = meeting;
+    }
+
+    /**
 	 * Returns a value within min <= value <= max
 	 */
 	public int getLunchDuration() {
@@ -105,7 +114,7 @@ public class UserProfile implements Cloneable {
 			@SuppressWarnings("unchecked")
 			Iterator<String> keys = prof.keySet().iterator();
 			while (keys.hasNext()) {
-				String k = (String) keys.next();
+				String k = keys.next();
 				JSONArray values = (JSONArray) prof.get(k);
 				String[] vals = new String[values.size()];
 				for (int i = 0; i < values.size(); ++i) {
@@ -158,6 +167,9 @@ public class UserProfile implements Cloneable {
 		case "randomWalks":
 			randomWalks = p;
 			break;
+        case "meeting":
+            meeting = p;
+            break;
 		default:
 			System.err.println("ERROR: profile file wrongly formatted");
 			break;

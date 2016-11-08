@@ -15,7 +15,8 @@ public class Building {
 	private int numRooms;
 	private String id;
 	private ArrayList<Room> rooms;
-	private String[] locations;
+	private String[] officeLocations;
+    private String[] meetingLocations;
 	
 	public Building(String id, ArrayList<Room> rooms){
 		this.rooms = rooms;
@@ -26,26 +27,33 @@ public class Building {
 	}
 	
 	private void addSpecialRooms() {
-		rooms.add(new Room("outside", "0"));
-		rooms.add(new Room("inside", "0"));
-		rooms.add(new Room("salon", "0"));
+		rooms.add(new Room("outside", "0", "undefined"));
+		rooms.add(new Room("inside", "0", "undefined"));
+		rooms.add(new Room("salon", "0", "undefined"));
 	}
 	
 	private void parseLocations() {
-		HashSet<String> locs = new HashSet<String>();
+		HashSet<String> officeLocs = new HashSet<String>();
+        HashSet<String> meetingLocs = new HashSet<String>();
 		for (Room r : rooms) {
-			if (Integer.parseInt(r.getSize()) > 0) locs.add(r.getLocation());
+			if (Integer.parseInt(r.getSize()) > 0) {
+                if (r.getType().equals(Room.ROOM_TYPE.MEETING_ROOM)) meetingLocs.add(r.getLocation());
+                else if (r.getType().equals(Room.ROOM_TYPE.OFFICE)) officeLocs.add(r.getLocation());
+            }
 		}
-		locations = locs.toArray(new String[locs.size()]);
+		officeLocations = officeLocs.toArray(new String[officeLocs.size()]);
+        meetingLocations = meetingLocs.toArray(new String[meetingLocs.size()]);
 	}
 
-	public String[] getLocations() {
-		return locations;
+
+	public String[] getOfficeLocations() {
+		return officeLocations;
 	}
 
-	public void setLocations(String[] l) {
-		this.locations = l;
-	}
+    public String[] getMeetingLocations() {
+        return meetingLocations;
+    }
+
 
 	public void setRooms(ArrayList<Room> rooms) {
 		this.rooms = rooms;
@@ -123,7 +131,8 @@ public class Building {
                 else if (e instanceof Lamp) fcons += ((Lamp) e).getCons();
             }
         }
-        /**
+
+        /*
          * Every step equivals to 10 seconds, and consumption is added every step.
          * Thus, (fcons/(STEPS))*(STEPS/360) gives kWh
          */

@@ -74,15 +74,32 @@ public class Utils {
 	
 	@SuppressWarnings("unchecked")
 	public void generatePeople() {
+
+        int PROFESSORS = 5;
+        int STUDENTS = 5;
+        int PAS = 0;
+
 		try (FileWriter writer = new FileWriter("./res/people.json")) {
 			JSONObject root = new JSONObject();
 			JSONArray people = new JSONArray();
-			for (int i = 0; i < 3; ++i) {
+			for (int i = 0; i < PROFESSORS; ++i) {
 				JSONObject person = new JSONObject();
 				person.put("name", this.getRandomName());
 				person.put("profile", "professor");
 				people.add(person);
 			}
+            for (int i = 0; i < STUDENTS; ++i) {
+                JSONObject person = new JSONObject();
+                person.put("name", this.getRandomName());
+                person.put("profile", "student");
+                people.add(person);
+            }
+            for (int i = 0; i < PAS; ++i) {
+                JSONObject person = new JSONObject();
+                person.put("name", this.getRandomName());
+                person.put("profile", "pas");
+                people.add(person);
+            }
 			root.put("people", people);
 			writer.write(root.toJSONString());
 		} catch (IOException e) {
@@ -101,6 +118,7 @@ public class Utils {
 		}
 		return sb.toString();
 	}
+
 	
 	public Building loadBuilding() {
 		JSONParser parser = new JSONParser();
@@ -112,7 +130,7 @@ public class Utils {
 			JSONArray rms = (JSONArray) root.get("rooms");
 			for (int i = 0; i < rms.size(); ++i) {
 				JSONObject rm = (JSONObject) rms.get(i);
-				Room r = new Room((String) rm.get("id"), (String) rm.get("size"));
+				Room r = new Room((String) rm.get("id"), (String) rm.get("size"), (String) rm.get("type"));
 				JSONArray sens = (JSONArray) rm.get("sensors");
 				for (int j = 0; j < sens.size(); ++j) {
 					JSONObject sen = (JSONObject) sens.get(j);
@@ -188,4 +206,5 @@ public class Utils {
         }
         return events;
     }
+
 }

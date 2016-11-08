@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Room {
-	
-	/**
-	 * Current value used to know when all room sensors have been filled
-	 */
-	
-	
+
+    public enum ROOM_TYPE {
+        OFFICE, MEETING_ROOM, UNDEFINED
+    }
+
 	private String location;
 	private String size;
+    private ROOM_TYPE type;
 	private ArrayList<Sensor> sensors;
 	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
@@ -29,9 +29,10 @@ public class Room {
     private ArrayList<Person> peopleComing;
 	private HashSet<Object> entities;
 	
-	public Room(String location, String size) {
+	public Room(String location, String size, String type) {
 		this.location = location;
 		this.size = size;
+        this.type = ROOM_TYPE.valueOf(type.toUpperCase());
 		sensors = new ArrayList<Sensor>();
 		actuators = new ArrayList<Actuator>();
 		this.entities = new HashSet<>();
@@ -60,8 +61,15 @@ public class Room {
 		this.sensors = sensors;
 	}
 
+    public ROOM_TYPE getType() {
+        return type;
+    }
 
-	public boolean sensorExists(String soID, String type) {
+    public void setType(ROOM_TYPE type) {
+        this.type = type;
+    }
+
+    public boolean sensorExists(String soID, String type) {
 		for (Sensor s : sensors) {
 			if (s.getSoID().equals(soID) && s.getType().equals(type)) return true;
 		}
@@ -180,7 +188,7 @@ public class Room {
 
     public boolean arePeopleComing(int threshold) {
 
-        /**
+        /*
          * If someone comes in the next threshold steps, some actions might be anticipated
          */
 
