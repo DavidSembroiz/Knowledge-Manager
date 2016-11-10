@@ -17,42 +17,12 @@ import static iot.Manager.LOG_EVENTS;
 
 public class PeopleManager {
 
-    public Person getPerson(String name) {
-        for (Person p : people) {
-            if (p.getName().equals(name)) return p;
-        }
-        return null;
-    }
-
-    public void executeActions() {
-        for (Person p : people) {
-            if (!p.isActing()) {
-                if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
-                else if (p.getNextActionSteps() == 0) {
-                    p.decreaseNextActionSteps();
-                    executeAction(p);
-                }
-            }
-            else if (p.isActing()){
-                if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
-                else if (p.getRemainingSteps() == 0) {
-                    p.decreaseRemainingSteps();
-                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
-                                                           " " + p.getCurrentAction().toString());
-                    p.setActing(false);
-                }
-
-            }
-
-        }
-    }
-
     public enum Action {
 		MOVE, LUNCH, ENTER, EXIT, MEETING
 	}
 	
 	public enum State {
-		OUTSIDE, INSIDE, ROOM, MEETING, SALON
+		OUTSIDE, INSIDE, ROOM, SALON
 	}
 	
 	public enum Type {
@@ -111,6 +81,65 @@ public class PeopleManager {
 	private void flushData() {
 		if (writer != null) writer.flush();
 	}
+
+    public Person getPerson(String name) {
+        for (Person p : people) {
+            if (p.getName().equals(name)) return p;
+        }
+        return null;
+    }
+
+    public void updateActions() {
+        for (Person p : people) {
+            if (!p.isActing()) {
+                if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
+                else if (p.getNextActionSteps() == 0) {
+
+					/*
+					 * Action is executed and nextActionSteps is set to -1
+					 */
+
+                    p.decreaseNextActionSteps();
+                    executeAction(p);
+                }
+                else if (p.getNextActionSteps() < 0) {
+                    assignNewAction(p);
+                }
+            }
+            else if (p.isActing()) {
+                if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
+                else if(p.getRemainingSteps() == 0) {
+                    p.decreaseRemainingSteps();
+                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                            " " + p.getCurrentAction().toString());
+                    assignNewAction(p);
+                }
+            }
+        }
+    }
+
+    public void executeActions() {
+        for (Person p : people) {
+            if (!p.isActing()) {
+                if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
+                else if (p.getNextActionSteps() == 0) {
+                    p.decreaseNextActionSteps();
+                    executeAction(p);
+                }
+            }
+            else if (p.isActing()){
+                if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
+                else if (p.getRemainingSteps() == 0) {
+                    p.decreaseRemainingSteps();
+                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                            " " + p.getCurrentAction().toString());
+                    p.setActing(false);
+                }
+
+            }
+
+        }
+    }
 	
 	private UserProfile getProfile(String s) {
 		for (UserProfile up : defaultProfiles) {
@@ -120,8 +149,7 @@ public class PeopleManager {
 		}
 		return null;
 	}
-	
-	
+
 	private void getPeopleFromFile() {
 		JSONParser parser = new JSONParser();
 		people = new ArrayList<>();
@@ -132,9 +160,8 @@ public class PeopleManager {
 			JSONArray ppl = (JSONArray) root.get("people");
 			for (int i = 0; i < ppl.size(); ++i) {
 				JSONObject person = (JSONObject) ppl.get(i);
-				Person p = new Person((String) person.get("name"),
-						              getProfile((String) person.get("profile")),
-						              generateUserParams());
+                String type = (String) person.get("profile");
+				Person p = new Person((String) person.get("name"), type, getProfile(type), generateUserParams());
 				people.add(p);
 			}
 		} catch (IOException | ParseException e) {
@@ -151,34 +178,7 @@ public class PeopleManager {
 		return new UserParams(t, l);
 	}
 
-	public void updateActions() {
-		for (Person p : people) {
-			if (!p.isActing()) {
-				if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
-				else if (p.getNextActionSteps() == 0) {
-					
-					/*
-					 * Action is executed and nextActionSteps is set to -1
-					 */
 
-					p.decreaseNextActionSteps();
-					executeAction(p);
-				}
-				else if (p.getNextActionSteps() < 0) {
-					assignNewAction(p);
-				}
-			}
-			else if (p.isActing()) {
-				if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
-				else if(p.getRemainingSteps() == 0) {
-                    p.decreaseRemainingSteps();
-                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
-                            " " + p.getCurrentAction().toString());
-                    assignNewAction(p);
-                }
-			}
-		}
-	}
 	
 	private void executeAction(Person p) {
 		p.setActing(true);
@@ -203,7 +203,9 @@ public class PeopleManager {
         if (a.equals(Action.MOVE)) {
             if (p.isInside()) {
                 assigned = true;
-                dest = getRandomOfficeDestination(p.getLocation());
+                if (p.isProfessor()) dest = getRandomOfficeDestination(p.getLocation());
+                else if (p.isStudent()) dest = getRandomClassDestination(p.getLocation());
+                else dest = getRandomDestination(p.getLocation());
                 next = 1 + rand.nextInt(30);
                 duration = p.getProfile().getRandomWalksDuration();
                 currentLoc = p.getLocation();
@@ -261,6 +263,25 @@ public class PeopleManager {
 			}
 		}
 	}
+
+    private String getRandomDestination(String currentLoc) {
+        int r = rand.nextInt(building.NUM_PLACES);
+        switch (r) {
+            case 0: return getRandomOfficeDestination(currentLoc);
+            case 1: return getRandomClassDestination(currentLoc);
+            case 2: return getRandomMeetingDestination(currentLoc);
+            default: return null;
+        }
+    }
+
+    private String getRandomClassDestination(String currentLoc) {
+        String[] locs = building.getClassromLocations();
+        String nextLoc = locs[rand.nextInt(locs.length)];
+        while (nextLoc.equals(currentLoc)) {
+            nextLoc = locs[rand.nextInt(locs.length)];
+        }
+        return nextLoc;
+    }
 
     private String getRandomMeetingDestination(String currentLoc) {
         String[] locs = building.getMeetingLocations();

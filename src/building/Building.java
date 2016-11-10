@@ -15,8 +15,12 @@ public class Building {
 	private int numRooms;
 	private String id;
 	private ArrayList<Room> rooms;
+
+
+    public int NUM_PLACES = 3;
 	private String[] officeLocations;
     private String[] meetingLocations;
+    private String[] classLocations;
 	
 	public Building(String id, ArrayList<Room> rooms){
 		this.rooms = rooms;
@@ -35,14 +39,17 @@ public class Building {
 	private void parseLocations() {
 		HashSet<String> officeLocs = new HashSet<String>();
         HashSet<String> meetingLocs = new HashSet<String>();
+        HashSet<String> classLocs = new HashSet<String>();
 		for (Room r : rooms) {
 			if (Integer.parseInt(r.getSize()) > 0) {
                 if (r.getType().equals(Room.ROOM_TYPE.MEETING_ROOM)) meetingLocs.add(r.getLocation());
                 else if (r.getType().equals(Room.ROOM_TYPE.OFFICE)) officeLocs.add(r.getLocation());
+                else if (r.getType().equals(Room.ROOM_TYPE.CLASSROOM)) classLocs.add(r.getLocation());
             }
 		}
 		officeLocations = officeLocs.toArray(new String[officeLocs.size()]);
         meetingLocations = meetingLocs.toArray(new String[meetingLocs.size()]);
+        classLocations = classLocs.toArray(new String[classLocs.size()]);
 	}
 
 
@@ -54,26 +61,10 @@ public class Building {
         return meetingLocations;
     }
 
+    public String[] getClassromLocations() {
+        return classLocations;
+    }
 
-	public void setRooms(ArrayList<Room> rooms) {
-		this.rooms = rooms;
-	}
-
-	public int getNumRooms() {
-		return numRooms;
-	}
-
-	public void setNumRooms(int numRooms) {
-		this.numRooms = numRooms;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public ArrayList<Room> getRooms() {
 		return this.rooms;
@@ -93,7 +84,6 @@ public class Building {
 				if (e instanceof Computer) {
 					int cons = ((Computer) e).getCurrentState().getConsumption();
 					((Computer) e).addConsumption(cons);
-					
 				}
 				else if (e instanceof HVAC) {
                     int cons = ((HVAC) e).getCurrentState().getConsumption();
@@ -121,7 +111,7 @@ public class Building {
 		}
 	}
 	
-	public double calculateFinalConsumption() {
+	public double calculateConsumption() {
         double fcons = 0;
         for (Room r : rooms) {
             HashSet<Object> ents = r.getEntities();
@@ -143,4 +133,6 @@ public class Building {
     public void fireRules() {
         for (Room r : rooms) r.fireRules();
     }
+
+
 }

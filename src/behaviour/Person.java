@@ -2,6 +2,7 @@ package behaviour;
 
 import behaviour.PeopleManager.Action;
 import behaviour.PeopleManager.State;
+import behaviour.PeopleManager.Type;
 import domain.Debugger;
 
 public class Person {
@@ -10,16 +11,18 @@ public class Person {
 	private State currentState;
 	private Action currentAction;
 	private String location;
+    private String type;
 	private UserProfile profile;
 	private UserParams params;
 	private int nextActionSteps;
 	private int remainingSteps;
 	private boolean acting;
 	
-	public Person(String name, UserProfile prof, UserParams param) {
+	public Person(String name, String type, UserProfile prof, UserParams param) {
 		this.currentAction = Action.MOVE;
 		this.currentState = State.OUTSIDE;
 		this.name = name;
+        this.type = type;
 		this.profile = prof;
 		this.params = param;
 		this.nextActionSteps = -9999;
@@ -142,5 +145,17 @@ public class Person {
 
     public void sethadEntered(boolean b) {
         params.setHadEntered(b);
+    }
+
+    public boolean isProfessor() {
+        return type.equals(Type.PROFESSOR);
+    }
+
+    public boolean isStudent() {
+        return type.equals(Type.STUDENT);
+    }
+
+    public boolean isPas() {
+        return type.equals(Type.PAS);
     }
 }

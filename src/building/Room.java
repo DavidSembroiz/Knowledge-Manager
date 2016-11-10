@@ -16,7 +16,7 @@ import java.util.HashSet;
 public class Room {
 
     public enum ROOM_TYPE {
-        OFFICE, MEETING_ROOM, UNDEFINED
+        OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
     }
 
 	private String location;

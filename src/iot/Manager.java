@@ -119,36 +119,48 @@ public class Manager {
 		}
 	}
 
+	private void baseSimulation() {
+        /*
+
+         */
+    }
+
 
 
 	private void simulate() {
 		while (CURRENT_STEP < STEPS) {
-			if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) Debugger.log("Step " + CURRENT_STEP);
+			if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) {
+                Debugger.log("Step " + CURRENT_STEP);
+                Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
+            }
 			peopleManager.updateActions();
             building.fireRules();
 			building.updateConsumption();
 			++CURRENT_STEP;
 		}
-        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateFinalConsumption() + " kWh");
+        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
 	}
 
 	private void repeatSimulation() {
 		PriorityQueue<Event> events = uts.fetchEventsFromFile();
         while (CURRENT_STEP < STEPS) {
-            if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) Debugger.log("Step " + CURRENT_STEP);
+            if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) {
+                Debugger.log("Step " + CURRENT_STEP);
+                Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
+            }
             peopleManager.executeActions();
-            building.fireRules();
-            building.updateConsumption();
+
             while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
                 Event e = events.poll();
-                if (Debugger.isEnabled()) Debugger.log("Event " + e.getAction().toString() + " for " + e.getName());
                 Person p = peopleManager.getPerson(e.getName());
                 peopleManager.assignSpecificAction(p, e);
 
             }
+            building.fireRules();
+            building.updateConsumption();
             ++CURRENT_STEP;
         }
-        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateFinalConsumption() + " kWh");
+        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
 	}
 	
 	public void manageMessage(String topic, String message) {
