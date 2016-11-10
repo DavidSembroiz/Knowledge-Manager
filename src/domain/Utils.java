@@ -75,9 +75,9 @@ public class Utils {
 	@SuppressWarnings("unchecked")
 	public void generatePeople() {
 
-        int PROFESSORS = 40;
-        int STUDENTS = 50;
-        int PAS = 10;
+        int PROFESSORS = 20;
+        int STUDENTS = 0;
+        int PAS = 0;
 
 		try (FileWriter writer = new FileWriter("./res/people.json")) {
 			JSONObject root = new JSONObject();

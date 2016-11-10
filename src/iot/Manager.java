@@ -5,10 +5,7 @@ import behaviour.PeopleManager;
 import behaviour.Person;
 import building.Building;
 import building.Room;
-import domain.Database;
-import domain.Debugger;
-import domain.Mqtt;
-import domain.Utils;
+import domain.*;
 import models.Weather;
 
 import java.io.FileInputStream;
@@ -42,7 +39,7 @@ public class Manager {
 	private PeopleManager peopleManager;
 	private Weather models;
 	
-	
+	private CustomFileWriter consumption_writer;
 	
 	public Manager() {
 		CURRENT_STEP = 0;
@@ -56,6 +53,8 @@ public class Manager {
 		if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
+
+        consumption_writer = new CustomFileWriter("./res/consumption.log");
 		
 		if (MODE == 0) simulate();
         else if (MODE == 1) repeatSimulation();
@@ -121,35 +120,28 @@ public class Manager {
 
 	private void baseSimulation() {
         /*
-
+         * During normal simulation, all elements are ON between working hours
          */
+
+
+
     }
-
-
 
 	private void simulate() {
 		while (CURRENT_STEP < STEPS) {
-			if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) {
-                Debugger.log("Step " + CURRENT_STEP);
-                Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
-            }
 			peopleManager.updateActions();
             building.fireRules();
 			building.updateConsumption();
 			++CURRENT_STEP;
 		}
-        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
+		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+        writeHourlyConsumption();
 	}
 
-	private void repeatSimulation() {
+    private void repeatSimulation() {
 		PriorityQueue<Event> events = uts.fetchEventsFromFile();
         while (CURRENT_STEP < STEPS) {
-            if (Debugger.isEnabled() && CURRENT_STEP%500 == 0) {
-                Debugger.log("Step " + CURRENT_STEP);
-                Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
-            }
             peopleManager.executeActions();
-
             while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
                 Event e = events.poll();
                 Person p = peopleManager.getPerson(e.getName());
@@ -160,8 +152,16 @@ public class Manager {
             building.updateConsumption();
             ++CURRENT_STEP;
         }
-        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateConsumption() + " kWh");
+        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+        writeHourlyConsumption();
 	}
+
+    private void writeHourlyConsumption() {
+        double cons[] = building.getHourlyConsumption();
+        for (int i = 0; i < cons.length; ++i) {
+            consumption_writer.write(Double.toString(cons[i]));
+        }
+    }
 	
 	public void manageMessage(String topic, String message) {
 		String soID = uts.extractIdFromTopic(topic);

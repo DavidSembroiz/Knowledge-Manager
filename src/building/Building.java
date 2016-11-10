@@ -111,7 +111,7 @@ public class Building {
 		}
 	}
 	
-	public double calculateConsumption() {
+	public double calculateAccumulatedConsumption() {
         double fcons = 0;
         for (Room r : rooms) {
             HashSet<Object> ents = r.getEntities();
@@ -123,12 +123,32 @@ public class Building {
         }
 
         /*
-         * Every step equivals to 10 seconds, and consumption is added every step.
+         * Every step equals to 10 seconds, and consumption is added every step.
          * Thus, (fcons/(STEPS))*(STEPS/360) gives kWh
+         *
+         * Equals to (fcons/360)/1000 for 1 day
+         *
          */
 
         return ((fcons/Manager.STEPS)*(Manager.STEPS/360))/1000;
 	}
+
+	public double[] getHourlyConsumption() {
+        double fcons[] = new double[24];
+        for (int i = 0; i < 24; ++i) {
+            for (Room r : rooms) {
+                HashSet<Object> ents = r.getEntities();
+                for (Object e : ents) {
+                    if (e instanceof Computer) fcons[i] += ((Computer) e).getHourlyConsumption(i);
+                    else if (e instanceof HVAC) fcons[i] += ((HVAC) e).getHourlyConsumption(i);
+                    else if (e instanceof Lamp) fcons[i] += ((Lamp) e).getHourlyConsumption(i);
+                }
+            }
+            fcons[i] /= (360*1000);
+        }
+        return fcons;
+    }
+
 
     public void fireRules() {
         for (Room r : rooms) r.fireRules();

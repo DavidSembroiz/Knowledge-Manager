@@ -15,6 +15,10 @@ import java.util.HashSet;
 
 public class Room {
 
+    public ArrayList<Person> getPeopleComing() {
+        return peopleComing;
+    }
+
     public enum ROOM_TYPE {
         OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
     }
@@ -33,40 +37,25 @@ public class Room {
 		this.location = location;
 		this.size = size;
         this.type = ROOM_TYPE.valueOf(type.toUpperCase());
-		sensors = new ArrayList<Sensor>();
-		actuators = new ArrayList<Actuator>();
+		sensors = new ArrayList<>();
+		actuators = new ArrayList<>();
 		this.entities = new HashSet<>();
 		this.ruleManager = new RuleManager(this);
-		this.peopleActing = new ArrayList<Person>();
-        this.peopleComing = new ArrayList<Person>();
+		this.peopleActing = new ArrayList<>();
+        this.peopleComing = new ArrayList<>();
 	}
-	
-	public RuleManager getRuleManager() {
-		return ruleManager;
-	}
+
 
 	public String getLocation() {
 		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public ArrayList<Sensor> getSensors() {
 		return sensors;
 	}
 
-	public void setSensors(ArrayList<Sensor> sensors) {
-		this.sensors = sensors;
-	}
-
     public ROOM_TYPE getType() {
         return type;
-    }
-
-    public void setType(ROOM_TYPE type) {
-        this.type = type;
     }
 
     public boolean sensorExists(String soID, String type) {
@@ -91,29 +80,9 @@ public class Room {
 	public void addSensor(ArrayList<Sensor> s) {
 		for (Sensor sen : s) sensors.add(sen);
 	}
-	
-	public void addSensor(String id, String type, String val) {
-		this.sensors.add(new Sensor(id, type, val));
-	}
 
 	public String getSize() {
 		return size;
-	}
-
-	public void setSize(String size) {
-		this.size = size;
-	}
-
-	public ArrayList<Actuator> getActuators() {
-		return actuators;
-	}
-
-	public void setActuators(ArrayList<Actuator> actuators) {
-		this.actuators = actuators;
-	}
-
-	public void setRuleManager(RuleManager ruleManager) {
-		this.ruleManager = ruleManager;
 	}
 
 	public Sensor fetchSensor(String id, String type) {
@@ -129,13 +98,13 @@ public class Room {
 	}
 
 	public void addEntity(String type, String qtt) {
+        ArrayList<Computer> comps = new ArrayList();
 		for (int i = 0; i < Integer.parseInt(qtt); ++i) {
 			if (type.equals("computer")) {
-				Computer c = new Computer();
+                Computer c = new Computer(i);
+				comps.add(c);
 				entities.add(c);
-				ruleManager.addComputerRule(c);
-				
-			}
+            }
 			else if (type.equals("lamp")) {
 				Lamp l = new Lamp();
 				entities.add(l);
@@ -152,30 +121,15 @@ public class Room {
                 ruleManager.addDoorRule(door);
             }
 		}
+		ruleManager.addComputerRule(comps);
 	}
 
 	public HashSet<Object> getEntities() {
 		return entities;
 	}
 
-	public void setEntities(HashSet<Object> entities) {
-		this.entities = entities;
-	}
-
     public ArrayList<Person> getPeopleActing() {
         return peopleActing;
-    }
-
-    public void setPeopleActing(ArrayList<Person> peopleActing) {
-        this.peopleActing = peopleActing;
-    }
-
-    public ArrayList<Person> getPeopleComing() {
-        return peopleComing;
-    }
-
-    public void setPeopleComing(ArrayList<Person> peopleComing) {
-        this.peopleComing = peopleComing;
     }
 
     public void removePerson(Person p) {
@@ -213,4 +167,5 @@ public class Room {
             peopleActing.add(p);
         }
     }
+
 }

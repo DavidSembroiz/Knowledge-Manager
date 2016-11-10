@@ -7,10 +7,9 @@ import entity.Computer.State;
 import iot.Sensor;
 import org.easyrules.annotation.Action;
 import org.easyrules.annotation.Condition;
-import org.easyrules.annotation.Rule;
+import org.easyrules.core.BasicRule;
 
-@Rule(name = "Computer Management Rule")
-public class ComputerRule {
+public class ComputerRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 30;
 	
@@ -19,12 +18,13 @@ public class ComputerRule {
 	private Sensor power;
 	private Computer comp;
 
-	
-	public ComputerRule(Room r, Computer c, Sensor s) {
-		this.comp = c;
-		this.power = s;
-		this.room = r;
-	}
+
+    public ComputerRule(Room r, Computer c, Sensor s) {
+        super("Computer rule #" + Integer.toString(c.getId()), "Rule to manage computer", c.getId());
+        this.room = r;
+        this.comp = c;
+        this.power = s;
+    }
 
 	
 	@Condition
@@ -43,11 +43,13 @@ public class ComputerRule {
 	public void switchStatus() throws Exception {
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
-            if (Debugger.isEnabled()) Debugger.log("Computer switched ON in room " + room.getLocation());
+            if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
+                    "switched ON in room " + room.getLocation());
             comp.setCurrentState(State.ON);
         }
 		else if (st.equals(State.ON)) {
-            if (Debugger.isEnabled()) Debugger.log("Computer switched OFF in room " + room.getLocation());
+            if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
+                    "switched OFF in room " + room.getLocation());
             comp.setCurrentState(State.OFF);
         }
 	}

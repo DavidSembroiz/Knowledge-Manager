@@ -148,14 +148,14 @@ public class Person {
     }
 
     public boolean isProfessor() {
-        return type.equals(Type.PROFESSOR);
+        return type.equals(Type.PROFESSOR.toString().toLowerCase());
     }
 
     public boolean isStudent() {
-        return type.equals(Type.STUDENT);
+        return type.equals(Type.STUDENT.toString().toLowerCase());
     }
 
     public boolean isPas() {
-        return type.equals(Type.PAS);
+        return type.equals(Type.PAS.toString().toLowerCase());
     }
 }

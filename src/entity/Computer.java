@@ -1,11 +1,16 @@
 package entity;
 
+import iot.Manager;
+
 public class Computer {
-	
+
+    private int id;
 	private State currentState;
 	private double accPowerUsage;
-	
-	public enum State {
+    private double consumptionHistory[];
+
+
+    public enum State {
 		OFF(0),
 		ON(100),
 		SUSPEND(50);
@@ -19,10 +24,20 @@ public class Computer {
 	}
 	
 	
-	public Computer() {
-		this.currentState = State.OFF;
+	public Computer(int id) {
+
+        this.id = id;
+        this.currentState = State.OFF;
+        consumptionHistory = new double[24];
 	}
 
+    public double getHourlyConsumption(int i) {
+        return consumptionHistory[i];
+    }
+
+    public int getId() {
+        return id;
+    }
 
 	public State getCurrentState() {
 		return currentState;
@@ -35,7 +50,9 @@ public class Computer {
 
 
 	public void addConsumption(double cons) {
-		this.accPowerUsage += cons;
+
+        this.accPowerUsage += cons;
+        this.consumptionHistory[Manager.CURRENT_STEP/360] += cons;
 	}
 
 	public double getCons() {
