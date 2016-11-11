@@ -24,7 +24,8 @@ public class LampRule extends BasicRule {
 
 	
 	public LampRule(Room r, Lamp l, Sensor light) {
-		models = Weather.getInstance();
+        super("Lamp rule #" + l.getId(), "Rule to manage Lamps", l.getId());
+        models = Weather.getInstance();
 		this.room = r;
 		this.lamp = l;
 		this.luminosity = light;

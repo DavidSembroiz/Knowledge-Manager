@@ -16,7 +16,9 @@ public class Door {
     }
 
 
-
+    public int getId() {
+        return this.id;
+    }
 
     public State getCurrentState() {
         return currentState;

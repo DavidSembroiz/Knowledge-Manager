@@ -190,6 +190,8 @@ public class PeopleManager {
         String currentLoc = p.getLocation();
         p.assignAction(e.getAction(), e.getDest(), e.getNext(), e.getDuration());
         building.movePerson(p, currentLoc);
+        building.unassignRoomElements(p, currentLoc);
+        building.assignRoomElements(p, e.getDest());
     }
 
 	private void assignNewAction(Person p) {

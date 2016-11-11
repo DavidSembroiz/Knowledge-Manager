@@ -2,6 +2,7 @@ package entity;
 
 public class Window {
 
+    private int id;
     private State currentState;
 
     public enum State {
@@ -9,10 +10,14 @@ public class Window {
     }
 
 
-    public Window() {
+    public Window(int id) {
+        this.id = id;
         this.currentState = State.CLOSE;
     }
 
+    public int getId() {
+        return id;
+    }
 
     public State getCurrentState() {
         return currentState;

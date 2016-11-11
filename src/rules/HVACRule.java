@@ -8,12 +8,10 @@ import entity.HVAC.State;
 import iot.Manager;
 import iot.Sensor;
 import models.Weather;
-import org.easyrules.annotation.Rule;
 import org.easyrules.core.BasicRule;
 
 import java.util.ArrayList;
 
-@Rule(name = "HVAC Management Rule")
 public class HVACRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 60;
@@ -26,6 +24,7 @@ public class HVACRule extends BasicRule {
 	private HVAC hvac;
 	
 	public HVACRule(Room r, HVAC h, Sensor temp, Sensor hum) {
+        super("HVAC rule #" + h.getId(), "Rule to manage HVAC", h.getId());
 		models = Weather.getInstance();
 		temperature = temp;
 		humidity = hum;

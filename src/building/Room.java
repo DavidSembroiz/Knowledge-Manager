@@ -107,14 +107,14 @@ public class Room {
                 break;
             case "lamp":
                 for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-                    Lamp l = new Lamp();
+                    Lamp l = new Lamp(i);
                     entities.add(l);
                     ruleManager.addLampRule(l);
                 }
                 break;
             case "hvac":
                 for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-                    HVAC hvac = new HVAC();
+                    HVAC hvac = new HVAC(i);
                     entities.add(hvac);
                     ruleManager.addHVACRule(hvac);
                 }

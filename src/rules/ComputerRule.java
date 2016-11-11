@@ -25,9 +25,11 @@ public class ComputerRule extends BasicRule {
         this.power = s;
     }
 
+    // TODO change return false
+
     private boolean isPersonComing() {
         if (comp.getUsedBy() == null) return false;
-        return (comp.getUsedBy().getNextActionSteps() < PREDICTION_THRESHOLD);
+        return !(comp.getUsedBy() == null) || (comp.getUsedBy().getNextActionSteps() < PREDICTION_THRESHOLD);
     }
 
 	

@@ -3,12 +3,13 @@ package entity;
 import iot.Manager;
 
 public class HVAC {
-	
+
+    private int id;
 	private State currentState;
 	private double accPowerUsage;
     private double consumptionHistory[];
-	
-	public enum State {
+
+    public enum State {
 		OFF(0),
 		ON(100),
 		SUSPEND(50);
@@ -22,11 +23,16 @@ public class HVAC {
 	}
 	
 	
-	public HVAC() {
+	public HVAC(int id) {
 
+        this.id = id;
         this.currentState = State.OFF;
         consumptionHistory = new double[24];
 	}
+
+    public int getId() {
+        return id;
+    }
 
     public double getHourlyConsumption(int i) {
         return consumptionHistory[i];

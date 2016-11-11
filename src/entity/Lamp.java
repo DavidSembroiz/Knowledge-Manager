@@ -3,12 +3,17 @@ package entity;
 import iot.Manager;
 
 public class Lamp {
-	
+
+    private int id;
 	private State currentState;
 	private double accPowerUsage;
     private double consumptionHistory[];
-	
-	public enum State {
+
+    public int getId() {
+        return id;
+    }
+
+    public enum State {
 		OFF(0),
 		ON(100);
 		
@@ -21,8 +26,8 @@ public class Lamp {
 	}
 	
 	
-	public Lamp() {
-
+	public Lamp(int id) {
+        this.id = id;
         this.currentState = State.OFF;
         consumptionHistory = new double[24];
 	}

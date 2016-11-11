@@ -18,9 +18,10 @@ public class WindowRule extends BasicRule {
     private Window window;
 
 
-    public WindowRule(Room r, Window d, Sensor s) {
+    public WindowRule(Room r, Window w, Sensor s) {
+        super("Window rule #" + w.getId(), "Rule to manage Windows", w.getId());
         this.room = r;
-        this.window = d;
+        this.window = w;
         this.electro = s;
     }
 

@@ -5,10 +5,8 @@ import domain.Debugger;
 import entity.Door;
 import entity.Door.State;
 import iot.Sensor;
-import org.easyrules.annotation.Rule;
 import org.easyrules.core.BasicRule;
 
-@Rule(name = "Door Management Rule")
 public class DoorRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 10;
@@ -20,7 +18,9 @@ public class DoorRule extends BasicRule {
 
 	
 	public DoorRule(Room r, Door d, Sensor s) {
-		this.room = r;
+        super("Door rule #" + d.getId(), "Rule to manage doors", d.getId());
+
+        this.room = r;
         this.door = d;
         this.electro = s;
 	}
