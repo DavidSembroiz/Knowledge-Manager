@@ -5,12 +5,11 @@ import domain.Debugger;
 import entity.Door;
 import entity.Door.State;
 import iot.Sensor;
-import org.easyrules.annotation.Action;
-import org.easyrules.annotation.Condition;
 import org.easyrules.annotation.Rule;
+import org.easyrules.core.BasicRule;
 
 @Rule(name = "Door Management Rule")
-public class DoorRule {
+public class DoorRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 10;
 	
@@ -27,8 +26,8 @@ public class DoorRule {
 	}
 
 	
-	@Condition
-	public boolean checkDoor() {
+	@Override
+	public boolean evaluate() {
 		State st = door.getCurrentState();
         if (st.equals(State.CLOSE)) {
             if (room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
@@ -39,8 +38,8 @@ public class DoorRule {
         return false;
 	}
 	
-	@Action(order = 1)
-	public void switchDoor() throws Exception {
+	@Override
+	public void execute() throws Exception {
         State st = door.getCurrentState();
         if (st.equals(State.CLOSE)) {
             if (Debugger.isEnabled()) Debugger.log("Door OPENED in room " + room.getLocation());

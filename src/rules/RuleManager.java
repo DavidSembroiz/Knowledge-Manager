@@ -40,12 +40,13 @@ public class RuleManager {
 	}
 
 	public void addComputerRule(Computer c) {
-		ArrayList<Sensor> sens = r.getSensors();
+        ArrayList<Sensor> sens = r.getSensors();
 		for (Sensor s : sens) {
 			if (!s.isAssigned() && s.getType().toLowerCase().equals("power")) {
-				ComputerRule cr = new ComputerRule(r, c, s);
+                ComputerRule cr = new ComputerRule(r, c, s);
 				s.setAssigned(true);
 				rulesEngine.registerRule(cr);
+                return;
 			}
 		}
 	}
@@ -57,15 +58,17 @@ public class RuleManager {
 			if (!s.isAssigned()) {
 				if (s.getType().equals("temperature")) temp = s;
 				else if (s.getType().equals("humidity")) hum = s;
+
+                if (temp != null && hum != null) {
+                    HVACRule hr = new HVACRule(r, h, temp, hum);
+                    temp.setValue(DEFAULT_TEMPERATURE);
+                    temp.setAssigned(true);
+                    hum.setValue(DEFAULT_HUMIDITY);
+                    hum.setAssigned(true);
+                    rulesEngine.registerRule(hr);
+                    return;
+                }
 			}
-		}
-		if (temp != null && hum != null) {
-			HVACRule hr = new HVACRule(r, h, temp, hum);
-            temp.setValue(DEFAULT_TEMPERATURE);
-			temp.setAssigned(true);
-            hum.setValue(DEFAULT_HUMIDITY);
-			hum.setAssigned(true);
-			rulesEngine.registerRule(hr);
 		}
 	}
 
@@ -77,6 +80,7 @@ public class RuleManager {
                 s.setValue(DEFAULT_LIGHT);
                 s.setAssigned(true);
                 rulesEngine.registerRule(lr);
+                return;
             }
         }
     }
@@ -88,6 +92,7 @@ public class RuleManager {
                 DoorRule dr = new DoorRule(r, d, s);
                 s.setAssigned(true);
                 rulesEngine.registerRule(dr);
+                return;
             }
         }
     }

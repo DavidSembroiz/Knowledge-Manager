@@ -54,7 +54,7 @@ public class Manager {
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 
-        consumption_writer = new CustomFileWriter("./res/consumption.log");
+        consumption_writer = new CustomFileWriter("./res/results/consumption.log");
 		
 		if (MODE == 0) simulate();
         else if (MODE == 1) repeatSimulation();

@@ -1,10 +1,12 @@
 package entity;
 
+import behaviour.Person;
 import iot.Manager;
 
 public class Computer {
 
     private int id;
+    private Person usedBy;
 	private State currentState;
 	private double accPowerUsage;
     private double consumptionHistory[];
@@ -37,6 +39,14 @@ public class Computer {
 
     public int getId() {
         return id;
+    }
+
+    public void setUsedBy(Person p) {
+        this.usedBy = p;
+    }
+
+    public Person getUsedBy() {
+        return usedBy;
     }
 
 	public State getCurrentState() {

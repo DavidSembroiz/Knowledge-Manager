@@ -2,6 +2,7 @@ package entity;
 
 public class Door {
 
+    private int id;
     private State currentState;
 
     public enum State {
@@ -9,9 +10,12 @@ public class Door {
     }
 
 
-    public Door() {
+    public Door(int id) {
+        this.id = id;
         this.currentState = State.CLOSE;
     }
+
+
 
 
     public State getCurrentState() {

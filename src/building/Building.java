@@ -110,8 +110,38 @@ public class Building {
 			}
 		}
 	}
-	
-	public double calculateAccumulatedConsumption() {
+
+    public void assignRoomElements(Person p, String roomLoc) {
+        Room r = getRoom(roomLoc);
+        if (r != null) {
+            HashSet<Object> ents = r.getEntities();
+            for (Object e : ents) {
+                if (e instanceof Computer) {
+                    if (((Computer) e).getUsedBy() == null) {
+                        ((Computer) e).setUsedBy(p);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void unassignRoomElements(Person p, String roomLoc) {
+        Room r = getRoom(roomLoc);
+        if (r != null) {
+            HashSet<Object> ents = r.getEntities();
+            for (Object e : ents) {
+                if (e instanceof Computer) {
+                    Person c = ((Computer) e).getUsedBy();
+                    if (c != null && c.getName().equals(p.getName())) {
+                        ((Computer) e).setUsedBy(null);
+                    }
+                }
+            }
+        }
+    }
+
+    public double calculateAccumulatedConsumption() {
         double fcons = 0;
         for (Room r : rooms) {
             HashSet<Object> ents = r.getEntities();

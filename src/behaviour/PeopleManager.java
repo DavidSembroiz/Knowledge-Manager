@@ -252,6 +252,8 @@ public class PeopleManager {
 		if (assigned) {
 			p.assignAction(a, dest, next, duration);
 			building.movePerson(p, currentLoc);
+            building.unassignRoomElements(p, currentLoc);
+            building.assignRoomElements(p, dest);
 			if (LOG_EVENTS) {
 				writer.println(Manager.CURRENT_STEP + "," +
 							   p.getName() + "," +

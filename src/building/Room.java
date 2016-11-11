@@ -15,9 +15,7 @@ import java.util.HashSet;
 
 public class Room {
 
-    public ArrayList<Person> getPeopleComing() {
-        return peopleComing;
-    }
+
 
     public enum ROOM_TYPE {
         OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
@@ -98,30 +96,38 @@ public class Room {
 	}
 
 	public void addEntity(String type, String qtt) {
-        ArrayList<Computer> comps = new ArrayList();
-		for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-			if (type.equals("computer")) {
-                Computer c = new Computer(i);
-				comps.add(c);
-				entities.add(c);
-            }
-			else if (type.equals("lamp")) {
-				Lamp l = new Lamp();
-				entities.add(l);
-				ruleManager.addLampRule(l);
-			}
-			else if (type.equals("hvac")) {
-				HVAC hvac = new HVAC();
-				entities.add(hvac);
-				ruleManager.addHVACRule(hvac);
-			}
-            else if (type.equals("door")) {
-                Door door = new Door();
-                entities.add(door);
-                ruleManager.addDoorRule(door);
-            }
+
+        switch(type) {
+            case "computer":
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
+                    Computer c = new Computer(i);
+                    entities.add(c);
+                    ruleManager.addComputerRule(c);
+                }
+                break;
+            case "lamp":
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
+                    Lamp l = new Lamp();
+                    entities.add(l);
+                    ruleManager.addLampRule(l);
+                }
+                break;
+            case "hvac":
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
+                    HVAC hvac = new HVAC();
+                    entities.add(hvac);
+                    ruleManager.addHVACRule(hvac);
+                }
+                break;
+            case "door":
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
+                    Door door = new Door(i);
+                    entities.add(door);
+                    ruleManager.addDoorRule(door);
+                }
+                break;
+            default: break;
 		}
-		ruleManager.addComputerRule(comps);
 	}
 
 	public HashSet<Object> getEntities() {
@@ -157,7 +163,7 @@ public class Room {
     }
 
     public boolean isEmpty() {
-        return peopleActing.size() == 0;
+        return peopleActing.size() == 0 && peopleComing.size() == 0;
     }
 
     public void shiftPerson(Person p) {

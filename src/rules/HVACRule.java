@@ -8,14 +8,13 @@ import entity.HVAC.State;
 import iot.Manager;
 import iot.Sensor;
 import models.Weather;
-import org.easyrules.annotation.Action;
-import org.easyrules.annotation.Condition;
 import org.easyrules.annotation.Rule;
+import org.easyrules.core.BasicRule;
 
 import java.util.ArrayList;
 
 @Rule(name = "HVAC Management Rule")
-public class HVACRule {
+public class HVACRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 60;
 	
@@ -109,8 +108,8 @@ public class HVACRule {
     }
 	
 	
-	@Condition
-	public boolean checkConditions() {
+	@Override
+	public boolean evaluate() {
 		State st = hvac.getCurrentState();
 		
 		if (st.equals(State.OFF)) {
@@ -134,8 +133,8 @@ public class HVACRule {
 	
 	
 	
-	@Action(order = 1)
-	public void apply() throws Exception {
+	@Override
+	public void execute() throws Exception {
 		State st = hvac.getCurrentState();
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("HVAC switched ON in room " + room.getLocation());

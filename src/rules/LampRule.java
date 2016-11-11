@@ -8,9 +8,10 @@ import entity.Lamp.State;
 import building.Room;
 import iot.Sensor;
 import models.Weather;
+import org.easyrules.core.BasicRule;
 
 @Rule(name = "Lights Management Rule")
-public class LampRule {
+public class LampRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 5;
     private int ENVIRONMENTAL_LIGHT_THRESHOLD = 500;
@@ -35,8 +36,8 @@ public class LampRule {
 		return modelValue > ENVIRONMENTAL_LIGHT_THRESHOLD;
 	}
 	
-	@Condition
-	public boolean checkLuminosity() {
+	@Override
+	public boolean evaluate() {
 
 		/*
 		 * If light is ON:
@@ -57,8 +58,8 @@ public class LampRule {
 		return false;
 	}
 	
-	@Action(order = 1)
-	public void changeState() throws Exception {
+	@Override
+	public void execute() throws Exception {
         State st = lamp.getCurrentState();
         if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Lamp switched ON in room " + room.getLocation());
