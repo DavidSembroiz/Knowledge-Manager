@@ -9,10 +9,15 @@ public class HVAC {
 	private double accPowerUsage;
     private double consumptionHistory[];
 
+    /*
+     * ON: 1500 W
+     * SUSPEND: 200 W
+     */
+
     public enum State {
 		OFF(0),
-		ON(100),
-		SUSPEND(50);
+		ON(1500),
+		SUSPEND(200);
 		
 		private final int cons;
 		public int getConsumption() {return cons;}

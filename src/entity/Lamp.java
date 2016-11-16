@@ -13,9 +13,14 @@ public class Lamp {
         return id;
     }
 
+    /*
+     * ON: 200 W
+     */
+
     public enum State {
-		OFF(0),
-		ON(100);
+        ON(200),
+		OFF(0);
+
 		
 		private final int cons;
 		public int getConsumption() {return cons;}

@@ -11,11 +11,16 @@ public class Computer {
 	private double accPowerUsage;
     private double consumptionHistory[];
 
+    /*
+     * ON: 350 W
+     * SUSPEND: 20 W
+     */
+
 
     public enum State {
 		OFF(0),
-		ON(100),
-		SUSPEND(50);
+		ON(350),
+		SUSPEND(20);
 		
 		private final int cons;
 		public int getConsumption() {return cons;}

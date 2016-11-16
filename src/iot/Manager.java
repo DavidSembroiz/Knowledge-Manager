@@ -6,7 +6,7 @@ import behaviour.Person;
 import building.Building;
 import building.Room;
 import domain.*;
-import models.Weather;
+import model.Weather;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -55,9 +55,18 @@ public class Manager {
 		peopleManager.setBuilding(building);
 
         consumption_writer = new CustomFileWriter("./res/results/consumption.log");
-		
-		if (MODE == 0) simulate();
-        else if (MODE == 1) repeatSimulation();
+
+        switch (MODE) {
+            case 0:
+                simulate();
+                break;
+            case 1:
+                repeatSimulation();
+                break;
+            case 2:
+                baseSimulation();
+                break;
+        }
 	}
 	
 	
@@ -123,11 +132,29 @@ public class Manager {
          * During normal simulation, all elements are ON between working hours
          */
 
+        while (CURRENT_STEP < STEPS) {
+            PriorityQueue<Event> events = uts.fetchEventsFromFile();
+            while (CURRENT_STEP < STEPS) {
+                peopleManager.executeActions();
+                while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
+                    Event e = events.poll();
+                    Person p = peopleManager.getPerson(e.getName());
+                    peopleManager.assignSpecificAction(p, e);
+
+                }
+                building.fireRules();
+                building.updateConsumption();
+                ++CURRENT_STEP;
+            }
+
+            if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+            writeHourlyConsumption();
 
 
+        }
     }
 
-	private void simulate() {
+    private void simulate() {
 		while (CURRENT_STEP < STEPS) {
 			peopleManager.updateActions();
             building.fireRules();

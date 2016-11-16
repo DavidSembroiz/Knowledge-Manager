@@ -75,8 +75,8 @@ public class Utils {
 	@SuppressWarnings("unchecked")
 	public void generatePeople() {
 
-        int PROFESSORS = 20;
-        int STUDENTS = 0;
+        int PROFESSORS = 40;
+        int STUDENTS = 100;
         int PAS = 0;
 
 		try (FileWriter writer = new FileWriter("./res/people.json")) {

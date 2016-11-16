@@ -8,14 +8,12 @@ import entity.HVAC;
 import entity.Lamp;
 import iot.Actuator;
 import iot.Sensor;
-import rules.RuleManager;
+import rule.RuleManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Room {
-
-
 
     public enum ROOM_TYPE {
         OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
@@ -70,6 +68,27 @@ public class Room {
 		}
 		return null;
 	}
+
+
+    public void turnHVACon() {
+        for (Object e : entities) {
+            if (e instanceof HVAC) {
+                if (((HVAC) e).getCurrentState().equals(HVAC.State.OFF))
+                ((HVAC) e).setCurrentState(HVAC.State.ON);
+            }
+        }
+    }
+
+    public void turnHVACoff() {
+        for (Object e : entities) {
+            if (e instanceof HVAC) {
+                if (!((HVAC) e).getCurrentState().equals(HVAC.State.OFF))
+                    ((HVAC) e).setCurrentState(HVAC.State.OFF);
+            }
+        }
+    }
+
+
 
 	public void fireRules() {
 		ruleManager.fireRules();

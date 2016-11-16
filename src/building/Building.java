@@ -104,7 +104,7 @@ public class Building {
                 if (Debugger.isEnabled()) Debugger.log("Person " + p.getName() + " removed from " + roomLoc);
 				r.removePerson(p);
 			}
-			else if (p.getLocation().equals(roomLoc)) {
+            if (p.getLocation().equals(roomLoc)) {
                 if (Debugger.isEnabled()) Debugger.log("Person " + p.getName() + " added to " + roomLoc);
 				r.addPerson(p);
 			}
@@ -185,4 +185,15 @@ public class Building {
     }
 
 
+    public void turnHVACsON() {
+        for (Room r : rooms) {
+            r.turnHVACon();
+        }
+    }
+
+    public void turnHVACsOFF() {
+        for (Room r : rooms) {
+            r.turnHVACoff();
+        }
+    }
 }

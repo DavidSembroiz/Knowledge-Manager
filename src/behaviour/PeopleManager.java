@@ -280,6 +280,7 @@ public class PeopleManager {
 
     private String getRandomClassDestination(String currentLoc) {
         String[] locs = building.getClassromLocations();
+        if (locs.length == 1) return locs[0];
         String nextLoc = locs[rand.nextInt(locs.length)];
         while (nextLoc.equals(currentLoc)) {
             nextLoc = locs[rand.nextInt(locs.length)];
@@ -289,6 +290,7 @@ public class PeopleManager {
 
     private String getRandomMeetingDestination(String currentLoc) {
         String[] locs = building.getMeetingLocations();
+        if (locs.length == 1) return locs[0];
         String nextLoc = locs[rand.nextInt(locs.length)];
         while (nextLoc.equals(currentLoc)) {
             nextLoc = locs[rand.nextInt(locs.length)];
@@ -308,7 +310,8 @@ public class PeopleManager {
 
     private String getRandomOfficeDestination(String currentLoc) {
 		String[] locs = building.getOfficeLocations();
-		String nextLoc = locs[rand.nextInt(locs.length)];
+        if (locs.length == 1) return locs[0];
+        String nextLoc = locs[rand.nextInt(locs.length)];
 		while (nextLoc.equals(currentLoc)) {
 			nextLoc = locs[rand.nextInt(locs.length)];
 		}
