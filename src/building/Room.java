@@ -15,13 +15,10 @@ import java.util.HashSet;
 
 public class Room {
 
-    public enum ROOM_TYPE {
-        OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
-    }
 
 	private String location;
 	private String size;
-    private ROOM_TYPE type;
+    private Building.ROOM_TYPE type;
 	private ArrayList<Sensor> sensors;
 	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
@@ -32,7 +29,7 @@ public class Room {
 	public Room(String location, String size, String type) {
 		this.location = location;
 		this.size = size;
-        this.type = ROOM_TYPE.valueOf(type.toUpperCase());
+        this.type = Building.ROOM_TYPE.valueOf(type.toUpperCase());
 		sensors = new ArrayList<>();
 		actuators = new ArrayList<>();
 		this.entities = new HashSet<>();
@@ -50,7 +47,7 @@ public class Room {
 		return sensors;
 	}
 
-    public ROOM_TYPE getType() {
+    public Building.ROOM_TYPE getType() {
         return type;
     }
 

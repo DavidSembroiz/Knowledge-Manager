@@ -7,16 +7,9 @@ import entity.HVAC.State;
 import iot.Sensor;
 
 public class SmartHVAC extends HVACRule {
-
-    private int PREDICTION_THRESHOLD = 60;
-	
-	private Room room;
-	private HVAC hvac;
 	
 	public SmartHVAC(Room r, HVAC h, Sensor temp, Sensor hum) {
         super(r, h, temp, hum);
-		hvac = h;
-		this.room = r;
 	}
 	
 	

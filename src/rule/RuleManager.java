@@ -44,9 +44,17 @@ public class RuleManager {
         ArrayList<Sensor> sens = r.getSensors();
 		for (Sensor s : sens) {
 			if (!s.isAssigned() && s.getType().toLowerCase().equals("power")) {
-                ComputerRule cr = new ComputerRule(r, c, s);
-				s.setAssigned(true);
-				rulesEngine.registerRule(cr);
+                s.setAssigned(true);
+                SmartComputer cr;
+                NormalComputer crn;
+                if (Manager.MODE == 2) {
+                    crn = new NormalComputer(r, c, s);
+                    rulesEngine.registerRule(crn);
+                }
+                else {
+                    cr = new SmartComputer(r, c, s);
+                    rulesEngine.registerRule(cr);
+                }
                 return;
 			}
 		}

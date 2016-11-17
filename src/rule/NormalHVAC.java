@@ -9,13 +9,8 @@ import iot.Sensor;
 
 public class NormalHVAC extends HVACRule {
 
-	private Room room;
-	private HVAC hvac;
-
 	public NormalHVAC(Room r, HVAC h, Sensor temp, Sensor hum) {
         super(r, h, temp, hum);
-		hvac = h;
-		this.room = r;
 	}
 
 

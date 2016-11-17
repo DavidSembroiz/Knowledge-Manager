@@ -42,8 +42,8 @@ public class Mqtt {
 		uts = Utils.getInstance();
 		this.manager = m;
 		loadProperties();
-		connect();
 		ids = awsdb.queryIds(QUERY_ALL);
+        connect();
 		subscribe(ids);
 	}
 	

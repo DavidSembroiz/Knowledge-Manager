@@ -13,14 +13,14 @@ import java.util.ArrayList;
 
 public class HVACRule extends BasicRule {
 
-    private int PREDICTION_THRESHOLD = 60;
+    protected int PREDICTION_THRESHOLD = 60;
 
-    private Room room;
-    private Weather models;
+    protected Room room;
+    protected Weather models;
 
-    private Sensor temperature;
-    private Sensor humidity;
-    private HVAC hvac;
+    protected Sensor temperature;
+    protected Sensor humidity;
+    protected HVAC hvac;
 
     public HVACRule(Room r, HVAC h, Sensor temp, Sensor hum) {
         super("HVAC rule #" + h.getId(), "Rule to manage HVAC", h.getId());

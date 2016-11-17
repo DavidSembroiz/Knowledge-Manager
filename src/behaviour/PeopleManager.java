@@ -190,8 +190,10 @@ public class PeopleManager {
         String currentLoc = p.getLocation();
         p.assignAction(e.getAction(), e.getDest(), e.getNext(), e.getDuration());
         building.movePerson(p, currentLoc);
-        building.unassignRoomElements(p, currentLoc);
-        building.assignRoomElements(p, e.getDest());
+        if (!isHavingLunch(p)) {
+            building.unassignRoomElements(p, currentLoc);
+            building.assignRoomElements(p, e.getDest());
+        }
     }
 
 	private void assignNewAction(Person p) {
@@ -199,27 +201,37 @@ public class PeopleManager {
 
 		Action a = getNextAction(p);
         if (a == null) return;
-		String dest = null, currentLoc = null;
+		String dest = null;
 		int next = 0, duration = 0;
 		boolean assigned = false;
         if (a.equals(Action.MOVE)) {
             if (p.isInside()) {
                 assigned = true;
-                if (p.isProfessor()) dest = getRandomOfficeDestination(p.getLocation());
-                else if (p.isStudent()) dest = getRandomClassDestination(p.getLocation());
-                else dest = getRandomDestination(p.getLocation());
+                /*
+                 * Return from lunch
+                 */
+                if (isHavingLunch(p)) dest = p.getPastLocation();
+                else {
+                    if (p.isProfessor()) dest = getRandomOfficeDestination(p.getLocation());
+                    else if (p.isStudent()) dest = getRandomClassDestination(p.getLocation());
+                    else dest = getRandomDestination(p.getLocation());
+                }
                 next = 1 + rand.nextInt(30);
                 duration = p.getProfile().getRandomWalksDuration();
-                currentLoc = p.getLocation();
+                p.setPastLocation(p.getLocation());
             }
         }
         if (a.equals(Action.MEETING)) {
             if (p.isInside()) {
                 assigned = true;
-                dest = getRandomMeetingDestination(p.getLocation());
+                /*
+                 * Return from lunch
+                 */
+                if (isHavingLunch(p)) dest = p.getPastLocation();
+                else dest = getRandomMeetingDestination(p.getLocation());
                 next = 1 + rand.nextInt(30);
                 duration = p.getProfile().getRandomWalksDuration();
-                currentLoc = p.getLocation();
+                p.setPastLocation(p.getLocation());
             }
         }
 		else if (a.equals(Action.ENTER)) {
@@ -228,7 +240,7 @@ public class PeopleManager {
 				dest = "inside";
 				next = 1 + rand.nextInt(20);
 				duration = 1;
-				currentLoc = p.getLocation();
+                p.setPastLocation(p.getLocation());
                 p.sethadEntered(true);
 			}
 		}
@@ -238,7 +250,7 @@ public class PeopleManager {
 				dest = "outside";
                 next = 1;
 				duration = 1 + rand.nextInt(20);
-				currentLoc = p.getLocation();
+                p.setPastLocation(p.getLocation());
 			}
 		}
 		else if (a.equals(Action.LUNCH)) {
@@ -247,15 +259,17 @@ public class PeopleManager {
 				dest = "salon";
 				next = 1 + rand.nextInt(10);
 				duration = p.getProfile().getLunchDuration();
-				currentLoc = p.getLocation();
+                p.setPastLocation(p.getLocation());
 				p.setHadLunch(true);
 			}
 		}
 		if (assigned) {
 			p.assignAction(a, dest, next, duration);
-			building.movePerson(p, currentLoc);
-            building.unassignRoomElements(p, currentLoc);
-            building.assignRoomElements(p, dest);
+			building.movePerson(p, p.getPastLocation());
+            if (!isHavingLunch(p)) {
+                building.unassignRoomElements(p, p.getPastLocation());
+                building.assignRoomElements(p, dest);
+            }
 			if (LOG_EVENTS) {
 				writer.println(Manager.CURRENT_STEP + "," +
 							   p.getName() + "," +
@@ -267,6 +281,11 @@ public class PeopleManager {
 			}
 		}
 	}
+
+	private boolean isHavingLunch(Person p) {
+        return p.getCurrentAction().equals(Action.LUNCH);
+    }
+
 
     private String getRandomDestination(String currentLoc) {
         int r = rand.nextInt(building.NUM_PLACES);
@@ -300,6 +319,11 @@ public class PeopleManager {
 
     private Action getNextAction(Person p) {
         UserProfile up = p.getProfile();
+        if (p.getCurrentAction().equals(Action.LUNCH)) {
+            Building.ROOM_TYPE type = building.getLocationType(p.getPastLocation());
+            if (type.equals(Building.ROOM_TYPE.OFFICE)) return Action.MOVE;
+            if (type.equals(Building.ROOM_TYPE.MEETING_ROOM)) return Action.MEETING;
+        }
         if (up.getEntrance().triggerStatus(Manager.CURRENT_STEP)) return Action.ENTER;
         if (up.getRandomWalks().triggerStatus(Manager.CURRENT_STEP)) return Action.MOVE;
         if (up.getLunch().triggerStatus(Manager.CURRENT_STEP)) return Action.LUNCH;

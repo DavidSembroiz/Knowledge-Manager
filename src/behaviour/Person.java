@@ -11,6 +11,7 @@ public class Person {
 	private State currentState;
 	private Action currentAction;
 	private String location;
+    private String pastLocation;
     private String type;
 	private UserProfile profile;
 	private UserParams params;
@@ -157,5 +158,13 @@ public class Person {
 
     public boolean isPas() {
         return type.equals(Type.PAS.toString().toLowerCase());
+    }
+
+    public String getPastLocation() {
+        return pastLocation;
+    }
+
+    public void setPastLocation(String pastLocation) {
+        this.pastLocation = pastLocation;
     }
 }

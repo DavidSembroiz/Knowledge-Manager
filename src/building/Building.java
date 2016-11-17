@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Building {
+
+    public enum ROOM_TYPE {
+        OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
+    }
 	
 	private int numRooms;
 	private String id;
@@ -42,9 +46,9 @@ public class Building {
         HashSet<String> classLocs = new HashSet<String>();
 		for (Room r : rooms) {
 			if (Integer.parseInt(r.getSize()) > 0) {
-                if (r.getType().equals(Room.ROOM_TYPE.MEETING_ROOM)) meetingLocs.add(r.getLocation());
-                else if (r.getType().equals(Room.ROOM_TYPE.OFFICE)) officeLocs.add(r.getLocation());
-                else if (r.getType().equals(Room.ROOM_TYPE.CLASSROOM)) classLocs.add(r.getLocation());
+                if (r.getType().equals(ROOM_TYPE.MEETING_ROOM)) meetingLocs.add(r.getLocation());
+                else if (r.getType().equals(ROOM_TYPE.OFFICE)) officeLocs.add(r.getLocation());
+                else if (r.getType().equals(ROOM_TYPE.CLASSROOM)) classLocs.add(r.getLocation());
             }
 		}
 		officeLocations = officeLocs.toArray(new String[officeLocs.size()]);
@@ -185,15 +189,10 @@ public class Building {
     }
 
 
-    public void turnHVACsON() {
+    public ROOM_TYPE getLocationType(String location) {
         for (Room r : rooms) {
-            r.turnHVACon();
+            if (r.getLocation().equals(location)) return r.getType();
         }
-    }
-
-    public void turnHVACsOFF() {
-        for (Room r : rooms) {
-            r.turnHVACoff();
-        }
+        return null;
     }
 }
