@@ -4,6 +4,7 @@ import behaviour.Event;
 import behaviour.PeopleManager.Action;
 import building.Building;
 import building.Room;
+import iot.Manager;
 import iot.Sensor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -75,26 +76,22 @@ public class Utils {
 	@SuppressWarnings("unchecked")
 	public void generatePeople() {
 
-        int PROFESSORS = 50;
-        int STUDENTS = 0;
-        int PAS = 0;
-
 		try (FileWriter writer = new FileWriter("./res/people.json")) {
 			JSONObject root = new JSONObject();
 			JSONArray people = new JSONArray();
-			for (int i = 0; i < PROFESSORS; ++i) {
+			for (int i = 0; i < Manager.NUM_PROFESSORS; ++i) {
 				JSONObject person = new JSONObject();
 				person.put("name", this.getRandomName());
 				person.put("profile", "professor");
 				people.add(person);
 			}
-            for (int i = 0; i < STUDENTS; ++i) {
+            for (int i = 0; i < Manager.NUM_STUDENTS; ++i) {
                 JSONObject person = new JSONObject();
                 person.put("name", this.getRandomName());
                 person.put("profile", "student");
                 people.add(person);
             }
-            for (int i = 0; i < PAS; ++i) {
+            for (int i = 0; i < Manager.NUM_PAS; ++i) {
                 JSONObject person = new JSONObject();
                 person.put("name", this.getRandomName());
                 person.put("profile", "pas");

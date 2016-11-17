@@ -15,8 +15,7 @@ public class Building {
     public enum ROOM_TYPE {
         OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
     }
-	
-	private int numRooms;
+
 	private String id;
 	private ArrayList<Room> rooms;
 
@@ -25,11 +24,11 @@ public class Building {
 	private String[] officeLocations;
     private String[] meetingLocations;
     private String[] classLocations;
+    private String[] specialLocations;
 	
 	public Building(String id, ArrayList<Room> rooms){
 		this.rooms = rooms;
 		addSpecialRooms();
-		this.numRooms = rooms.size();
 		this.id = id;
 		parseLocations();
 	}
@@ -44,16 +43,19 @@ public class Building {
 		HashSet<String> officeLocs = new HashSet<String>();
         HashSet<String> meetingLocs = new HashSet<String>();
         HashSet<String> classLocs = new HashSet<String>();
+        HashSet<String> specialLocs = new HashSet<String>();
 		for (Room r : rooms) {
 			if (Integer.parseInt(r.getSize()) > 0) {
                 if (r.getType().equals(ROOM_TYPE.MEETING_ROOM)) meetingLocs.add(r.getLocation());
                 else if (r.getType().equals(ROOM_TYPE.OFFICE)) officeLocs.add(r.getLocation());
                 else if (r.getType().equals(ROOM_TYPE.CLASSROOM)) classLocs.add(r.getLocation());
+                else if (r.getType().equals(ROOM_TYPE.UNDEFINED)) specialLocs.add(r.getLocation());
             }
 		}
 		officeLocations = officeLocs.toArray(new String[officeLocs.size()]);
         meetingLocations = meetingLocs.toArray(new String[meetingLocs.size()]);
         classLocations = classLocs.toArray(new String[classLocs.size()]);
+        specialLocations = specialLocs.toArray(new String[specialLocs.size()]);
 	}
 
 
@@ -67,6 +69,10 @@ public class Building {
 
     public String[] getClassromLocations() {
         return classLocations;
+    }
+
+    public String[] getSpecialLocations() {
+        return specialLocations;
     }
 
 

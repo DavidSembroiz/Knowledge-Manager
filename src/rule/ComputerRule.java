@@ -26,21 +26,17 @@ public class ComputerRule extends BasicRule {
 
     protected boolean isGuestComing() {
         Person guest = comp.getUsedBy();
-        if (guest == null) return false;
-        return guest.getNextActionSteps() < PREDICTION_THRESHOLD && room.getLocation().equals(guest.getLocation());
+        return guest != null &&
+                guest.getNextActionSteps() < PREDICTION_THRESHOLD && room.getLocation().equals(guest.getLocation());
     }
 
     protected boolean guestReturned() {
         Person p = comp.getUsedBy();
-        if (p == null) return false;
-        if (p != null && room.getLocation().equals(p.getLocation())) return true;
-        return false;
+        return p != null || room.getLocation().equals(p.getLocation());
     }
 
     protected boolean guestLeft() {
         Person p = comp.getUsedBy();
-        if (p == null) return true;
-        if (p != null && !room.getLocation().equals(p.getLocation())) return true;
-        return false;
+        return p == null || !room.getLocation().equals(p.getLocation());
     }
 }

@@ -15,7 +15,7 @@ public class Probability {
 	
 	
 	public Probability(String[] values) {
-		probabilityPerHour = new HashMap<Integer, Double>();
+		probabilityPerHour = new HashMap<>();
 		for (int i = 0; i < values.length; ++i) {
 			probabilityPerHour.put(i, Double.parseDouble(values[i]));
 		}
@@ -38,12 +38,4 @@ public class Probability {
 	public boolean triggerStatus(int currentTime) {
 		return rand.nextDouble() < getProbability(currentTime)/Math.max(10 - Manager.CURRENT_STEP / 756, 0);
 	}
-	
-	public boolean triggerStatusWithPrint(int currentTime) {
-		double next = rand.nextDouble();
-		double real = getProbability(currentTime)/Math.max(10 - Manager.CURRENT_STEP / 756, 0);
-		System.out.println("Next: " + next + "     |     " + "Real: " + real + " (" + currentTime + ")");
-		return next < real;
-	}
-	
 }

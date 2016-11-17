@@ -190,7 +190,7 @@ public class PeopleManager {
         String currentLoc = p.getLocation();
         p.assignAction(e.getAction(), e.getDest(), e.getNext(), e.getDuration());
         building.movePerson(p, currentLoc);
-        if (!isHavingLunch(p)) {
+        if (!wasHavingLunch(p)) {
             building.unassignRoomElements(p, currentLoc);
             building.assignRoomElements(p, e.getDest());
         }
@@ -210,7 +210,7 @@ public class PeopleManager {
                 /*
                  * Return from lunch
                  */
-                if (isHavingLunch(p)) dest = p.getPastLocation();
+                if (wasHavingLunch(p)) dest = p.getPastLocation();
                 else {
                     if (p.isProfessor()) dest = getRandomOfficeDestination(p.getLocation());
                     else if (p.isStudent()) dest = getRandomClassDestination(p.getLocation());
@@ -227,7 +227,7 @@ public class PeopleManager {
                 /*
                  * Return from lunch
                  */
-                if (isHavingLunch(p)) dest = p.getPastLocation();
+                if (wasHavingLunch(p)) dest = p.getPastLocation();
                 else dest = getRandomMeetingDestination(p.getLocation());
                 next = 1 + rand.nextInt(30);
                 duration = p.getProfile().getRandomWalksDuration();
@@ -266,7 +266,7 @@ public class PeopleManager {
 		if (assigned) {
 			p.assignAction(a, dest, next, duration);
 			building.movePerson(p, p.getPastLocation());
-            if (!isHavingLunch(p)) {
+            if (!wasHavingLunch(p)) {
                 building.unassignRoomElements(p, p.getPastLocation());
                 building.assignRoomElements(p, dest);
             }
@@ -282,7 +282,7 @@ public class PeopleManager {
 		}
 	}
 
-	private boolean isHavingLunch(Person p) {
+	private boolean wasHavingLunch(Person p) {
         return p.getCurrentAction().equals(Action.LUNCH);
     }
 

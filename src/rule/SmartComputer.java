@@ -30,8 +30,6 @@ public class SmartComputer extends ComputerRule {
 	}
 
 
-
-
     @Override
 	public void execute() throws Exception {
 		State st = comp.getCurrentState();

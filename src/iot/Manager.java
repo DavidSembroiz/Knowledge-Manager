@@ -24,6 +24,7 @@ public class Manager {
 	public static boolean LOG_EVENTS;
 
 	private int GENERATE_PEOPLE;
+    public static int NUM_PROFESSORS, NUM_STUDENTS, NUM_PAS;
 
     public static int MODE;
 	public static int STEPS;
@@ -80,6 +81,9 @@ public class Manager {
             MODE = Integer.parseInt(prop.getProperty("mode"));
 			LOG_EVENTS = Boolean.parseBoolean(prop.getProperty("log_events"));
 			GENERATE_PEOPLE = Integer.parseInt(prop.getProperty("generate_people"));
+            NUM_PROFESSORS = Integer.parseInt(prop.getProperty("professors"));
+            NUM_STUDENTS = Integer.parseInt(prop.getProperty("students"));
+            NUM_PAS = Integer.parseInt(prop.getProperty("pas"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

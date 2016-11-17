@@ -29,10 +29,6 @@ public class Event implements Comparable<Event> {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Action getAction() {
         return action;
     }

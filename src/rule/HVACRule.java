@@ -41,8 +41,7 @@ public class HVACRule extends BasicRule {
     protected boolean currentTemperatureOK() {
         double pplTemp = getPeopleTemperature();
         double roomTemp = Double.parseDouble(temperature.getValue());
-        if (Math.abs(pplTemp - roomTemp) < 0.5) return true;
-        return false;
+        return Math.abs(pplTemp - roomTemp) < 0.5;
     }
 
     protected boolean environmentalTemperatureOK() {
@@ -115,7 +114,6 @@ public class HVACRule extends BasicRule {
     protected boolean reactivateFromSuspend() {
         double pplTemp = getPeopleTemperature();
         double roomTemp = Double.parseDouble(temperature.getValue());
-        if (Math.abs(pplTemp - roomTemp) > 3) return true;
-        return false;
+        return Math.abs(pplTemp - roomTemp) > 3;
     }
 }
