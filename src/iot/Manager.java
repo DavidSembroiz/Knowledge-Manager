@@ -157,36 +157,29 @@ public class Manager {
 
     private void simulate() {
 		while (CURRENT_STEP < STEPS) {
-            if (CURRENT_STEP%50 == 0) consumption_writer.write(Double.toString(building.calculateAccumulatedConsumption()));
             peopleManager.updateActions();
             building.fireRules();
 			building.updateConsumption();
 			++CURRENT_STEP;
 		}
 		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        //writeHourlyConsumption();
+        writeHourlyConsumption();
 	}
 
     private void repeatSimulation() {
 		ArrayList<Event> events = uts.fetchEventsFromFile();
-        while (CURRENT_STEP < STEPS) {
-            if (CURRENT_STEP%50 == 0) consumption_writer.write(Double.toString(building.calculateAccumulatedConsumption()));
-            peopleManager.executeActions();
+        while (CURRENT_STEP < STEPS) {peopleManager.executeActions();
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                 Event e = events.remove(0);
                 Person p = peopleManager.getPerson(e.getName());
                 peopleManager.assignSpecificAction(p, e);
-                if (p.getName().equals("mvpmqxyzyi")) {
-                    System.out.print("");
-                }
-
             }
             building.fireRules();
             building.updateConsumption();
             ++CURRENT_STEP;
         }
         if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        //writeHourlyConsumption();
+        writeHourlyConsumption();
 	}
 
 
