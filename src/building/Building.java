@@ -127,7 +127,8 @@ public class Building {
             HashSet<Object> ents = r.getEntities();
             for (Object e : ents) {
                 if (e instanceof Computer) {
-                    if (((Computer) e).getUsedBy() == null) {
+                    if (((Computer) e).getUsedBy() == null &&
+                            ((Computer) e).getCurrentState().equals(Computer.State.OFF)) {
                         ((Computer) e).setUsedBy(p);
                         return;
                     }

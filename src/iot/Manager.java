@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Properties;
 
 public class Manager {
@@ -137,11 +136,11 @@ public class Manager {
          */
 
         while (CURRENT_STEP < STEPS) {
-            PriorityQueue<Event> events = uts.fetchEventsFromFile();
+            ArrayList<Event> events = uts.fetchEventsFromFile();
             while (CURRENT_STEP < STEPS) {
                 peopleManager.executeActions();
-                while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
-                    Event e = events.poll();
+                while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
+                    Event e = events.remove(0);
                     Person p = peopleManager.getPerson(e.getName());
                     peopleManager.assignSpecificAction(p, e);
 
@@ -169,14 +168,17 @@ public class Manager {
 	}
 
     private void repeatSimulation() {
-		PriorityQueue<Event> events = uts.fetchEventsFromFile();
+		ArrayList<Event> events = uts.fetchEventsFromFile();
         while (CURRENT_STEP < STEPS) {
             if (CURRENT_STEP%50 == 0) consumption_writer.write(Double.toString(building.calculateAccumulatedConsumption()));
             peopleManager.executeActions();
-            while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
-                Event e = events.poll();
+            while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
+                Event e = events.remove(0);
                 Person p = peopleManager.getPerson(e.getName());
                 peopleManager.assignSpecificAction(p, e);
+                if (p.getName().equals("mvpmqxyzyi")) {
+                    System.out.print("");
+                }
 
             }
             building.fireRules();

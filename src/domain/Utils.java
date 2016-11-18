@@ -182,8 +182,8 @@ public class Utils {
 		return ret;
 	}
 
-    public PriorityQueue<Event> fetchEventsFromFile() {
-        PriorityQueue<Event> events = new PriorityQueue<Event>();
+    public ArrayList<Event> fetchEventsFromFile() {
+        ArrayList<Event> events = new ArrayList<Event>();
         try(BufferedReader br = new BufferedReader(new FileReader("res/events.log"))) {
             String line;
             while ((line = br.readLine()) != null) {
