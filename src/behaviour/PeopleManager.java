@@ -1,7 +1,6 @@
 package behaviour;
 
 import building.Building;
-import domain.Debugger;
 import iot.Manager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -110,8 +109,8 @@ public class PeopleManager {
                 if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
                 else if(p.getRemainingSteps() == 0) {
                     p.decreaseRemainingSteps();
-                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
-                            " " + p.getCurrentAction().toString());
+                    /*if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                            " " + p.getCurrentAction().toString());*/
                     assignNewAction(p);
                 }
             }
@@ -131,8 +130,8 @@ public class PeopleManager {
                 if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
                 else if (p.getRemainingSteps() == 0) {
                     p.decreaseRemainingSteps();
-                    if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
-                            " " + p.getCurrentAction().toString());
+                    /*if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                            " " + p.getCurrentAction().toString());*/
                     p.setActing(false);
                 }
 

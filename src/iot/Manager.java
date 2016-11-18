@@ -55,7 +55,7 @@ public class Manager {
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 
-        consumption_writer = new CustomFileWriter("./res/results/consumption.log");
+        consumption_writer = new CustomFileWriter("./res/results/consumption_" + MODE + ".log");
 
         switch (MODE) {
             case 0:
@@ -153,25 +153,25 @@ public class Manager {
 
             if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
             writeHourlyConsumption();
-
-
         }
     }
 
     private void simulate() {
 		while (CURRENT_STEP < STEPS) {
-			peopleManager.updateActions();
+            if (CURRENT_STEP%50 == 0) consumption_writer.write(Double.toString(building.calculateAccumulatedConsumption()));
+            peopleManager.updateActions();
             building.fireRules();
 			building.updateConsumption();
 			++CURRENT_STEP;
 		}
 		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
+        //writeHourlyConsumption();
 	}
 
     private void repeatSimulation() {
 		PriorityQueue<Event> events = uts.fetchEventsFromFile();
         while (CURRENT_STEP < STEPS) {
+            if (CURRENT_STEP%50 == 0) consumption_writer.write(Double.toString(building.calculateAccumulatedConsumption()));
             peopleManager.executeActions();
             while (!events.isEmpty() && events.peek().getStep() == CURRENT_STEP) {
                 Event e = events.poll();
@@ -184,8 +184,9 @@ public class Manager {
             ++CURRENT_STEP;
         }
         if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
+        //writeHourlyConsumption();
 	}
+
 
     private void writeHourlyConsumption() {
         double cons[] = building.getHourlyConsumption();

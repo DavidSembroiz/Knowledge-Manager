@@ -153,12 +153,13 @@ public class Building {
 
     public double calculateAccumulatedConsumption() {
         double fcons = 0;
+        double ccons = 0, hcons = 0, lcons = 0;
         for (Room r : rooms) {
             HashSet<Object> ents = r.getEntities();
             for (Object e : ents) {
-                if (e instanceof Computer) fcons += ((Computer) e).getCons();
-                else if (e instanceof HVAC) fcons += ((HVAC) e).getCons();
-                else if (e instanceof Lamp) fcons += ((Lamp) e).getCons();
+                if (e instanceof Computer) ccons += ((Computer) e).getCons();
+                else if (e instanceof HVAC) hcons += ((HVAC) e).getCons();
+                else if (e instanceof Lamp) lcons += ((Lamp) e).getCons();
             }
         }
 
@@ -169,8 +170,12 @@ public class Building {
          * Equals to (fcons/360)/1000 for 1 day
          *
          */
-
-        return ((fcons/Manager.STEPS)*(Manager.STEPS/360))/1000;
+        ccons /= 1000;
+        hcons /= 1000;
+        lcons /= 1000;
+        System.out.println(Manager.CURRENT_STEP + " Computer " + ccons + " HVAC " + hcons + " Lamp " + lcons);
+        return (ccons + hcons + lcons);
+        //return ((fcons/Manager.CURRENT_STEP)*(Manager.STEPS/360))/1000;
 	}
 
 	public double[] getHourlyConsumption() {

@@ -26,13 +26,13 @@ public class ComputerRule extends BasicRule {
 
     protected boolean isGuestComing() {
         Person guest = comp.getUsedBy();
-        return guest != null &&
-                guest.getNextActionSteps() < PREDICTION_THRESHOLD && room.getLocation().equals(guest.getLocation());
+        if (guest == null) return false;
+        return guest.getNextActionSteps() < PREDICTION_THRESHOLD && room.getLocation().equals(guest.getLocation());
     }
 
     protected boolean guestReturned() {
         Person p = comp.getUsedBy();
-        return p != null || room.getLocation().equals(p.getLocation());
+        return p != null && room.getLocation().equals(p.getLocation());
     }
 
     protected boolean guestLeft() {

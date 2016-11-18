@@ -13,14 +13,14 @@ public class Computer {
 
     /*
      * ON: 350 W
-     * SUSPEND: 20 W
+     * SUSPEND: 50 W
      */
 
 
     public enum State {
 		OFF(0),
 		ON(350),
-		SUSPEND(20);
+		SUSPEND(50);
 		
 		private final int cons;
 		public int getConsumption() {return cons;}

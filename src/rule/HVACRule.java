@@ -2,9 +2,7 @@ package rule;
 
 import behaviour.Person;
 import building.Room;
-import domain.Debugger;
 import entity.HVAC;
-import iot.Manager;
 import iot.Sensor;
 import model.Weather;
 import org.easyrules.core.BasicRule;
@@ -81,7 +79,7 @@ public class HVACRule extends BasicRule {
         if (roomTemp == environTemp) return;
         if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.005;
         else newTemp = roomTemp + (environTemp - roomTemp) * 0.005;
-        if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC OFF");
+        //if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC OFF");
         temperature.setValue(Double.toString(newTemp));
     }
 
@@ -95,7 +93,7 @@ public class HVACRule extends BasicRule {
         double newTemp = 0;
         if (roomTemp < pplTemp) newTemp = roomTemp + (pplTemp - roomTemp) * 0.01;
         else if (pplTemp < roomTemp) newTemp = roomTemp - (roomTemp - pplTemp) * 0.01;
-        if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC ON");
+        //if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC ON");
         temperature.setValue(Double.toString(newTemp));
     }
 
@@ -106,8 +104,7 @@ public class HVACRule extends BasicRule {
         if (roomTemp == environTemp) return;
         if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.005;
         else newTemp = roomTemp + (environTemp - roomTemp) * 0.005;
-        if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled())
-            Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC SUSPENDED");
+        //if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC SUSPENDED");
         temperature.setValue(Double.toString(newTemp));
     }
 
