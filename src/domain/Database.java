@@ -29,14 +29,10 @@ public class Database {
 	
 	private Statement st;
 	private PreparedStatement pst;
-	private Utils uts;
-	
-	private Properties prop;
 	private PGPoolingDataSource poolSource;
 	
 	
 	private void initComponents() {
-		this.uts = Utils.getInstance();
 		loadProperties();
 		loadPoolSource();
 		//createIdTable();
@@ -53,7 +49,7 @@ public class Database {
 	}
 	
 	private void loadProperties() {
-		prop = new Properties();
+        Properties prop = new Properties();
 		try {
 			InputStream is = new FileInputStream("database.properties");
 			prop.load(is);
@@ -129,7 +125,7 @@ public class Database {
 	}
 
 	
-	public ArrayList<String> queryIds(int n) {
+    ArrayList<String> queryIds(int n) {
 		ArrayList<String> ret = new ArrayList<String>();
 		Connection c = null;
 		try {

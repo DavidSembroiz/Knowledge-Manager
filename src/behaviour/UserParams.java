@@ -7,7 +7,7 @@ public class UserParams {
 	private boolean hadLunch;
     private boolean hadEntered;
 	
-	public UserParams(double t, double l) {
+	UserParams(double t, double l) {
 		temperature = t;
 		light = l;
 		this.hadLunch = false;
@@ -30,19 +30,19 @@ public class UserParams {
 		this.light = light;
 	}
 
-	public boolean hadLunch() {
+	boolean hadLunch() {
 		return hadLunch;
 	}
 
-	public void setHadLunch(boolean hadLunch) {
+	void setHadLunch(boolean hadLunch) {
 		this.hadLunch = hadLunch;
 	}
 
-    public boolean hadEntered() {
+    boolean hadEntered() {
         return hadEntered;
     }
 
-    public void setHadEntered(boolean hadEntered) {
+    void setHadEntered(boolean hadEntered) {
         this.hadEntered = hadEntered;
     }
 

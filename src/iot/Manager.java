@@ -26,11 +26,8 @@ public class Manager {
     public static int NUM_PROFESSORS, NUM_STUDENTS, NUM_PAS;
 
     public static int MODE;
-	public static int STEPS;
+	private static int STEPS;
 	public static int CURRENT_STEP;
-
-	
-	private Properties prop;
 	
 	private Building building;
 	private Mqtt mqtt;
@@ -72,7 +69,7 @@ public class Manager {
 	
 
 	private void loadProperties() {
-		prop = new Properties();
+		Properties prop = new Properties();
 		try {
 			InputStream is = new FileInputStream("manager.properties");
 			prop.load(is);
@@ -90,7 +87,7 @@ public class Manager {
 	
 	
 	
-	private void processMessage(String topic, String message, String location, String soID) {
+	private void processMessage(String message, String location, String soID) {
 		Room r = building.getRoom(location);
 		if (r != null) {
 			ArrayList<String> types = uts.getTypesFromMessage(message);
@@ -103,7 +100,7 @@ public class Manager {
 				Sensor s = r.getSensor(soID, type);
 				printBuilding();
 				
-				/**
+				/*
 				 * Currently changed to fit the simulation
 				 * 
 				 * Initialize sensors with proper data instead of RNG data
@@ -120,13 +117,21 @@ public class Manager {
 	private void initializeValue(Sensor s, String message) {
 		if (s != null) {
 			String type = s.getType();
-			if (type.equals("temperature")) s.setValue(Double.toString(16));
-			else if (type.equals("humidity")) s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
-			else if (type.equals("luminosity")) s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
-			else {
-				String val = uts.getValueFromType(message, type);
-				s.setValue(val);
-			}
+            switch (type) {
+                case "temperature":
+                    s.setValue(Double.toString(16));
+                    break;
+                case "humidity":
+                    s.setValue(Double.toString(models.getCurrentEnvironmentalHumidity()));
+                    break;
+                case "luminosity":
+                    s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
+                    break;
+                default:
+                    String val = uts.getValueFromType(message, type);
+                    s.setValue(val);
+                    break;
+            }
 		}
 	}
 
@@ -134,7 +139,6 @@ public class Manager {
         /*
          * During normal simulation, all elements are ON between working hours
          */
-
         while (CURRENT_STEP < STEPS) {
             ArrayList<Event> events = uts.fetchEventsFromFile();
             while (CURRENT_STEP < STEPS) {
@@ -168,7 +172,8 @@ public class Manager {
 
     private void repeatSimulation() {
 		ArrayList<Event> events = uts.fetchEventsFromFile();
-        while (CURRENT_STEP < STEPS) {peopleManager.executeActions();
+        while (CURRENT_STEP < STEPS) {
+            peopleManager.executeActions();
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                 Event e = events.remove(0);
                 Person p = peopleManager.getPerson(e.getName());
@@ -185,18 +190,18 @@ public class Manager {
 
     private void writeHourlyConsumption() {
         double cons[] = building.getHourlyConsumption();
-        for (int i = 0; i < cons.length; ++i) {
-            consumption_writer.write(Double.toString(cons[i]));
+        for (double con : cons) {
+            consumption_writer.write(Double.toString(con));
         }
     }
 	
 	public void manageMessage(String topic, String message) {
 		String soID = uts.extractIdFromTopic(topic);
 		String location = awsdb.getLocation(soID);
-		if (location != null) processMessage(topic, message, location, soID);
+		if (location != null) processMessage(message, location, soID);
 
 		else {
-			/**
+			/*
 			 * TODO Unable to query database, handle messages
 			 */
 			System.out.println("Unable to query room number, message discarded");

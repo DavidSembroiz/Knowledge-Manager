@@ -19,7 +19,7 @@ public class Person {
 	private int remainingSteps;
 	private boolean acting;
 	
-	public Person(String name, String type, UserProfile prof, UserParams param) {
+	Person(String name, String type, UserProfile prof, UserParams param) {
 		this.currentAction = Action.MOVE;
 		this.currentState = State.OUTSIDE;
 		this.name = name;
@@ -32,11 +32,11 @@ public class Person {
 		this.acting = false;
 	}
 
-	public int getRemainingSteps() {
+	int getRemainingSteps() {
 		return remainingSteps;
 	}
 	
-	public void decreaseRemainingSteps() {
+	void decreaseRemainingSteps() {
 		--remainingSteps;
 	}
 
@@ -44,7 +44,7 @@ public class Person {
 		return nextActionSteps;
 	}
 	
-	public void decreaseNextActionSteps() {
+	void decreaseNextActionSteps() {
 		--nextActionSteps;
 	}
 
@@ -60,19 +60,19 @@ public class Person {
 		return currentState;
 	}
 
-	public UserProfile getProfile() {
+	UserProfile getProfile() {
 		return profile;
 	}
 
-	public boolean isActing() {
+	boolean isActing() {
 		return acting;
 	}
 
-	public void setActing(boolean acting) {
+	void setActing(boolean acting) {
 		this.acting = acting;
 	}
 
-	public Action getCurrentAction() {
+	Action getCurrentAction() {
 		return currentAction;
 	}
 
@@ -80,7 +80,7 @@ public class Person {
 		return params;
 	}
 
-	public void assignAction(Action a, String dest, int next, int duration) {
+	void assignAction(Action a, String dest, int next, int duration) {
 		this.currentAction = a;
 		this.location = dest;
 		this.nextActionSteps = next;
@@ -99,7 +99,7 @@ public class Person {
 		return location;
 	}
 
-	public void changeState() {
+	void changeState() {
 		if (Debugger.isEnabled()) Debugger.log("Executing action...");
 		if (currentAction.equals(Action.MOVE)) {
 			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
@@ -128,31 +128,31 @@ public class Person {
 		}
 	}
 
-	public boolean isInside() {
+    boolean isInside() {
 		return !(currentState.equals(State.OUTSIDE));
 	}
 	
-	public boolean hadLunch() {
+    boolean hadLunch() {
 		return params.hadLunch();
 	}
 
-	public void setHadLunch(boolean b) {
+    void setHadLunch(boolean b) {
 		params.setHadLunch(b);
 	}
 
-    public boolean hadEntered() {
+    boolean hadEntered() {
         return params.hadEntered();
     }
 
-    public void sethadEntered(boolean b) {
+    void sethadEntered(boolean b) {
         params.setHadEntered(b);
     }
 
-    public boolean isProfessor() {
+    boolean isProfessor() {
         return type.equals(Type.PROFESSOR.toString().toLowerCase());
     }
 
-    public boolean isStudent() {
+    boolean isStudent() {
         return type.equals(Type.STUDENT.toString().toLowerCase());
     }
 
@@ -160,11 +160,11 @@ public class Person {
         return type.equals(Type.PAS.toString().toLowerCase());
     }
 
-    public String getPastLocation() {
+    String getPastLocation() {
         return pastLocation;
     }
 
-    public void setPastLocation(String pastLocation) {
+    void setPastLocation(String pastLocation) {
         this.pastLocation = pastLocation;
     }
 }

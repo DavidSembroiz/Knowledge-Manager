@@ -5,7 +5,6 @@ import domain.Debugger;
 import entity.Computer;
 import entity.HVAC;
 import entity.Lamp;
-import iot.Manager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,10 +39,10 @@ public class Building {
 	}
 	
 	private void parseLocations() {
-		HashSet<String> officeLocs = new HashSet<String>();
-        HashSet<String> meetingLocs = new HashSet<String>();
-        HashSet<String> classLocs = new HashSet<String>();
-        HashSet<String> specialLocs = new HashSet<String>();
+		HashSet<String> officeLocs = new HashSet<>();
+        HashSet<String> meetingLocs = new HashSet<>();
+        HashSet<String> classLocs = new HashSet<>();
+        HashSet<String> specialLocs = new HashSet<>();
 		for (Room r : rooms) {
 			if (Integer.parseInt(r.getSize()) > 0) {
                 if (r.getType().equals(ROOM_TYPE.MEETING_ROOM)) meetingLocs.add(r.getLocation());
@@ -153,15 +152,9 @@ public class Building {
     }
 
     public double calculateAccumulatedConsumption() {
-        double fcons = 0;
-        for (Room r : rooms) {
-            HashSet<Object> ents = r.getEntities();
-            for (Object e : ents) {
-                if (e instanceof Computer) fcons += ((Computer) e).getCons();
-                else if (e instanceof HVAC) fcons += ((HVAC) e).getCons();
-                else if (e instanceof Lamp) fcons += ((Lamp) e).getCons();
-            }
-        }
+        double fcons[] = getHourlyConsumption();
+        double res = 0;
+        for (double fcon : fcons) res += fcon;
 
         /*
          * Every step equals to 10 seconds, and consumption is added every step.
@@ -170,12 +163,12 @@ public class Building {
          * Equals to (fcons/360)/1000 for 1 day
          *
          */
-        return ((fcons/Manager.CURRENT_STEP)*(Manager.STEPS/360))/1000;
+        return res;
 	}
 
 	public double[] getHourlyConsumption() {
         double fcons[] = new double[24];
-        for (int i = 0; i < 24; ++i) {
+        for (int i = 0; i < fcons.length; ++i) {
             for (Room r : rooms) {
                 HashSet<Object> ents = r.getEntities();
                 for (Object e : ents) {
@@ -191,7 +184,7 @@ public class Building {
 
 
     public void fireRules() {
-        for (Room r : rooms) r.fireRules();
+        rooms.forEach(Room::fireRules);
     }
 
 

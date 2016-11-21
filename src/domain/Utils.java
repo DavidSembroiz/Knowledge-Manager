@@ -29,11 +29,8 @@ public class Utils {
 	}
 	
 	
-	/**
+	/*
 	 * Gets the soID from a topic string
-	 * 
-	 * @param topic
-	 * @return
 	 */
 	
 	public String extractIdFromTopic(String topic) {
@@ -42,15 +39,14 @@ public class Utils {
 	
 	
 	public ArrayList<String> getTypesFromMessage(String message) {
-		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> ret = new ArrayList<>();
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject obj = (JSONObject) parser.parse(message);
 			JSONObject channels = (JSONObject) obj.get("channels");
-			Set<?> s = channels.keySet();
-			for (Iterator<?> it = s.iterator(); it.hasNext();) {
-				ret.add((String)it.next());
-			}
+            for (Object value : channels.keySet()) {
+                ret.add((String) value);
+            }
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -119,30 +115,30 @@ public class Utils {
 	
 	public Building loadBuilding() {
 		JSONParser parser = new JSONParser();
-		ArrayList<Room> rooms = new ArrayList<Room>();
+		ArrayList<Room> rooms = new ArrayList<>();
 		try {
-			FileReader reader = new FileReader("./res/building.json");
+			FileReader reader = new FileReader("./res/building_testbed.json");
 			JSONObject root = (JSONObject) parser.parse(reader);
 			String id = (String) root.get("id");
 			JSONArray rms = (JSONArray) root.get("rooms");
-			for (int i = 0; i < rms.size(); ++i) {
-				JSONObject rm = (JSONObject) rms.get(i);
-				Room r = new Room((String) rm.get("id"), (String) rm.get("size"), (String) rm.get("type"));
-				JSONArray sens = (JSONArray) rm.get("sensors");
-				for (int j = 0; j < sens.size(); ++j) {
-					JSONObject sen = (JSONObject) sens.get(j);
-					String mode = (String) sen.get("mode");
-					if (mode.equals("single")) r.addSensor(loadSingleSensor(sen));
-					else if (mode.equals("multiple")) r.addSensor(loadMultipleSensor(sen));
-					
-				}
-				JSONArray ents = (JSONArray) rm.get("entities");
-				for (int j = 0; j < ents.size(); ++j) {
-					JSONObject ent = (JSONObject) ents.get(j);
-					r.addEntity((String) ent.get("type"), (String) ent.get("quantity"));
-				}
-				rooms.add(r);
-			}
+            for (Object rm1 : rms) {
+                JSONObject rm = (JSONObject) rm1;
+                Room r = new Room((String) rm.get("id"), (String) rm.get("size"), (String) rm.get("type"));
+                JSONArray sens = (JSONArray) rm.get("sensors");
+                for (Object sen1 : sens) {
+                    JSONObject sen = (JSONObject) sen1;
+                    String mode = (String) sen.get("mode");
+                    if (mode.equals("single")) r.addSensor(loadSingleSensor(sen));
+                    else if (mode.equals("multiple")) r.addSensor(loadMultipleSensor(sen));
+
+                }
+                JSONArray ents = (JSONArray) rm.get("entities");
+                for (Object ent1 : ents) {
+                    JSONObject ent = (JSONObject) ent1;
+                    r.addEntity((String) ent.get("type"), (String) ent.get("quantity"));
+                }
+                rooms.add(r);
+            }
 			return new Building(id, rooms);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
@@ -151,29 +147,28 @@ public class Utils {
 	}
 
 	private ArrayList<Sensor> loadMultipleSensor(JSONObject sen) {
-		ArrayList<Sensor> ret = new ArrayList<Sensor>();
+		ArrayList<Sensor> ret = new ArrayList<>();
 		String mainType = (String) sen.get("type");
 		String qt = (String) sen.get("quantity");
 		JSONArray motes = (JSONArray) sen.get("motes");
-		
-		for (int i = 0; i < motes.size(); ++i) {
-			JSONObject mote = (JSONObject) motes.get(i);
-			String type = (String) mote.get("type");
-			String qtt = (String) mote.get("quantity");
-			for (int k = 0; k < Integer.parseInt(qt); ++k) {
-				if (Integer.parseInt(qtt) > 1) {
-					for (int j = 0; j < Integer.parseInt(qtt); ++j) {
-						ret.add(new Sensor(mainType + "_" + k, type + "_" + j, "-1"));
-					}
-				}
-				else ret.add(new Sensor(mainType + "_" + k, type, "-1"));
-			}
-		}
+
+        for (Object mote1 : motes) {
+            JSONObject mote = (JSONObject) mote1;
+            String type = (String) mote.get("type");
+            String qtt = (String) mote.get("quantity");
+            for (int k = 0; k < Integer.parseInt(qt); ++k) {
+                if (Integer.parseInt(qtt) > 1) {
+                    for (int j = 0; j < Integer.parseInt(qtt); ++j) {
+                        ret.add(new Sensor(mainType + "_" + k, type + "_" + j, "-1"));
+                    }
+                } else ret.add(new Sensor(mainType + "_" + k, type, "-1"));
+            }
+        }
 		return ret;
 	}
 
 	private ArrayList<Sensor> loadSingleSensor(JSONObject sen) {
-		ArrayList<Sensor> ret = new ArrayList<Sensor>();
+		ArrayList<Sensor> ret = new ArrayList<>();
 		String qtt = (String) sen.get("quantity");
 		String type = (String) sen.get("type");
 		for (int z = 0; z < Integer.parseInt(qtt); ++z) {
@@ -183,7 +178,7 @@ public class Utils {
 	}
 
     public ArrayList<Event> fetchEventsFromFile() {
-        ArrayList<Event> events = new ArrayList<Event>();
+        ArrayList<Event> events = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader("res/events.log"))) {
             String line;
             while ((line = br.readLine()) != null) {

@@ -24,7 +24,7 @@ public class PeopleManager {
 		OUTSIDE, INSIDE, ROOM, SALON
 	}
 	
-	public enum Type {
+	enum Type {
 		PROFESSOR, PAS, STUDENT
 	}
 	
@@ -56,7 +56,7 @@ public class PeopleManager {
 		getPeopleFromFile();
 	}
 
-	public void fetchProfiles() {
+	private void fetchProfiles() {
 		defaultProfiles = new ArrayList<>();
 		for (Type t : Type.values()) {
 			defaultProfiles.add(new UserProfile(t));
@@ -157,12 +157,12 @@ public class PeopleManager {
 			JSONObject root = (JSONObject) parser.parse(reader);
 			
 			JSONArray ppl = (JSONArray) root.get("people");
-			for (int i = 0; i < ppl.size(); ++i) {
-				JSONObject person = (JSONObject) ppl.get(i);
+            for (Object per : ppl) {
+                JSONObject person = (JSONObject) per;
                 String type = (String) person.get("profile");
-				Person p = new Person((String) person.get("name"), type, getProfile(type), generateUserParams());
-				people.add(p);
-			}
+                Person p = new Person((String) person.get("name"), type, getProfile(type), generateUserParams());
+                people.add(p);
+            }
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}

@@ -29,19 +29,19 @@ public class Event implements Comparable<Event> {
         return name;
     }
 
-    public Action getAction() {
+    Action getAction() {
         return action;
     }
 
-    public String getDest() {
+    String getDest() {
         return dest;
     }
 
-    public int getNext() {
+    int getNext() {
         return next;
     }
 
-    public int getDuration() {
+    int getDuration() {
         return duration;
     }
 

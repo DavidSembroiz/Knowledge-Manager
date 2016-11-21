@@ -6,15 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Probability {
+class Probability {
 	
 	private Map<Integer, Double> probabilityPerHour;
 	private Random rand;
-	private int HALF_HOUR = 180;
-	private int DIVISIONS = 48;
 	
 	
-	public Probability(String[] values) {
+	Probability(String[] values) {
 		probabilityPerHour = new HashMap<>();
 		for (int i = 0; i < values.length; ++i) {
 			probabilityPerHour.put(i, Double.parseDouble(values[i]));
@@ -23,6 +21,8 @@ public class Probability {
 	}
 	
 	private double getProbability(int currentTime) {
+        int HALF_HOUR = 180;
+        int DIVISIONS = 48;
 		int t1 = currentTime/HALF_HOUR;
 		double p1 = this.probabilityPerHour.get(t1);
 		if (currentTime%HALF_HOUR == 0) return p1;
@@ -35,7 +35,7 @@ public class Probability {
 		return min + (max - min) * ((currentTime%HALF_HOUR)/HALF_HOUR);
 	}
 	
-	public boolean triggerStatus(int currentTime) {
+	boolean triggerStatus(int currentTime) {
 		return rand.nextDouble() < getProbability(currentTime)/Math.max(10 - Manager.CURRENT_STEP / 756, 0);
 	}
 }

@@ -9,18 +9,18 @@ import org.easyrules.core.BasicRule;
 
 import java.util.ArrayList;
 
-public class HVACRule extends BasicRule {
+class HVACRule extends BasicRule {
 
-    protected int PREDICTION_THRESHOLD = 60;
+    int PREDICTION_THRESHOLD = 60;
 
-    protected Room room;
-    protected Weather models;
+    Room room;
+    private Weather models;
 
-    protected Sensor temperature;
-    protected Sensor humidity;
-    protected HVAC hvac;
+    private Sensor temperature;
+    private Sensor humidity;
+    HVAC hvac;
 
-    public HVACRule(Room r, HVAC h, Sensor temp, Sensor hum) {
+    HVACRule(Room r, HVAC h, Sensor temp, Sensor hum) {
         super("HVAC rule #" + h.getId(), "Rule to manage HVAC", h.getId());
         models = Weather.getInstance();
         temperature = temp;
@@ -29,25 +29,25 @@ public class HVACRule extends BasicRule {
         this.room = r;
     }
 
-    protected Double getPeopleTemperature() {
+    private Double getPeopleTemperature() {
         double accTemp = 0;
         ArrayList<Person> people = room.getPeopleActing();
         for (Person p : people) accTemp += p.getParams().getTemperature();
         return people.size() > 0 ? (accTemp/people.size()) : 21;
     }
 
-    protected boolean currentTemperatureOK() {
+    boolean currentTemperatureOK() {
         double pplTemp = getPeopleTemperature();
         double roomTemp = Double.parseDouble(temperature.getValue());
         return Math.abs(pplTemp - roomTemp) < 0.5;
     }
 
-    protected boolean environmentalTemperatureOK() {
+    private boolean environmentalTemperatureOK() {
 
         Double temp = models.getCurrentEnvironmentalTemperature();
         Double hum = models.getCurrentEnvironmentalHumidity();
 
-        /**
+        /*
          * Summer
          */
 
@@ -56,7 +56,7 @@ public class HVACRule extends BasicRule {
         else if (temp < 22.5 && temp > 21.5) return true;
         return false;
 
-        /**
+        /*
          * Winter
 
          if (hum < 45 && temp < 25.5 && temp > 20.5) return true;
@@ -67,12 +67,12 @@ public class HVACRule extends BasicRule {
          */
     }
 
-    protected boolean temperatureOK() {
+    boolean temperatureOK() {
         return environmentalTemperatureOK() || currentTemperatureOK();
     }
 
 
-    protected void moderateTemperature() {
+    void moderateTemperature() {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double environTemp = models.getCurrentEnvironmentalTemperature();
         double newTemp;
@@ -87,7 +87,7 @@ public class HVACRule extends BasicRule {
      * When HVAC is ON, temperature is adjusted at a 10 degree every 30 minutes ratio
      */
 
-    protected void adjustTemperature() {
+    void adjustTemperature() {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double pplTemp = getPeopleTemperature();
         double newTemp = 0;
@@ -97,7 +97,7 @@ public class HVACRule extends BasicRule {
         temperature.setValue(Double.toString(newTemp));
     }
 
-    protected void suspendTemperature() {
+    void suspendTemperature() {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double environTemp = models.getCurrentEnvironmentalTemperature();
         double newTemp;
@@ -108,9 +108,11 @@ public class HVACRule extends BasicRule {
         temperature.setValue(Double.toString(newTemp));
     }
 
-    protected boolean reactivateFromSuspend() {
+    boolean reactivateFromSuspend() {
         double pplTemp = getPeopleTemperature();
         double roomTemp = Double.parseDouble(temperature.getValue());
         return Math.abs(pplTemp - roomTemp) > 3;
     }
+
+
 }

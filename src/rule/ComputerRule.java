@@ -6,36 +6,35 @@ import entity.Computer;
 import iot.Sensor;
 import org.easyrules.core.BasicRule;
 
-public class ComputerRule extends BasicRule {
-
-    protected int PREDICTION_THRESHOLD = 30;
+class ComputerRule extends BasicRule {
 
     protected Room room;
 
-    protected Sensor power;
+    private Sensor power;
     protected Computer comp;
 
 
 
-    protected ComputerRule(Room r, Computer c, Sensor s) {
+    ComputerRule(Room r, Computer c, Sensor s) {
         super("Computer rule #" + c.getId(), "Rule to manage computer", c.getId());
         this.room = r;
         this.comp = c;
         this.power = s;
     }
 
-    protected boolean isGuestComing() {
+    boolean isGuestComing() {
+        int PREDICTION_THRESHOLD = 30;
         Person guest = comp.getUsedBy();
-        if (guest == null) return false;
-        return guest.getNextActionSteps() < PREDICTION_THRESHOLD && room.getLocation().equals(guest.getLocation());
+        return guest != null && guest.getNextActionSteps() < PREDICTION_THRESHOLD
+                && room.getLocation().equals(guest.getLocation());
     }
 
-    protected boolean guestReturned() {
+    boolean guestReturned() {
         Person p = comp.getUsedBy();
         return p != null && room.getLocation().equals(p.getLocation());
     }
 
-    protected boolean guestLeft() {
+    boolean guestLeft() {
         Person p = comp.getUsedBy();
         return p == null || !room.getLocation().equals(p.getLocation());
     }

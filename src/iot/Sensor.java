@@ -83,7 +83,7 @@ public class Sensor {
 		return soID;
 	}
 
-	public void setSoID(String soID) {
+	void setSoID(String soID) {
 		this.soID = soID;
 	}
 

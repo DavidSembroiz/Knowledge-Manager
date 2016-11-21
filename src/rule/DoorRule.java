@@ -7,9 +7,7 @@ import entity.Door.State;
 import iot.Sensor;
 import org.easyrules.core.BasicRule;
 
-public class DoorRule extends BasicRule {
-
-    private int PREDICTION_THRESHOLD = 10;
+class DoorRule extends BasicRule {
 	
 	private Room room;
 
@@ -17,7 +15,7 @@ public class DoorRule extends BasicRule {
 	private Door door;
 
 	
-	public DoorRule(Room r, Door d, Sensor s) {
+	DoorRule(Room r, Door d, Sensor s) {
         super("Door rule #" + d.getId(), "Rule to manage doors", d.getId());
 
         this.room = r;
@@ -28,6 +26,7 @@ public class DoorRule extends BasicRule {
 	
 	@Override
 	public boolean evaluate() {
+        int PREDICTION_THRESHOLD = 10;
 		State st = door.getCurrentState();
         if (st.equals(State.CLOSE)) {
             if (room.arePeopleComing(PREDICTION_THRESHOLD)) return true;

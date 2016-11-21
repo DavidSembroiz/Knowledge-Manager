@@ -87,7 +87,7 @@ public class Room {
 
 
 
-	public void fireRules() {
+	void fireRules() {
 		ruleManager.fireRules();
 	}
 	
@@ -146,7 +146,7 @@ public class Room {
 		}
 	}
 
-	public HashSet<Object> getEntities() {
+    HashSet<Object> getEntities() {
 		return entities;
 	}
 
@@ -154,11 +154,11 @@ public class Room {
         return peopleActing;
     }
 
-    public void removePerson(Person p) {
+    void removePerson(Person p) {
 		if (peopleActing.contains(p)) peopleActing.remove(p);
 	}
 
-	public void addPerson(Person p) {
+    void addPerson(Person p) {
 		peopleComing.add(p);
 	}
 

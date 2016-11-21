@@ -8,10 +8,9 @@ import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Random;
 
-public class UserProfile implements Cloneable {
+class UserProfile implements Cloneable {
 	
 	private Probability entrance;
 	private Probability randomWalks;
@@ -25,27 +24,27 @@ public class UserProfile implements Cloneable {
 	private Type type;
 	private Random rand;
 	
-	public UserProfile(Type t) {
+	UserProfile(Type t) {
 		this.type = t;
 		rand = new Random();
 		loadProfileFromFile(t);
 	}
 	
 	
-	public Probability getEntrance() {
+	Probability getEntrance() {
 		return entrance;
 	}
 	public void setEntrance(Probability entrance) {
 		this.entrance = entrance;
 	}
-	public Probability getRandomWalks() {
+    Probability getRandomWalks() {
 		return randomWalks;
 	}
 	public void setRandomWalks(Probability randomWalks) {
 		this.randomWalks = randomWalks;
 	}
 	
-	public Probability getLunch() {
+    Probability getLunch() {
 		return lunch;
 	}
 	
@@ -53,7 +52,7 @@ public class UserProfile implements Cloneable {
 		this.lunch = lunch;
 	}
 	
-	public Probability getExit() {
+    Probability getExit() {
 		return exit;
 	}
 	public void setExit(Probability exit) {
@@ -67,7 +66,7 @@ public class UserProfile implements Cloneable {
 		this.type = t;
 	}
 
-    public Probability getMeeting() {
+    Probability getMeeting() {
         return meeting;
     }
 
@@ -78,11 +77,11 @@ public class UserProfile implements Cloneable {
     /**
 	 * Returns a value within min <= value <= max
 	 */
-	public int getLunchDuration() {
+    int getLunchDuration() {
 		return rand.nextInt((lunchDurationRange[1] - lunchDurationRange[0]) + 1) + lunchDurationRange[0];
 	}
 	
-	public int getRandomWalksDuration() {
+    int getRandomWalksDuration() {
 		return rand.nextInt((randomWalksDurationRange[1] - randomWalksDurationRange[0]) + 1) + randomWalksDurationRange[0];
 	}
 	
@@ -104,30 +103,26 @@ public class UserProfile implements Cloneable {
      *
 	 */
 	
-	protected void loadProfileFromFile(Type t) {
+	private void loadProfileFromFile(Type t) {
 		JSONParser parser = new JSONParser();
 		try {
 			FileReader reader = new FileReader("./res/profiles.json");
 			JSONObject root = (JSONObject) parser.parse(reader);
 			JSONObject prof = (JSONObject) root.get(t.toString().toLowerCase());
 			if (prof == null) return;
-			@SuppressWarnings("unchecked")
-			Iterator<String> keys = prof.keySet().iterator();
-			while (keys.hasNext()) {
-				String k = keys.next();
-				JSONArray values = (JSONArray) prof.get(k);
-				String[] vals = new String[values.size()];
-				for (int i = 0; i < values.size(); ++i) {
-					vals[i] =  (String) values.get(i);
-				}
-				if (vals.length == 2) {
-					assignDuration(k, vals);
-				}
-				else {
-					Probability p = new Probability(vals);
-					assignProbability(k, p);
-				}
-			}
+            for (String k : (Iterable<String>) prof.keySet()) {
+                JSONArray values = (JSONArray) prof.get(k);
+                String[] vals = new String[values.size()];
+                for (int i = 0; i < values.size(); ++i) {
+                    vals[i] = (String) values.get(i);
+                }
+                if (vals.length == 2) {
+                    assignDuration(k, vals);
+                } else {
+                    Probability p = new Probability(vals);
+                    assignProbability(k, p);
+                }
+            }
 		} catch(IOException | ParseException e) {
 			e.printStackTrace();
 		}
