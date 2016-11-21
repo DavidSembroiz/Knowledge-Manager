@@ -8,7 +8,6 @@ public class Computer {
     private int id;
     private Person usedBy;
 	private State currentState;
-	private double accPowerUsage;
     private double consumptionHistory[];
 
     /*
@@ -65,13 +64,6 @@ public class Computer {
 
 
 	public void addConsumption(double cons) {
-
-        this.accPowerUsage += cons;
         this.consumptionHistory[Manager.CURRENT_STEP/360] += cons;
 	}
-
-	public double getCons() {
-        return accPowerUsage;
-    }
-
 }

@@ -1,7 +1,6 @@
 package rule;
 
 import building.Room;
-import domain.Utils;
 import entity.Computer;
 import entity.Door;
 import entity.HVAC;
@@ -22,19 +21,12 @@ public class RuleManager {
 
 	
 	private RulesEngine rulesEngine;
-	private Utils uts;
 	private Room r;
 	
 	public RuleManager(Room r) {
 		this.r = r;
-		this.uts = Utils.getInstance();
 		rulesEngine = aNewRulesEngine().build();
 	}
-	
-	public RulesEngine getRulesEngine() {
-		return rulesEngine;
-	}
-	
 	
 	public void fireRules() {
 		rulesEngine.fireRules();

@@ -32,13 +32,12 @@ public class Mqtt {
 	private ArrayList<String> ids;
 	private String topic;
 	private Utils uts;
-	private Properties prop;
 	private Manager manager;
 	private int subs;
 
 	public Mqtt(Manager m, Database awsdb) {
 		subs = 0;
-		ids = new ArrayList<String>();
+		ids = new ArrayList<>();
 		uts = Utils.getInstance();
 		this.manager = m;
 		loadProperties();
@@ -52,7 +51,7 @@ public class Mqtt {
 	 */
 	
 	private void loadProperties() {
-		prop = new Properties();
+		Properties prop = new Properties();
 		try {
 			InputStream is = new FileInputStream("database.properties");
 			prop.load(is);
@@ -74,7 +73,7 @@ public class Mqtt {
 	private void connect() {
 		connOpts = new MqttConnectOptions();
 		
-		/**
+		/*
 		 * Session has to be set to TRUE
 		 */
 		
@@ -127,7 +126,7 @@ public class Mqtt {
 		System.out.println("Subscriptions: " + subs);
 	}*/
 	
-	public void subscribe(ArrayList<String> ids) {
+    void subscribe(ArrayList<String> ids) {
 		String[] topics = new String[ids.size()];
 		int[] qos = new int[ids.size()];
 		for (int i = 0; i < ids.size(); ++i) {
@@ -148,13 +147,12 @@ public class Mqtt {
 		return ids;
 	}
 	
-	public void addId(String id) {
+    void addId(String id) {
 		ids.add(id);
 	}
 	
 	/**
 	 * Disconnects the client from the ServIoTicy endpoint
-	 * 
 	 */
 	public void disconnect() {
 		try {

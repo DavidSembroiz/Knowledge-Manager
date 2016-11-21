@@ -6,9 +6,9 @@ import entity.HVAC;
 import entity.HVAC.State;
 import iot.Sensor;
 
-public class SmartHVAC extends HVACRule {
+class SmartHVAC extends HVACRule {
 	
-	public SmartHVAC(Room r, HVAC h, Sensor temp, Sensor hum) {
+	SmartHVAC(Room r, HVAC h, Sensor temp, Sensor hum) {
         super(r, h, temp, hum);
 	}
 	

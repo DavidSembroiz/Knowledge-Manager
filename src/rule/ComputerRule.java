@@ -11,7 +11,7 @@ class ComputerRule extends BasicRule {
     protected Room room;
 
     private Sensor power;
-    protected Computer comp;
+    Computer comp;
 
 
 

@@ -6,10 +6,10 @@ import entity.Computer;
 import entity.Computer.State;
 import iot.Sensor;
 
-public class NormalComputer extends ComputerRule {
+class NormalComputer extends ComputerRule {
 
 
-    public NormalComputer(Room r, Computer c, Sensor s) {
+    NormalComputer(Room r, Computer c, Sensor s) {
         super(r, c, s);
     }
 
