@@ -3,6 +3,7 @@
 /servioticy*
 database.properties
 results/
+tests/
 res/building_*.json
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm

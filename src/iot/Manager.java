@@ -22,6 +22,12 @@ public class Manager {
 
 	public static boolean LOG_EVENTS;
 
+    /**
+     * Resolution of consumption file: value/24 equals the number of samples/hour
+     */
+
+    public static int CONSUMPTION_RESOLUTION = 24;
+
 	private int GENERATE_PEOPLE;
     public static int NUM_PROFESSORS, NUM_STUDENTS, NUM_PAS;
 

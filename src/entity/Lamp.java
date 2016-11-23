@@ -33,7 +33,7 @@ public class Lamp {
 	public Lamp(int id) {
         this.id = id;
         this.currentState = State.OFF;
-        consumptionHistory = new double[24];
+        consumptionHistory = new double[Manager.CONSUMPTION_RESOLUTION];
 	}
 
     public double getHourlyConsumption(int i) {
@@ -51,6 +51,6 @@ public class Lamp {
 
 
 	public void addConsumption(double cons) {
-        this.consumptionHistory[Manager.CURRENT_STEP/360] += cons;
+        this.consumptionHistory[Manager.CURRENT_STEP/(360/(Manager.CONSUMPTION_RESOLUTION/24))] += cons;
 	}
 }

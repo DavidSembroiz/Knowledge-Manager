@@ -5,6 +5,7 @@ import domain.Debugger;
 import entity.Computer;
 import entity.HVAC;
 import entity.Lamp;
+import iot.Manager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -167,7 +168,7 @@ public class Building {
 	}
 
 	public double[] getHourlyConsumption() {
-        double fcons[] = new double[24];
+        double fcons[] = new double[Manager.CONSUMPTION_RESOLUTION];
         for (int i = 0; i < fcons.length; ++i) {
             for (Room r : rooms) {
                 HashSet<Object> ents = r.getEntities();

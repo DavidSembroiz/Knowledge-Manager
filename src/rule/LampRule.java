@@ -1,21 +1,15 @@
 package rule;
 
+import building.Room;
 import domain.Debugger;
-import org.easyrules.annotation.*;
-
 import entity.Lamp;
 import entity.Lamp.State;
-import building.Room;
 import iot.Sensor;
 import model.Weather;
 import org.easyrules.core.BasicRule;
 
-@Rule(name = "Lights Management Rule")
-public class LampRule extends BasicRule {
+class LampRule extends BasicRule {
 
-    private int PREDICTION_THRESHOLD = 5;
-    private int ENVIRONMENTAL_LIGHT_THRESHOLD = 500;
-	
 	private Room room;
 	private Weather models;
 	
@@ -23,7 +17,7 @@ public class LampRule extends BasicRule {
 	private Lamp lamp;
 
 	
-	public LampRule(Room r, Lamp l, Sensor light) {
+	LampRule(Room r, Lamp l, Sensor light) {
         super("Lamp rule #" + l.getId(), "Rule to manage Lamps", l.getId());
         models = Weather.getInstance();
 		this.room = r;
@@ -33,12 +27,15 @@ public class LampRule extends BasicRule {
 	
 	
 	private boolean environmentalLightOK() {
+        int ENVIRONMENTAL_LIGHT_THRESHOLD = 500;
 		double modelValue = models.getCurrentEnvironmentalLight();
 		return modelValue > ENVIRONMENTAL_LIGHT_THRESHOLD;
 	}
 	
 	@Override
 	public boolean evaluate() {
+
+        int PREDICTION_THRESHOLD = 5;
 
 		/*
 		 * If light is ON:

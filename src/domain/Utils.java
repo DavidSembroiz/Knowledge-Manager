@@ -117,7 +117,7 @@ public class Utils {
 		JSONParser parser = new JSONParser();
 		ArrayList<Room> rooms = new ArrayList<>();
 		try {
-			FileReader reader = new FileReader("./res/building_testbed.json");
+			FileReader reader = new FileReader("./res/building.json");
 			JSONObject root = (JSONObject) parser.parse(reader);
 			String id = (String) root.get("id");
 			JSONArray rms = (JSONArray) root.get("rooms");

@@ -217,7 +217,6 @@ public class PeopleManager {
                 }
                 next = 1 + rand.nextInt(30);
                 duration = p.getProfile().getRandomWalksDuration();
-                p.setPastLocation(p.getLocation());
             }
         }
         if (a.equals(Action.MEETING)) {
@@ -228,18 +227,22 @@ public class PeopleManager {
                  */
                 if (wasHavingLunch(p)) dest = p.getPastLocation();
                 else dest = getRandomMeetingDestination(p.getLocation());
-                next = 1 + rand.nextInt(30);
+                /*
+                 * From 5 to 15 minutes to arrive
+                 */
+                next = 30 + rand.nextInt(60);
                 duration = p.getProfile().getRandomWalksDuration();
-                p.setPastLocation(p.getLocation());
             }
         }
 		else if (a.equals(Action.ENTER)) {
 			if (!p.isInside() && !p.hadEntered()) {
 				assigned = true;
 				dest = "inside";
-				next = 1 + rand.nextInt(20);
+                /*
+                 * From 10 to 30 minutes to enter, 1 step to execute action
+                 */
+				next = 60 + rand.nextInt(120);
 				duration = 1;
-                p.setPastLocation(p.getLocation());
                 p.sethadEntered(true);
 			}
 		}
@@ -247,22 +250,27 @@ public class PeopleManager {
 			if (p.isInside()) {
 				assigned = true;
 				dest = "outside";
+                /*
+                 * 1 step to exit the building, stays outside for 10 to 30 minutes
+                 */
                 next = 1;
-				duration = 1 + rand.nextInt(20);
-                p.setPastLocation(p.getLocation());
+				duration = 60 + rand.nextInt(120);
 			}
 		}
 		else if (a.equals(Action.LUNCH)) {
 			if (p.isInside() && !p.hadLunch()) {
 				assigned = true;
 				dest = "salon";
-				next = 1 + rand.nextInt(10);
+                /*
+                 * lunch in the next 5 to 10 minutes
+                 */
+				next = 30 + rand.nextInt(30);
 				duration = p.getProfile().getLunchDuration();
-                p.setPastLocation(p.getLocation());
 				p.setHadLunch(true);
 			}
 		}
 		if (assigned) {
+            p.setPastLocation(p.getLocation());
 			p.assignAction(a, dest, next, duration);
 			building.movePerson(p, p.getPastLocation());
             if (!wasHavingLunch(p)) {

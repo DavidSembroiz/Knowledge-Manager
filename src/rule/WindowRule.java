@@ -4,11 +4,9 @@ import building.Room;
 import entity.Window;
 import entity.Window.State;
 import iot.Sensor;
-import org.easyrules.annotation.Rule;
 import org.easyrules.core.BasicRule;
 
-@Rule(name = "Window Management Rule")
-public class WindowRule extends BasicRule {
+class WindowRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 10;
 
