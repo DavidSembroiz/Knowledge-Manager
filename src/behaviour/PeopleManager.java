@@ -16,6 +16,17 @@ import static iot.Manager.LOG_EVENTS;
 
 public class PeopleManager {
 
+
+
+
+    /**
+     * TODO Possible enhancement:
+     * Modify the rooms so the number of people has a limit. When selecting the destination room,
+     * create an index and, from this index, traverse the location vector to get the first available
+     * room. If all rooms are full, avoid actuating.
+     */
+
+
     public enum Action {
 		MOVE, LUNCH, ENTER, EXIT, MEETING
 	}
@@ -185,7 +196,8 @@ public class PeopleManager {
         p.changeState();
 	}
 
-	public void assignSpecificAction(Person p, Event e) {
+	public void assignSpecificAction(Event e) {
+        Person p = getPerson(e.getName());
         String currentLoc = p.getLocation();
         p.assignAction(e.getAction(), e.getDest(), e.getNext(), e.getDuration());
         building.movePerson(p, currentLoc);
@@ -205,38 +217,35 @@ public class PeopleManager {
 		boolean assigned = false;
         if (a.equals(Action.MOVE)) {
             if (p.isInside()) {
-                assigned = true;
                 /*
                  * Return from lunch
                  */
                 if (wasHavingLunch(p)) dest = p.getPastLocation();
-                else {
-                    if (p.isProfessor()) dest = getRandomOfficeDestination(p.getLocation());
-                    else if (p.isStudent()) dest = getRandomClassDestination(p.getLocation());
-                    else dest = getRandomDestination(p.getLocation());
-                }
+                else dest = getDestination(p);
+                if (dest == null) return;
                 next = 1 + rand.nextInt(30);
                 duration = p.getProfile().getRandomWalksDuration();
+                assigned = true;
             }
         }
         if (a.equals(Action.MEETING)) {
             if (p.isInside()) {
-                assigned = true;
                 /*
                  * Return from lunch
                  */
                 if (wasHavingLunch(p)) dest = p.getPastLocation();
-                else dest = getRandomMeetingDestination(p.getLocation());
+                else dest = getSpecificDestination(p.getLocation(), building.getMeetingLocations());
+                if (dest == null) return;
                 /*
                  * From 5 to 15 minutes to arrive
                  */
                 next = 30 + rand.nextInt(60);
                 duration = p.getProfile().getRandomWalksDuration();
+                assigned = true;
             }
         }
 		else if (a.equals(Action.ENTER)) {
 			if (!p.isInside() && !p.hadEntered()) {
-				assigned = true;
 				dest = "inside";
                 /*
                  * From 10 to 30 minutes to enter, 1 step to execute action
@@ -244,22 +253,22 @@ public class PeopleManager {
 				next = 60 + rand.nextInt(120);
 				duration = 1;
                 p.sethadEntered(true);
+                assigned = true;
 			}
 		}
 		else if (a.equals(Action.EXIT)) {
 			if (p.isInside()) {
-				assigned = true;
 				dest = "outside";
                 /*
                  * 1 step to exit the building, stays outside for 10 to 30 minutes
                  */
                 next = 1;
 				duration = 60 + rand.nextInt(120);
+                assigned = true;
 			}
 		}
 		else if (a.equals(Action.LUNCH)) {
 			if (p.isInside() && !p.hadLunch()) {
-				assigned = true;
 				dest = "salon";
                 /*
                  * lunch in the next 5 to 10 minutes
@@ -267,6 +276,7 @@ public class PeopleManager {
 				next = 30 + rand.nextInt(30);
 				duration = p.getProfile().getLunchDuration();
 				p.setHadLunch(true);
+                assigned = true;
 			}
 		}
 		if (assigned) {
@@ -277,58 +287,33 @@ public class PeopleManager {
                 building.unassignRoomElements(p, p.getPastLocation());
                 building.assignRoomElements(p, dest);
             }
-			if (LOG_EVENTS) {
-				writer.println(Manager.CURRENT_STEP + "," +
-							   p.getName() + "," +
-							   p.getCurrentAction().toString() + "," +
-						       p.getNextActionSteps() + "," +
-						       p.getRemainingSteps() + "," +
-						       p.getLocation());
-				flushData();
-			}
+			logEvent(p);
 		}
 	}
+
+	public void logEvent(Person p) {
+        if (LOG_EVENTS) {
+            writer.println(Manager.CURRENT_STEP + "," +
+                    p.getName() + "," +
+                    p.getCurrentAction().toString() + "," +
+                    p.getNextActionSteps() + "," +
+                    p.getRemainingSteps() + "," +
+                    p.getLocation());
+            flushData();
+        }
+    }
 
 	private boolean wasHavingLunch(Person p) {
         return p.getCurrentAction().equals(Action.LUNCH);
     }
 
 
-    private String getRandomDestination(String currentLoc) {
-        int r = rand.nextInt(building.NUM_PLACES);
-        switch (r) {
-            case 0: return getRandomOfficeDestination(currentLoc);
-            case 1: return getRandomClassDestination(currentLoc);
-            case 2: return getRandomMeetingDestination(currentLoc);
-            default: return null;
-        }
-    }
-
-    private String getRandomClassDestination(String currentLoc) {
-        String[] locs = building.getClassromLocations();
-        if (locs.length == 1) return locs[0];
-        String nextLoc = locs[rand.nextInt(locs.length)];
-        while (nextLoc.equals(currentLoc)) {
-            nextLoc = locs[rand.nextInt(locs.length)];
-        }
-        return nextLoc;
-    }
-
-    private String getRandomMeetingDestination(String currentLoc) {
-        String[] locs = building.getMeetingLocations();
-        if (locs.length == 1) return locs[0];
-        String nextLoc = locs[rand.nextInt(locs.length)];
-        while (nextLoc.equals(currentLoc)) {
-            nextLoc = locs[rand.nextInt(locs.length)];
-        }
-        return nextLoc;
-    }
-
     private Action getNextAction(Person p) {
         UserProfile up = p.getProfile();
         if (p.getCurrentAction().equals(Action.LUNCH)) {
             Building.ROOM_TYPE type = building.getLocationType(p.getPastLocation());
-            if (type.equals(Building.ROOM_TYPE.OFFICE)) return Action.MOVE;
+            if (type.equals(Building.ROOM_TYPE.OFFICE) ||
+            type.equals(Building.ROOM_TYPE.CLASSROOM)) return Action.MOVE;
             if (type.equals(Building.ROOM_TYPE.MEETING_ROOM)) return Action.MEETING;
         }
         if (up.getEntrance().triggerStatus(Manager.CURRENT_STEP)) return Action.ENTER;
@@ -339,18 +324,60 @@ public class PeopleManager {
         return null;
     }
 
-    private String getRandomOfficeDestination(String currentLoc) {
-		String[] locs = building.getOfficeLocations();
+    private String getSpecificDestination(String currentLoc, String[] locs) {
         if (locs.length == 1) return locs[0];
-        String nextLoc = locs[rand.nextInt(locs.length)];
-		while (nextLoc.equals(currentLoc)) {
-			nextLoc = locs[rand.nextInt(locs.length)];
-		}
-		return nextLoc;
-	}
+        int start = rand.nextInt(locs.length - 1);
+        for (int i = start + 1; i != start; i = (i+1)%locs.length) {
+            if (!locs[i].equals(currentLoc) &&
+                    building.getRoom(locs[i]).isAvailable()) return locs[i];
+        }
+        return null;
+    }
+
+	private String getDestination(Person p) {
+        String currentLoc = p.getLocation();
+        String office = getSpecificDestination(currentLoc, building.getOfficeLocations());
+        String classroom = getSpecificDestination(currentLoc, building.getClassromLocations());
+        String meeting = getSpecificDestination(currentLoc, building.getMeetingLocations());
+        double office_threshold = 0, class_threshold = 0, meeting_threshold = 0;
+
+        /*
+         * Thresholds must add 1
+         */
+
+        /**
+         * TODO if some of the locations is null, discard and share the percentage to the rest of the locations
+         */
+
+        if (p.isProfessor()) {
+            office_threshold = office == null ? 0 : 0.5;
+            class_threshold = classroom == null ? 0 : 0.25;
+            meeting_threshold = meeting == null ? 0 : 0.25;
+        }
+        else if (p.isStudent()) {
+            office_threshold = office == null ? 0 : 0.2;
+            class_threshold = classroom == null ? 0 : 0.6;
+            meeting_threshold = meeting == null ? 0 : 0.2;
+        }
+        else {
+            office_threshold = office == null ? 0 : 1/3;
+            class_threshold = classroom == null ? 0 : 1/3;
+            meeting_threshold = meeting == null ? 0 : 1/3;
+        }
+
+
+        double decide = rand.nextDouble();
+        if (decide < office_threshold) return office;
+        else if (decide < office_threshold + class_threshold) return classroom;
+        else if (decide < office_threshold + class_threshold + meeting_threshold) return meeting;
+        return null;
+    }
 
 	public void setBuilding(Building b) {
 		this.building = b;
 	}
-	
+
+    public ArrayList<Person> getPeople() {
+        return people;
+    }
 }

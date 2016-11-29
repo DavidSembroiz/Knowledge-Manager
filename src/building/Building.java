@@ -13,7 +13,17 @@ import java.util.HashSet;
 public class Building {
 
     public enum ROOM_TYPE {
-        OFFICE, MEETING_ROOM, CLASSROOM, UNDEFINED
+        OFFICE(3),
+        MEETING_ROOM(20),
+        CLASSROOM(20),
+        UNDEFINED(9999);
+
+        private final int limit;
+        public int getLimit() {return limit;}
+
+        ROOM_TYPE(int limit) {
+            this.limit = limit;
+        }
     }
 
 	private String id;

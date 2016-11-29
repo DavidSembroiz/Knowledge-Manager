@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Random;
 
 public class Manager {
 
@@ -28,14 +29,29 @@ public class Manager {
 
     public static int CONSUMPTION_RESOLUTION = 24;
 
-	private int GENERATE_PEOPLE;
+    /**
+     * Control the generation of new people
+     */
+
+    private int GENERATE_PEOPLE;
     public static int NUM_PROFESSORS, NUM_STUDENTS, NUM_PAS;
 
+    /**
+     * MODE 0: smart simulation
+     * MODE 1: repeat smart simulation
+     * MODE 2: base simulation
+     */
+
     public static int MODE;
-	private static int STEPS;
+
+    /**
+     * Simulation steps
+     */
+
+    private static int STEPS;
 	public static int CURRENT_STEP;
-	
-	private Building building;
+
+    private Building building;
 	private Mqtt mqtt;
 	private Utils uts;
 	private Database awsdb;
@@ -90,8 +106,19 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+    public void manageMessage(String topic, String message) {
+        String soID = uts.extractIdFromTopic(topic);
+        String location = awsdb.getLocation(soID);
+        if (location != null) processMessage(message, location, soID);
+
+        else {
+			/*
+			 * Unable to query database, handle messages
+			 */
+            System.out.println("Unable to query room number, message discarded");
+        }
+    }
 	
 	private void processMessage(String message, String location, String soID) {
 		Room r = building.getRoom(location);
@@ -152,7 +179,7 @@ public class Manager {
                 while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                     Event e = events.remove(0);
                     Person p = peopleManager.getPerson(e.getName());
-                    peopleManager.assignSpecificAction(p, e);
+                    peopleManager.assignSpecificAction(e);
 
                 }
                 building.fireRules();
@@ -170,11 +197,24 @@ public class Manager {
             peopleManager.updateActions();
             building.fireRules();
 			building.updateConsumption();
+            if (CURRENT_STEP == 6840) {
+                emptyBuilding();
+            }
 			++CURRENT_STEP;
 		}
 		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         writeHourlyConsumption();
 	}
+
+    private void emptyBuilding() {
+        Random rand = new Random();
+        peopleManager.getPeople().stream().filter(Person::isInside).forEach(p -> {
+            Event leave = new Event(CURRENT_STEP, p.getName(), PeopleManager.Action.EXIT,
+                    PeopleManager.State.OUTSIDE.toString().toLowerCase(), rand.nextInt(STEPS - CURRENT_STEP) + 1, 1);
+            peopleManager.assignSpecificAction(leave);
+            peopleManager.logEvent(p);
+        });
+    }
 
     private void repeatSimulation() {
 		ArrayList<Event> events = uts.fetchEventsFromFile();
@@ -183,7 +223,7 @@ public class Manager {
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                 Event e = events.remove(0);
                 Person p = peopleManager.getPerson(e.getName());
-                peopleManager.assignSpecificAction(p, e);
+                peopleManager.assignSpecificAction(e);
             }
             building.fireRules();
             building.updateConsumption();
@@ -200,19 +240,7 @@ public class Manager {
             consumption_writer.write(Double.toString(con));
         }
     }
-	
-	public void manageMessage(String topic, String message) {
-		String soID = uts.extractIdFromTopic(topic);
-		String location = awsdb.getLocation(soID);
-		if (location != null) processMessage(message, location, soID);
 
-		else {
-			/*
-			 * TODO Unable to query database, handle messages
-			 */
-			System.out.println("Unable to query room number, message discarded");
-		}
-	}
 	
 	private void printBuilding() {
 		ArrayList<Room> rooms = building.getRooms();

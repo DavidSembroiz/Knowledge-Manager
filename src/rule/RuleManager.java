@@ -86,10 +86,18 @@ public class RuleManager {
         ArrayList<Sensor> sens = r.getSensors();
         for (Sensor s : sens) {
             if (!s.isAssigned() && s.getType().toLowerCase().equals("luminosity")) {
-                LampRule lr = new LampRule(r, l, s);
                 s.setValue(DEFAULT_LIGHT);
                 s.setAssigned(true);
-                rulesEngine.registerRule(lr);
+                NormalLamp ln;
+                SmartLamp sln;
+                if (Manager.MODE == 2) {
+                    ln = new NormalLamp(r, l, s);
+                    rulesEngine.registerRule(ln);
+                }
+                else {
+                    sln = new SmartLamp(r, l, s);
+                    rulesEngine.registerRule(sln);
+                }
                 return;
             }
         }

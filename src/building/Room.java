@@ -146,7 +146,7 @@ public class Room {
 		}
 	}
 
-    HashSet<Object> getEntities() {
+    public HashSet<Object> getEntities() {
 		return entities;
 	}
 
@@ -156,6 +156,7 @@ public class Room {
 
     void removePerson(Person p) {
 		if (peopleActing.contains(p)) peopleActing.remove(p);
+        else if (peopleComing.contains(p)) peopleComing.remove(p);
 	}
 
     void addPerson(Person p) {
@@ -190,4 +191,7 @@ public class Room {
         }
     }
 
+    public boolean isAvailable() {
+        return peopleActing.size() + peopleComing.size() < type.getLimit();
+    }
 }

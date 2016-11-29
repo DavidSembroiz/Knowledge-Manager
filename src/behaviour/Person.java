@@ -80,7 +80,7 @@ public class Person {
 		return params;
 	}
 
-	void assignAction(Action a, String dest, int next, int duration) {
+	public void assignAction(Action a, String dest, int next, int duration) {
 		this.currentAction = a;
 		this.location = dest;
 		this.nextActionSteps = next;
@@ -128,7 +128,7 @@ public class Person {
 		}
 	}
 
-    boolean isInside() {
+    public boolean isInside() {
 		return !(currentState.equals(State.OUTSIDE));
 	}
 	

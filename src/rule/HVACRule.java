@@ -71,6 +71,9 @@ class HVACRule extends BasicRule {
         return environmentalTemperatureOK() || currentTemperatureOK();
     }
 
+    /**
+     * Temperature moderation when HVAC is OFF
+     */
 
     void moderateTemperature() {
         double roomTemp = Double.parseDouble(temperature.getValue());
@@ -79,7 +82,6 @@ class HVACRule extends BasicRule {
         if (roomTemp == environTemp) return;
         if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.005;
         else newTemp = roomTemp + (environTemp - roomTemp) * 0.005;
-        //if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC OFF");
         temperature.setValue(Double.toString(newTemp));
     }
 
@@ -93,18 +95,20 @@ class HVACRule extends BasicRule {
         double newTemp = 0;
         if (roomTemp < pplTemp) newTemp = roomTemp + (pplTemp - roomTemp) * 0.01;
         else if (pplTemp < roomTemp) newTemp = roomTemp - (roomTemp - pplTemp) * 0.01;
-        //if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC ON");
         temperature.setValue(Double.toString(newTemp));
     }
+
+    /**
+     * Temperature adjustment when HVAC is SUSPENDED
+     */
 
     void suspendTemperature() {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double environTemp = models.getCurrentEnvironmentalTemperature();
         double newTemp;
         if (roomTemp == environTemp) return;
-        if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.005;
-        else newTemp = roomTemp + (environTemp - roomTemp) * 0.005;
-        //if (Manager.CURRENT_STEP%50 == 0 && Debugger.isEnabled()) Debugger.log(newTemp + " ºC in room " + room.getLocation() + " with HVAC SUSPENDED");
+        if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.0025;
+        else newTemp = roomTemp + (environTemp - roomTemp) * 0.0025;
         temperature.setValue(Double.toString(newTemp));
     }
 
