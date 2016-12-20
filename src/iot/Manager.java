@@ -195,9 +195,9 @@ public class Manager {
 
 		while (CURRENT_STEP < STEPS) {
             peopleManager.updateActions();
+            if (CURRENT_STEP == 6840) emptyBuilding();
             building.fireRules();
 			building.updateConsumption();
-            if (CURRENT_STEP == 6840) emptyBuilding();
 			++CURRENT_STEP;
 		}
 		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
