@@ -16,9 +16,6 @@ import static iot.Manager.LOG_EVENTS;
 
 public class PeopleManager {
 
-
-
-
     /**
      * TODO Possible enhancement:
      * Modify the rooms so the number of people has a limit. When selecting the destination room,
@@ -69,9 +66,7 @@ public class PeopleManager {
 
 	private void fetchProfiles() {
 		defaultProfiles = new ArrayList<>();
-		for (Type t : Type.values()) {
-			defaultProfiles.add(new UserProfile(t));
-		}
+		for (Type t : Type.values()) { defaultProfiles.add(new UserProfile(t)); }
 	}
 	
 	
@@ -92,11 +87,8 @@ public class PeopleManager {
 		if (writer != null) writer.flush();
 	}
 
-    public Person getPerson(String name) {
-        for (Person p : people) {
-            if (p.getName().equals(name)) return p;
-        }
-        return null;
+    private Person getPerson(String name) {
+        return people.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
     }
 
     public void updateActions() {
@@ -152,13 +144,10 @@ public class PeopleManager {
     }
 	
 	private UserProfile getProfile(String s) {
-		for (UserProfile up : defaultProfiles) {
-			if (up.getType().equals(Type.valueOf(s.toUpperCase()))) {
-				return (UserProfile) up.clone();
-			}
-		}
-		return null;
-	}
+        return defaultProfiles.stream().filter(up ->
+                up.getType().equals(Type.valueOf(s.toUpperCase()))).findFirst().map(up ->
+                (UserProfile) up.clone()).orElse(null);
+    }
 
 	private void getPeopleFromFile() {
 		JSONParser parser = new JSONParser();
@@ -345,9 +334,6 @@ public class PeopleManager {
          * Thresholds must add 1
          */
 
-        /**
-         * TODO if some of the locations is null, discard and share the percentage to the rest of the locations
-         */
 
         if (p.isProfessor()) {
             office_threshold = office == null ? 0 : 0.5;

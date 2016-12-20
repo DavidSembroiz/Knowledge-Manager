@@ -3,14 +3,14 @@ package rule;
 import building.Room;
 import domain.Debugger;
 import entity.HVAC;
-import entity.HVAC.State;
+import entity.Window;
 import iot.Manager;
 import iot.Sensor;
 
 class NormalHVAC extends HVACRule {
 
-	NormalHVAC(Room r, HVAC h, Sensor temp, Sensor hum) {
-        super(r, h, temp, hum);
+	NormalHVAC(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
+        super(r, h, w, temp, hum);
 	}
 
 
@@ -20,21 +20,23 @@ class NormalHVAC extends HVACRule {
 	
 	@Override
 	public boolean evaluate() {
-		State st = hvac.getCurrentState();
+        HVAC.State st = hvac.getCurrentState();
 
-        if (st.equals(State.OFF)) {
+        if (st.equals(HVAC.State.OFF)) {
             moderateTemperature();
             if (workingHours()) return true;
         }
 
-        if (st.equals(State.ON)) {
+        if (st.equals(HVAC.State.ON)) {
             adjustTemperature();
+            if (window.isOpen()) return true;
             if (workingHours() && currentTemperatureOK()) return true;
             if (!workingHours()) return true;
         }
 
-        if (st.equals(State.SUSPEND)) {
+        if (st.equals(HVAC.State.SUSPEND)) {
             suspendTemperature();
+            if (window.isOpen()) return true;
             if (workingHours() && reactivateFromSuspend()) return true;
             if (!workingHours()) return true;
         }
@@ -44,25 +46,41 @@ class NormalHVAC extends HVACRule {
 
     @Override
 	public void execute() throws Exception {
-		State st = hvac.getCurrentState();
+        HVAC.State st = hvac.getCurrentState();
         if (workingHours()) {
-            if (st.equals(State.OFF)) {
+            if (st.equals(HVAC.State.OFF)) {
                 if (Debugger.isEnabled()) Debugger.log("HVAC switched ON in room " + room.getLocation());
-                hvac.setCurrentState(State.ON);
+                hvac.setCurrentState(HVAC.State.ON);
             }
-            else if (st.equals(State.ON)) {
-                if (Debugger.isEnabled()) Debugger.log("HVAC SUSPENDED in room " + room.getLocation());
-                hvac.setCurrentState(State.SUSPEND);
+            else if (st.equals(HVAC.State.ON)) {
+
+                if (window.isOpen()) {
+                    if (Debugger.isEnabled())
+                        Debugger.log("HVAC switched from ON to OFF in room " + room.getLocation());
+                    hvac.setCurrentState(HVAC.State.OFF);
+                }
+                else {
+                    if (Debugger.isEnabled()) Debugger.log("HVAC SUSPENDED in room " + room.getLocation());
+                    hvac.setCurrentState(HVAC.State.SUSPEND);
+                }
             }
-            else if (st.equals(State.SUSPEND)) {
-                if (Debugger.isEnabled())
-                    Debugger.log("HVAC switched from SUSPENDED to ON in room " + room.getLocation());
-                hvac.setCurrentState(State.ON);
+            else if (st.equals(HVAC.State.SUSPEND)) {
+
+                if (window.isOpen()) {
+                    if (Debugger.isEnabled())
+                        Debugger.log("HVAC switched from SUSPENDED to OFF in room " + room.getLocation());
+                    hvac.setCurrentState(HVAC.State.OFF);
+                }
+                else {
+                    if (Debugger.isEnabled())
+                        Debugger.log("HVAC switched from SUSPENDED to ON in room " + room.getLocation());
+                    hvac.setCurrentState(HVAC.State.ON);
+                }
             }
         }
         else {
             if (Debugger.isEnabled()) Debugger.log("HVAC switched OFF in room " + room.getLocation());
-            hvac.setCurrentState(State.OFF);
+            hvac.setCurrentState(HVAC.State.OFF);
         }
 	}
 }

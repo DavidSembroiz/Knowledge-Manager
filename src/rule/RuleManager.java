@@ -1,10 +1,7 @@
 package rule;
 
 import building.Room;
-import entity.Computer;
-import entity.Door;
-import entity.HVAC;
-import entity.Lamp;
+import entity.*;
 import iot.Manager;
 import iot.Sensor;
 import org.easyrules.api.RulesEngine;
@@ -18,6 +15,7 @@ public class RuleManager {
     private final String DEFAULT_TEMPERATURE = "20";
     private final String DEFAULT_LIGHT = "200";
     private final String DEFAULT_HUMIDITY = "30";
+    private final String DEFAULT_AIR_QUALITY = "4";
 
 	
 	private RulesEngine rulesEngine;
@@ -52,7 +50,7 @@ public class RuleManager {
 		}
 	}
 	
-	public void addHVACRule(HVAC h) {
+	public void addHVACRule(HVAC h, Window w) {
 		ArrayList<Sensor> sens = r.getSensors();
 		Sensor temp = null, hum = null;
 		for (Sensor s : sens) {
@@ -65,15 +63,16 @@ public class RuleManager {
                     temp.setAssigned(true);
                     hum.setValue(DEFAULT_HUMIDITY);
                     hum.setAssigned(true);
+                    w.setAssigned(true);
 
                     SmartHVAC hr;
                     NormalHVAC hrn;
                     if (Manager.MODE == 2) {
-                        hrn = new NormalHVAC(r, h, temp, hum);
+                        hrn = new NormalHVAC(r, h, w, temp, hum);
                         rulesEngine.registerRule(hrn);
                     }
                     else {
-                        hr = new SmartHVAC(r, h, temp, hum);
+                        hr = new SmartHVAC(r, h, w, temp, hum);
                         rulesEngine.registerRule(hr);
                     }
                     return;
@@ -115,4 +114,16 @@ public class RuleManager {
         }
     }
 
+    public void addWindowRule(Window w) {
+        ArrayList<Sensor> sens = r.getSensors();
+        for (Sensor s : sens) {
+            if (!s.isAssigned() && s.getType().toLowerCase().equals("airquality")) {
+                s.setValue(DEFAULT_AIR_QUALITY);
+                s.setAssigned(true);
+                WindowRule wr = new WindowRule(r, w, s);
+                rulesEngine.registerRule(wr);
+                return;
+            }
+        }
+    }
 }

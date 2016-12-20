@@ -3,13 +3,13 @@ package rule;
 import building.Room;
 import entity.Lamp;
 import iot.Sensor;
-import model.Weather;
+import model.ModelManager;
 import org.easyrules.core.BasicRule;
 
 class LampRule extends BasicRule {
 
     Room room;
-	private Weather models;
+	private ModelManager models;
 	
 	private Sensor luminosity;
     Lamp lamp;
@@ -17,7 +17,7 @@ class LampRule extends BasicRule {
 	
 	LampRule(Room r, Lamp l, Sensor light) {
         super("Lamp rule #" + l.getId(), "Rule to manage Lamps", l.getId());
-        models = Weather.getInstance();
+        models = ModelManager.getInstance();
 		this.room = r;
 		this.lamp = l;
 		this.luminosity = light;

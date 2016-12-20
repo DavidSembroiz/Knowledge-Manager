@@ -4,6 +4,9 @@ public class Window {
 
     private int id;
     private State currentState;
+    private boolean assigned;
+
+
 
     public enum State {
         OPEN, CLOSE
@@ -13,6 +16,7 @@ public class Window {
     public Window(int id) {
         this.id = id;
         this.currentState = State.CLOSE;
+        this.assigned = false;
     }
 
     public int getId() {
@@ -28,4 +32,15 @@ public class Window {
         this.currentState = currentState;
     }
 
+    public boolean isOpen() {
+        return getCurrentState().equals(State.OPEN);
+    }
+
+    public boolean isAssigned() {
+        return assigned;
+    }
+
+    public void setAssigned(boolean assigned) {
+        this.assigned = assigned;
+    }
 }

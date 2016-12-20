@@ -3,8 +3,9 @@ package rule;
 import behaviour.Person;
 import building.Room;
 import entity.HVAC;
+import entity.Window;
 import iot.Sensor;
-import model.Weather;
+import model.ModelManager;
 import org.easyrules.core.BasicRule;
 
 import java.util.ArrayList;
@@ -14,17 +15,19 @@ class HVACRule extends BasicRule {
     int PREDICTION_THRESHOLD = 60;
 
     Room room;
-    private Weather models;
+    private ModelManager models;
 
-    private Sensor temperature;
+    Sensor temperature;
     private Sensor humidity;
+    Window window;
     HVAC hvac;
 
-    HVACRule(Room r, HVAC h, Sensor temp, Sensor hum) {
+    HVACRule(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
         super("HVAC rule #" + h.getId(), "Rule to manage HVAC", h.getId());
-        models = Weather.getInstance();
+        models = ModelManager.getInstance();
         temperature = temp;
         humidity = hum;
+        this.window = w;
         hvac = h;
         this.room = r;
     }

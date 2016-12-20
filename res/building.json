@@ -2,7 +2,7 @@
   "rooms": [{
     "sensors": [{
       "mode": "multiple",
-      "quantity": "3",
+      "quantity": "2",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -16,7 +16,15 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "28",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "30",
       "type": "temperature"
     }, {
       "mode": "single",
@@ -24,39 +32,34 @@
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "26",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "22",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "21",
       "type": "light"
     }, {
       "mode": "single",
       "quantity": "23",
       "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "airquality"
     }],
-    "size": "95",
+    "size": "90",
     "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -66,7 +69,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "4",
+      "quantity": "2",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -80,47 +83,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "27",
-      "type": "light"
+      "quantity": "25",
+      "type": "luminosity"
     }, {
       "mode": "single",
       "quantity": "24",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "25",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "22",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "25",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "29",
       "type": "temperature"
     }, {
       "mode": "single",
       "quantity": "24",
       "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "electromagnetic"
     }],
-    "size": "185",
+    "size": "113",
     "entities": [{
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -144,47 +150,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "26",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "26",
+      "quantity": "30",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "29",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "25",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "24",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "29",
       "type": "luminosity"
-    }],
-    "size": "141",
-    "entities": [{
-      "quantity": "1",
-      "type": "door"
     }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "presence"
+    }],
+    "size": "31",
+    "entities": [{
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -194,7 +203,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "4",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -208,38 +217,38 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "24",
-      "type": "presence"
+      "quantity": "25",
+      "type": "light"
     }, {
       "mode": "single",
       "quantity": "22",
-      "type": "power"
+      "type": "presence"
     }, {
       "mode": "single",
       "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "29",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "21",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "22",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "25",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "23",
       "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "light"
     }],
-    "size": "14",
+    "size": "27",
     "entities": [{
       "quantity": "1",
       "type": "lamp"
@@ -249,203 +258,14 @@
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
     }],
     "id": "upc/campusnord/d63",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "4",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "electromagnetic"
-    }],
-    "size": "24",
-    "entities": [{
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d64",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "4",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "electromagnetic"
-    }],
-    "size": "127",
-    "entities": [{
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d65",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "4",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "humidity"
-    }],
-    "size": "155",
-    "entities": [{
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d66",
     "type": "OFFICE"
   }, {
     "sensors": [{
@@ -465,56 +285,59 @@
     }, {
       "mode": "single",
       "quantity": "23",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "28",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "28",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "23",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "21",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "25",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "22",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "24",
       "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "temperature"
     }],
-    "size": "16",
+    "size": "145",
     "entities": [{
+      "quantity": "1",
+      "type": "hvac"
+    }, {
       "quantity": "1",
       "type": "door"
     }, {
       "quantity": "1",
-      "type": "lamp"
+      "type": "window"
     }, {
       "quantity": "1",
-      "type": "hvac"
+      "type": "lamp"
     }, {
       "quantity": "3",
       "type": "computer"
     }],
-    "id": "upc/campusnord/d67",
+    "id": "upc/campusnord/d64",
     "type": "OFFICE"
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "4",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -528,38 +351,38 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "30",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
+      "quantity": "28",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "28",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "29",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "29",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "25",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "29",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "28",
       "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "presence"
     }],
-    "size": "3",
+    "size": "196",
     "entities": [{
       "quantity": "1",
       "type": "lamp"
@@ -569,6 +392,210 @@
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d65",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "airquality"
+    }],
+    "size": "39",
+    "entities": [{
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d66",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "airquality"
+    }],
+    "size": "29",
+    "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d67",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "power"
+    }],
+    "size": "106",
+    "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -592,15 +619,19 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "26",
-      "type": "temperature"
+      "quantity": "25",
+      "type": "airquality"
     }, {
       "mode": "single",
       "quantity": "29",
-      "type": "humidity"
+      "type": "temperature"
     }, {
       "mode": "single",
       "quantity": "21",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "25",
       "type": "luminosity"
     }, {
       "mode": "single",
@@ -612,27 +643,26 @@
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "25",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "21",
       "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "airquality"
     }],
-    "size": "153",
+    "size": "113",
     "entities": [{
+      "quantity": "1",
+      "type": "hvac"
+    }, {
       "quantity": "1",
       "type": "door"
     }, {
       "quantity": "1",
-      "type": "lamp"
+      "type": "window"
     }, {
       "quantity": "1",
-      "type": "hvac"
+      "type": "lamp"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -657,40 +687,43 @@
     }, {
       "mode": "single",
       "quantity": "30",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "29",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "21",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "29",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "26",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "23",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "21",
       "type": "airquality"
     }, {
       "mode": "single",
       "quantity": "26",
       "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "humidity"
     }],
-    "size": "189",
+    "size": "116",
     "entities": [{
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
@@ -720,27 +753,23 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "22",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "25",
+      "quantity": "27",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "22",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "30",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "28",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "23",
       "type": "humidity"
     }, {
       "mode": "single",
@@ -748,19 +777,26 @@
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "21",
       "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "light"
     }],
-    "size": "155",
+    "size": "113",
     "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -784,47 +820,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "27",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "23",
+      "quantity": "26",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "25",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "25",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "25",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "29",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "30",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "29",
       "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "power"
     }],
-    "size": "158",
+    "size": "46",
     "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -834,7 +873,74 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "electromagnetic"
+    }],
+    "size": "197",
+    "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d613",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "3",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -849,38 +955,41 @@
     }, {
       "mode": "single",
       "quantity": "21",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "24",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "25",
       "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "power"
     }],
-    "size": "145",
+    "size": "136",
     "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
       "quantity": "1",
       "type": "lamp"
     }, {
@@ -893,12 +1002,12 @@
       "quantity": "3",
       "type": "computer"
     }],
-    "id": "upc/campusnord/d613",
+    "id": "upc/campusnord/d614",
     "type": "OFFICE"
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -913,6 +1022,14 @@
     }, {
       "mode": "single",
       "quantity": "27",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "21",
       "type": "humidity"
     }, {
       "mode": "single",
@@ -920,33 +1037,25 @@
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "27",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "21",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "26",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "29",
       "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "temperature"
     }],
-    "size": "56",
+    "size": "131",
     "entities": [{
       "quantity": "1",
-      "type": "door"
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
@@ -954,10 +1063,80 @@
       "quantity": "1",
       "type": "hvac"
     }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
       "quantity": "3",
       "type": "computer"
     }],
-    "id": "upc/campusnord/d614",
+    "id": "upc/campusnord/d615",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "power"
+    }],
+    "size": "97",
+    "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d616",
     "type": "OFFICE"
   }, {
     "sensors": [{
@@ -976,87 +1155,27 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "28",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "29",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "humidity"
-    }],
-    "size": "5",
-    "entities": [{
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d615",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "2",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
       "quantity": "24",
       "type": "electromagnetic"
     }, {
       "mode": "single",
       "quantity": "24",
       "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "power"
     }, {
       "mode": "single",
       "quantity": "30",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "29",
       "type": "airquality"
     }, {
       "mode": "single",
@@ -1064,87 +1183,22 @@
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "25",
       "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "luminosity"
     }],
-    "size": "31",
+    "size": "2",
     "entities": [{
-      "quantity": "1",
-      "type": "door"
-    }, {
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
     }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d616",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "2",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "airquality"
-    }],
-    "size": "138",
-    "entities": [{
       "quantity": "1",
       "type": "door"
     }, {
       "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1168,7 +1222,11 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "29",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "24",
       "type": "power"
     }, {
       "mode": "single",
@@ -1176,11 +1234,11 @@
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "22",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "27",
       "type": "humidity"
     }, {
       "mode": "single",
@@ -1188,27 +1246,26 @@
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "24",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "30",
-      "type": "light"
-    }, {
-      "mode": "single",
       "quantity": "27",
-      "type": "presence"
+      "type": "light"
     }],
-    "size": "170",
+    "size": "55",
     "entities": [{
-      "quantity": "1",
-      "type": "door"
-    }, {
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1218,7 +1275,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "3",
+      "quantity": "4",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -1232,39 +1289,42 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "25",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "22",
+      "quantity": "29",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "26",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "21",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "27",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "28",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "23",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "23",
       "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "airquality"
     }],
-    "size": "156",
+    "size": "69",
     "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
@@ -1272,7 +1332,7 @@
       "type": "door"
     }, {
       "quantity": "1",
-      "type": "lamp"
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1297,22 +1357,26 @@
     }, {
       "mode": "single",
       "quantity": "26",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "25",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "23",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "21",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "29",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "23",
       "type": "temperature"
     }, {
       "mode": "single",
@@ -1320,23 +1384,22 @@
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "26",
       "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "electromagnetic"
     }],
-    "size": "66",
+    "size": "56",
     "entities": [{
       "quantity": "1",
-      "type": "door"
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1346,71 +1409,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "electromagnetic"
-    }],
-    "size": "137",
-    "entities": [{
       "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d621",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "3",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -1425,37 +1424,104 @@
     }, {
       "mode": "single",
       "quantity": "28",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "25",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "30",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "27",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "21",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "26",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "23",
       "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "airquality"
     }],
-    "size": "152",
+    "size": "60",
+    "entities": [{
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d621",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "temperature"
+    }],
+    "size": "26",
     "entities": [{
       "quantity": "1",
       "type": "lamp"
@@ -1465,6 +1531,9 @@
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1488,7 +1557,19 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "23",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "22",
       "type": "light"
     }, {
       "mode": "single",
@@ -1496,7 +1577,7 @@
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "21",
       "type": "power"
     }, {
       "mode": "single",
@@ -1504,31 +1585,22 @@
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "25",
       "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "electromagnetic"
     }],
-    "size": "9",
+    "size": "58",
     "entities": [{
-      "quantity": "1",
-      "type": "door"
-    }, {
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1538,7 +1610,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -1552,47 +1624,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "26",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "23",
+      "quantity": "21",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "21",
       "type": "temperature"
-    }],
-    "size": "121",
-    "entities": [{
-      "quantity": "1",
-      "type": "hvac"
     }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "power"
+    }],
+    "size": "37",
+    "entities": [{
       "quantity": "1",
       "type": "door"
     }, {
       "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
       "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1602,7 +1677,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -1617,26 +1692,10 @@
     }, {
       "mode": "single",
       "quantity": "22",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "27",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "25",
       "type": "humidity"
     }, {
       "mode": "single",
@@ -1644,19 +1703,38 @@
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "30",
       "type": "electromagnetic"
-    }],
-    "size": "66",
-    "entities": [{
-      "quantity": "1",
-      "type": "door"
     }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "airquality"
+    }],
+    "size": "135",
+    "entities": [{
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1666,7 +1744,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "4",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -1681,10 +1759,14 @@
     }, {
       "mode": "single",
       "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "25",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "22",
       "type": "temperature"
     }, {
       "mode": "single",
@@ -1692,11 +1774,11 @@
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "29",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "27",
       "type": "electromagnetic"
     }, {
       "mode": "single",
@@ -1704,15 +1786,14 @@
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "22",
       "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "power"
     }],
-    "size": "108",
+    "size": "73",
     "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
       "quantity": "1",
       "type": "lamp"
     }, {
@@ -1748,35 +1829,38 @@
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "23",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "26",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "24",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "23",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "23",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "27",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "24",
       "type": "airquality"
     }],
-    "size": "193",
+    "size": "146",
     "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
@@ -1784,7 +1868,7 @@
       "type": "door"
     }, {
       "quantity": "1",
-      "type": "lamp"
+      "type": "window"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1808,39 +1892,42 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "21",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "26",
+      "quantity": "27",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "22",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "23",
       "type": "light"
     }, {
       "mode": "single",
       "quantity": "29",
       "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "humidity"
     }],
-    "size": "1",
+    "size": "116",
     "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
       "quantity": "1",
       "type": "lamp"
     }, {
@@ -1872,47 +1959,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "28",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "25",
+      "quantity": "24",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "25",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "23",
       "type": "electromagnetic"
-    }],
-    "size": "61",
-    "entities": [{
-      "quantity": "1",
-      "type": "lamp"
     }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "temperature"
+    }],
+    "size": "132",
+    "entities": [{
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1922,7 +2012,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -1936,47 +2026,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
+      "quantity": "25",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "humidity"
+    }, {
+      "mode": "single",
       "quantity": "24",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "24",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "27",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "24",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "28",
       "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "humidity"
     }],
-    "size": "157",
+    "size": "165",
     "entities": [{
-      "quantity": "1",
-      "type": "lamp"
-    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -1986,7 +2079,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -2000,11 +2093,19 @@
       "type": "XM1000"
     }, {
       "mode": "single",
+      "quantity": "22",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
       "quantity": "28",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "23",
       "type": "light"
     }, {
       "mode": "single",
@@ -2012,35 +2113,30 @@
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "24",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "22",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "30",
       "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "luminosity"
     }],
-    "size": "115",
+    "size": "12",
     "entities": [{
-      "quantity": "1",
-      "type": "hvac"
-    }, {
       "quantity": "1",
       "type": "door"
     }, {
       "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
       "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -2050,70 +2146,6 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "1",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "electromagnetic"
-    }],
-    "size": "36",
-    "entities": [{
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d632",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
       "quantity": "2",
       "motes": [{
         "quantity": "1",
@@ -2128,19 +2160,86 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "28",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "29",
+      "quantity": "30",
       "type": "luminosity"
     }, {
       "mode": "single",
+      "quantity": "22",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "airquality"
+    }, {
+      "mode": "single",
       "quantity": "30",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "humidity"
+    }],
+    "size": "94",
+    "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d632",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "4",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "26",
       "type": "electromagnetic"
     }, {
       "mode": "single",
@@ -2148,24 +2247,27 @@
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "22",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "24",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "23",
       "type": "airquality"
     }],
-    "size": "19",
+    "size": "83",
     "entities": [{
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
@@ -2192,11 +2294,7 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "22",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "23",
+      "quantity": "27",
       "type": "humidity"
     }, {
       "mode": "single",
@@ -2204,32 +2302,39 @@
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "23",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "24",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "21",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "25",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "28",
       "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "temperature"
     }],
-    "size": "9",
+    "size": "192",
     "entities": [{
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
@@ -2242,7 +2347,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "1",
+      "quantity": "2",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -2256,47 +2361,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "28",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "29",
+      "quantity": "30",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "27",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "27",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "30",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "26",
       "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "presence"
     }],
-    "size": "2",
+    "size": "41",
     "entities": [{
       "quantity": "1",
-      "type": "door"
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
     }, {
       "quantity": "3",
       "type": "computer"
@@ -2320,11 +2428,11 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "26",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "23",
       "type": "presence"
     }, {
       "mode": "single",
@@ -2332,29 +2440,32 @@
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "23",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "29",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "26",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "30",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "25",
       "type": "electromagnetic"
     }],
-    "size": "121",
+    "size": "134",
     "entities": [{
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
@@ -2366,198 +2477,6 @@
       "type": "computer"
     }],
     "id": "upc/campusnord/d636",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "1",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "luminosity"
-    }],
-    "size": "65",
-    "entities": [{
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d637",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "3",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "airquality"
-    }],
-    "size": "117",
-    "entities": [{
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d638",
-    "type": "OFFICE"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "3",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "26",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "humidity"
-    }],
-    "size": "81",
-    "entities": [{
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "3",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d639",
     "type": "OFFICE"
   }, {
     "sensors": [{
@@ -2576,11 +2495,11 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "27",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "30",
+      "quantity": "27",
       "type": "temperature"
     }, {
       "mode": "single",
@@ -2588,26 +2507,160 @@
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "25",
+      "quantity": "26",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "28",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "21",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "24",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "27",
       "type": "power"
     }],
-    "size": "161",
+    "size": "11",
+    "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d637",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "airquality"
+    }],
+    "size": "25",
+    "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d638",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "1",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "27",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "power"
+    }],
+    "size": "197",
     "entities": [{
       "quantity": "1",
       "type": "hvac"
@@ -2616,7 +2669,77 @@
       "type": "door"
     }, {
       "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
       "type": "lamp"
+    }, {
+      "quantity": "3",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d639",
+    "type": "OFFICE"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "2",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "luminosity"
+    }],
+    "size": "132",
+    "entities": [{
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
     }, {
       "quantity": "2",
       "type": "computer"
@@ -2640,38 +2763,38 @@
       "type": "XM1000"
     }, {
       "mode": "single",
+      "quantity": "26",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "power"
+    }, {
+      "mode": "single",
       "quantity": "24",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "23",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
       "quantity": "21",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "power"
+      "type": "temperature"
     }],
-    "size": "184",
+    "size": "62",
     "entities": [{
       "quantity": "1",
       "type": "hvac"
@@ -2680,12 +2803,149 @@
       "type": "door"
     }, {
       "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "2",
       "type": "computer"
     }],
     "id": "upc/campusnord/d641",
+    "type": "MEETING_ROOM"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "4",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "electromagnetic"
+    }],
+    "size": "16",
+    "entities": [{
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "2",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d642",
+    "type": "MEETING_ROOM"
+  }, {
+    "sensors": [{
+      "mode": "multiple",
+      "quantity": "4",
+      "motes": [{
+        "quantity": "1",
+        "type": "temperature"
+      }, {
+        "quantity": "1",
+        "type": "humidity"
+      }, {
+        "quantity": "1",
+        "type": "luminosity"
+      }],
+      "type": "XM1000"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "temperature"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "presence"
+    }],
+    "size": "128",
+    "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
+      "quantity": "1",
+      "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "2",
+      "type": "computer"
+    }],
+    "id": "upc/campusnord/d643",
     "type": "MEETING_ROOM"
   }, {
     "sensors": [{
@@ -2704,166 +2964,38 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "25",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "power"
-    }, {
-      "mode": "single",
       "quantity": "29",
-      "type": "airquality"
-    }],
-    "size": "6",
-    "entities": [{
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "2",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d642",
-    "type": "MEETING_ROOM"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "2",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "22",
       "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "airquality"
-    }],
-    "size": "149",
-    "entities": [{
-      "quantity": "1",
-      "type": "lamp"
-    }, {
-      "quantity": "1",
-      "type": "hvac"
-    }, {
-      "quantity": "1",
-      "type": "door"
-    }, {
-      "quantity": "2",
-      "type": "computer"
-    }],
-    "id": "upc/campusnord/d643",
-    "type": "MEETING_ROOM"
-  }, {
-    "sensors": [{
-      "mode": "multiple",
-      "quantity": "2",
-      "motes": [{
-        "quantity": "1",
-        "type": "temperature"
-      }, {
-        "quantity": "1",
-        "type": "humidity"
-      }, {
-        "quantity": "1",
-        "type": "luminosity"
-      }],
-      "type": "XM1000"
-    }, {
-      "mode": "single",
-      "quantity": "22",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "luminosity"
     }, {
       "mode": "single",
       "quantity": "24",
-      "type": "electromagnetic"
+      "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "23",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "presence"
+      "quantity": "27",
+      "type": "temperature"
     }, {
       "mode": "single",
       "quantity": "21",
-      "type": "power"
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "28",
+      "type": "presence"
     }],
-    "size": "67",
+    "size": "165",
     "entities": [{
       "quantity": "1",
       "type": "lamp"
@@ -2873,6 +3005,9 @@
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "2",
       "type": "computer"
@@ -2882,7 +3017,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "1",
+      "quantity": "4",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -2896,15 +3031,15 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "23",
+      "quantity": "28",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "30",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "23",
       "type": "presence"
     }, {
       "mode": "single",
@@ -2912,11 +3047,11 @@
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "24",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "26",
       "type": "temperature"
     }, {
       "mode": "single",
@@ -2924,11 +3059,14 @@
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "28",
       "type": "luminosity"
     }],
-    "size": "71",
+    "size": "153",
     "entities": [{
+      "quantity": "1",
+      "type": "lamp"
+    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
@@ -2936,7 +3074,7 @@
       "type": "door"
     }, {
       "quantity": "1",
-      "type": "lamp"
+      "type": "window"
     }, {
       "quantity": "20",
       "type": "computer"
@@ -2946,7 +3084,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "2",
+      "quantity": "3",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -2960,47 +3098,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "22",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "29",
+      "quantity": "21",
       "type": "luminosity"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "29",
       "type": "electromagnetic"
     }, {
       "mode": "single",
-      "quantity": "28",
+      "quantity": "24",
       "type": "light"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "24",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "22",
+      "quantity": "25",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "21",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "29",
+      "quantity": "30",
       "type": "temperature"
-    }],
-    "size": "79",
-    "entities": [{
-      "quantity": "1",
-      "type": "lamp"
     }, {
+      "mode": "single",
+      "quantity": "22",
+      "type": "humidity"
+    }],
+    "size": "107",
+    "entities": [{
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
     }, {
       "quantity": "20",
       "type": "computer"
@@ -3024,47 +3165,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
+      "quantity": "27",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
       "quantity": "26",
+      "type": "light"
+    }, {
+      "mode": "single",
+      "quantity": "26",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "29",
       "type": "airquality"
     }, {
       "mode": "single",
       "quantity": "25",
       "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "humidity"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "luminosity"
-    }, {
-      "mode": "single",
-      "quantity": "25",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "21",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "27",
-      "type": "power"
     }],
-    "size": "138",
+    "size": "107",
     "entities": [{
-      "quantity": "1",
-      "type": "lamp"
-    }, {
       "quantity": "1",
       "type": "hvac"
     }, {
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
+    }, {
+      "quantity": "1",
+      "type": "lamp"
     }, {
       "quantity": "20",
       "type": "computer"
@@ -3074,7 +3218,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "1",
+      "quantity": "4",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -3088,41 +3232,44 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "27",
-      "type": "electromagnetic"
-    }, {
-      "mode": "single",
-      "quantity": "30",
-      "type": "light"
-    }, {
-      "mode": "single",
       "quantity": "23",
       "type": "presence"
     }, {
       "mode": "single",
-      "quantity": "24",
+      "quantity": "22",
       "type": "power"
     }, {
       "mode": "single",
-      "quantity": "27",
+      "quantity": "29",
       "type": "airquality"
     }, {
       "mode": "single",
-      "quantity": "21",
+      "quantity": "23",
       "type": "temperature"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "30",
       "type": "humidity"
     }, {
       "mode": "single",
-      "quantity": "26",
+      "quantity": "21",
       "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "24",
+      "type": "electromagnetic"
+    }, {
+      "mode": "single",
+      "quantity": "29",
+      "type": "light"
     }],
-    "size": "96",
+    "size": "36",
     "entities": [{
       "quantity": "1",
       "type": "door"
+    }, {
+      "quantity": "1",
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
@@ -3138,7 +3285,7 @@
   }, {
     "sensors": [{
       "mode": "multiple",
-      "quantity": "3",
+      "quantity": "1",
       "motes": [{
         "quantity": "1",
         "type": "temperature"
@@ -3152,47 +3299,50 @@
       "type": "XM1000"
     }, {
       "mode": "single",
-      "quantity": "24",
-      "type": "luminosity"
+      "quantity": "21",
+      "type": "presence"
+    }, {
+      "mode": "single",
+      "quantity": "25",
+      "type": "power"
+    }, {
+      "mode": "single",
+      "quantity": "23",
+      "type": "airquality"
+    }, {
+      "mode": "single",
+      "quantity": "21",
+      "type": "temperature"
     }, {
       "mode": "single",
       "quantity": "24",
+      "type": "humidity"
+    }, {
+      "mode": "single",
+      "quantity": "30",
+      "type": "luminosity"
+    }, {
+      "mode": "single",
+      "quantity": "22",
       "type": "electromagnetic"
     }, {
       "mode": "single",
       "quantity": "30",
       "type": "light"
-    }, {
-      "mode": "single",
-      "quantity": "24",
-      "type": "presence"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "power"
-    }, {
-      "mode": "single",
-      "quantity": "29",
-      "type": "airquality"
-    }, {
-      "mode": "single",
-      "quantity": "23",
-      "type": "temperature"
-    }, {
-      "mode": "single",
-      "quantity": "28",
-      "type": "humidity"
     }],
-    "size": "158",
+    "size": "136",
     "entities": [{
       "quantity": "1",
-      "type": "door"
+      "type": "window"
     }, {
       "quantity": "1",
       "type": "lamp"
     }, {
       "quantity": "1",
       "type": "hvac"
+    }, {
+      "quantity": "1",
+      "type": "door"
     }, {
       "quantity": "20",
       "type": "computer"

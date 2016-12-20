@@ -2,10 +2,7 @@ package building;
 
 import behaviour.Person;
 import domain.Debugger;
-import entity.Computer;
-import entity.Door;
-import entity.HVAC;
-import entity.Lamp;
+import entity.*;
 import iot.Actuator;
 import iot.Sensor;
 import rule.RuleManager;
@@ -131,8 +128,9 @@ public class Room {
             case "hvac":
                 for (int i = 0; i < Integer.parseInt(qtt); ++i) {
                     HVAC hvac = new HVAC(i);
+                    Window w = findUnassignedWindow();
                     entities.add(hvac);
-                    ruleManager.addHVACRule(hvac);
+                    if (w != null) ruleManager.addHVACRule(hvac, w);
                 }
                 break;
             case "door":
@@ -142,11 +140,24 @@ public class Room {
                     ruleManager.addDoorRule(door);
                 }
                 break;
+            case "window":
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
+                    Window window = new Window(i);
+                    entities.add(window);
+                    ruleManager.addWindowRule(window);
+                }
+                break;
             default: break;
 		}
 	}
 
-    public HashSet<Object> getEntities() {
+    private Window findUnassignedWindow() {
+        return (Window) entities.stream().filter(o ->
+                o instanceof Window).filter(o ->
+                !((Window) o).isAssigned()).findFirst().orElse(null);
+    }
+
+    HashSet<Object> getEntities() {
 		return entities;
 	}
 
@@ -164,15 +175,7 @@ public class Room {
 	}
 
     public boolean arePeopleComing(int threshold) {
-
-        /*
-         * If someone comes in the next threshold steps, some actions might be anticipated
-         */
-
-        for (Person p : peopleComing) {
-            if (p.getNextActionSteps() < threshold) return true;
-        }
-        return false;
+        return peopleComing.stream().anyMatch(p -> p.getNextActionSteps() < threshold);
     }
 
     public boolean arePeopleInside() {

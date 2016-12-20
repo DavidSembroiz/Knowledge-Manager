@@ -16,7 +16,7 @@ public class HVAC {
     public enum State {
 		OFF(0),
 		ON(1500),
-		SUSPEND(200);
+		SUSPEND(800);
 		
 		private final int cons;
 		public int getConsumption() {return cons;}

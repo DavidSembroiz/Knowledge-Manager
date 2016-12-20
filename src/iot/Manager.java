@@ -6,7 +6,7 @@ import behaviour.Person;
 import building.Building;
 import building.Room;
 import domain.*;
-import model.Weather;
+import model.ModelManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class Manager {
 	private Utils uts;
 	private Database awsdb;
 	private PeopleManager peopleManager;
-	private Weather models;
+	private ModelManager models;
 	
 	private CustomFileWriter consumption_writer;
 	
@@ -65,7 +65,7 @@ public class Manager {
 		loadProperties();
 		uts = Utils.getInstance();
 		awsdb = Database.getInstance();
-		models = Weather.getInstance();
+		models = ModelManager.getInstance();
 		//mqtt = new Mqtt(this, awsdb);
 		
 		building = uts.loadBuilding();
@@ -87,8 +87,6 @@ public class Manager {
                 break;
         }
 	}
-	
-	
 
 	private void loadProperties() {
 		Properties prop = new Properties();
@@ -160,6 +158,8 @@ public class Manager {
                 case "luminosity":
                     s.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
                     break;
+                case "airquality":
+                    s.setValue(Double.toString(models.getCurrentAirQuality()));
                 default:
                     String val = uts.getValueFromType(message, type);
                     s.setValue(val);
@@ -178,7 +178,6 @@ public class Manager {
                 peopleManager.executeActions();
                 while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                     Event e = events.remove(0);
-                    Person p = peopleManager.getPerson(e.getName());
                     peopleManager.assignSpecificAction(e);
 
                 }
@@ -193,16 +192,30 @@ public class Manager {
     }
 
     private void simulate() {
+
 		while (CURRENT_STEP < STEPS) {
             peopleManager.updateActions();
             building.fireRules();
 			building.updateConsumption();
-            if (CURRENT_STEP == 6840) {
-                emptyBuilding();
-            }
+            if (CURRENT_STEP == 6840) emptyBuilding();
 			++CURRENT_STEP;
 		}
 		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+        writeHourlyConsumption();
+	}
+
+    private void repeatSimulation() {
+		ArrayList<Event> events = uts.fetchEventsFromFile();
+        while (CURRENT_STEP < STEPS) {
+            peopleManager.executeActions();
+            while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
+                peopleManager.assignSpecificAction(events.remove(0));
+            }
+            building.fireRules();
+            building.updateConsumption();
+            ++CURRENT_STEP;
+        }
+        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         writeHourlyConsumption();
 	}
 
@@ -215,23 +228,6 @@ public class Manager {
             peopleManager.logEvent(p);
         });
     }
-
-    private void repeatSimulation() {
-		ArrayList<Event> events = uts.fetchEventsFromFile();
-        while (CURRENT_STEP < STEPS) {
-            peopleManager.executeActions();
-            while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
-                Event e = events.remove(0);
-                Person p = peopleManager.getPerson(e.getName());
-                peopleManager.assignSpecificAction(e);
-            }
-            building.fireRules();
-            building.updateConsumption();
-            ++CURRENT_STEP;
-        }
-        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
-	}
 
 
     private void writeHourlyConsumption() {
