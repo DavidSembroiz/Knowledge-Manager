@@ -5,7 +5,12 @@ import behaviour.PeopleManager;
 import behaviour.Person;
 import building.Building;
 import building.Room;
-import domain.*;
+import data.EventsDB;
+import data.IdentifierDB;
+import domain.CustomFileWriter;
+import domain.Debugger;
+import domain.Mqtt;
+import domain.Utils;
 import model.ModelManager;
 
 import java.io.FileInputStream;
@@ -54,7 +59,8 @@ public class Manager {
     private Building building;
 	private Mqtt mqtt;
 	private Utils uts;
-	private Database awsdb;
+	private IdentifierDB awsdb;
+	private EventsDB eventsdb;
 	private PeopleManager peopleManager;
 	private ModelManager models;
 	
@@ -64,7 +70,8 @@ public class Manager {
 		CURRENT_STEP = 0;
 		loadProperties();
 		uts = Utils.getInstance();
-		awsdb = Database.getInstance();
+		awsdb = IdentifierDB.getInstance();
+		eventsdb = EventsDB.getInstance();
 		models = ModelManager.getInstance();
 		mqtt = new Mqtt(this, awsdb);
 		

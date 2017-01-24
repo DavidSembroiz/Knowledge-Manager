@@ -2,6 +2,7 @@
 /knowledge*
 /servioticy*
 database.properties
+couchdb.properties
 results/
 tests/
 res/building_*.json

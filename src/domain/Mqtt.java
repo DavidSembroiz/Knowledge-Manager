@@ -1,5 +1,6 @@
 package domain;
 
+import data.IdentifierDB;
 import iot.Manager;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -34,7 +35,7 @@ public class Mqtt {
 	private Manager manager;
 	private int subs;
 
-	public Mqtt(Manager m, Database awsdb) {
+	public Mqtt(Manager m, IdentifierDB awsdb) {
 		subs = 0;
 		ids = new ArrayList<>();
 		uts = Utils.getInstance();
@@ -126,7 +127,7 @@ public class Mqtt {
 		System.out.println("Subscriptions: " + subs);
 	}*/
 	
-    void subscribe(ArrayList<String> ids) {
+    public void subscribe(ArrayList<String> ids) {
 		String[] topics = new String[ids.size()];
 		int[] qos = new int[ids.size()];
 		for (int i = 0; i < ids.size(); ++i) {
@@ -147,7 +148,7 @@ public class Mqtt {
 		return ids;
 	}
 	
-    void addId(String id) {
+    public void addId(String id) {
 		ids.add(id);
 	}
 	
