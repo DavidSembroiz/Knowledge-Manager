@@ -23,8 +23,13 @@ class WindowRule extends BasicRule {
     }
 
     private boolean properAirQuality() {
+        return Double.parseDouble(airquality.getValue()) < 4;
+    }
+
+    private void cleanAir() {
         Double val = Double.parseDouble(airquality.getValue());
-        return val < 4;
+        val = val - (val);
+        airquality.setValue(val.toString());
     }
 
 	

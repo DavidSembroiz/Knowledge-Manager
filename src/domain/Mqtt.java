@@ -26,7 +26,6 @@ public class Mqtt {
 	private String APIKEY;
 	private String CLIENTID;
 	private MqttConnectOptions connOpts;
-	//private MqttClient client;
 	private MqttAsyncClient client;
 	private MqttCb callback;
 	private ArrayList<String> ids;
@@ -85,6 +84,7 @@ public class Mqtt {
 			client = new MqttAsyncClient(ADDRESS, CLIENTID);
 			callback = new MqttCb(manager);
 			client.setCallback(callback);
+			client.connect(connOpts);
 			while (!client.isConnected());
 			if (client.isConnected()) System.out.println("Connected to ServIoTicy");
 		} catch (MqttException e) {

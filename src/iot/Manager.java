@@ -66,7 +66,7 @@ public class Manager {
 		uts = Utils.getInstance();
 		awsdb = Database.getInstance();
 		models = ModelManager.getInstance();
-		//mqtt = new Mqtt(this, awsdb);
+		mqtt = new Mqtt(this, awsdb);
 		
 		building = uts.loadBuilding();
 		if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
