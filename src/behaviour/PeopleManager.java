@@ -1,13 +1,15 @@
 package behaviour;
 
 import building.Building;
+import data.EventsDB;
 import iot.Manager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -51,7 +53,6 @@ public class PeopleManager {
 	private ArrayList<UserProfile> defaultProfiles;
 	private Building building;
 	private Random rand;
-	private PrintWriter writer;
 	
 	/**
 	 * Initialize all the components required to manage people.
@@ -59,7 +60,6 @@ public class PeopleManager {
 	
 	private void initComponents() {
 		rand = new Random();
-		if (Manager.MODE == 0 && LOG_EVENTS) enableRecordFile();
 		fetchProfiles();
 		getPeopleFromFile();
 	}
@@ -68,24 +68,8 @@ public class PeopleManager {
 		defaultProfiles = new ArrayList<>();
 		for (Type t : Type.values()) { defaultProfiles.add(new UserProfile(t)); }
 	}
-	
-	
-	/**
-	 * Enables to recording of events that happens during the simulation to allow
-	 * further repetitions.
-	 */
-	
-	private void enableRecordFile() {
-		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.log")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void flushData() {
-		if (writer != null) writer.flush();
-	}
+
+
 
     private Person getPerson(String name) {
         return people.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
@@ -281,15 +265,7 @@ public class PeopleManager {
 	}
 
 	public void logEvent(Person p) {
-        if (LOG_EVENTS) {
-            writer.println(Manager.CURRENT_STEP + "," +
-                    p.getName() + "," +
-                    p.getCurrentAction().toString() + "," +
-                    p.getNextActionSteps() + "," +
-                    p.getRemainingSteps() + "," +
-                    p.getLocation());
-            flushData();
-        }
+        if (LOG_EVENTS) { EventsDB.getInstance().save(p); }
     }
 
 	private boolean wasHavingLunch(Person p) {

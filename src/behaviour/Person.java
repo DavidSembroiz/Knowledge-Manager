@@ -32,7 +32,7 @@ public class Person {
 		this.acting = false;
 	}
 
-	int getRemainingSteps() {
+	public int getRemainingSteps() {
 		return remainingSteps;
 	}
 	
@@ -72,7 +72,7 @@ public class Person {
 		this.acting = acting;
 	}
 
-	Action getCurrentAction() {
+	public Action getCurrentAction() {
 		return currentAction;
 	}
 

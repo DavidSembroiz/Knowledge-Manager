@@ -1,16 +1,24 @@
 package data;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
-import org.lightcouch.Response;
+import behaviour.Event;
+import behaviour.PeopleManager;
+import behaviour.Person;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import iot.Manager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Properties;
 
 
-public class EventsDB {
+public class EventsDB extends NoSQLDB<Person, Event> {
+
 
     private static EventsDB instance = new EventsDB();
 
@@ -22,26 +30,8 @@ public class EventsDB {
         return instance;
     }
 
-    private String DB;
-    private boolean CREATE_IF_NOT_EXIST;
-    private String PROTOCOL;
-    private String HOST;
-    private int PORT;
-
-    private CouchDbClient dbClient;
-
-    private void initComponents() {
-        loadProperties();
-        CouchDbProperties properties = new CouchDbProperties()
-                .setDbName(DB)
-                .setCreateDbIfNotExist(CREATE_IF_NOT_EXIST)
-                .setProtocol(PROTOCOL)
-                .setHost(HOST)
-                .setPort(PORT);
-        dbClient = new CouchDbClient(properties);
-    }
-
-    private void loadProperties() {
+    @Override
+    public void loadProperties() {
         Properties prop = new Properties();
         try {
             InputStream is = new FileInputStream("couchdb.properties");
@@ -57,7 +47,56 @@ public class EventsDB {
         }
     }
 
-    public void save(Object o) {
-        Response res = dbClient.save(o);
+    @Override
+    public void save(Person p) {
+        boolean found = dbClient.contains(p.getName());
+        JsonObject ob;
+        if (found) {
+            ob = dbClient.find(JsonObject.class, p.getName());
+            JsonArray events = ob.getAsJsonArray("events");
+            events.add(createJsonObject(p));
+            dbClient.update(ob);
+        }
+        else {
+            ob = new JsonObject();
+            ob.addProperty("_id", p.getName());
+            ob.add("events", new JsonArray());
+            ob.addProperty("_rev", (String) null);
+            JsonArray events = ob.getAsJsonArray("events");
+            events.add(createJsonObject(p));
+            dbClient.save(ob);
+        }
+    }
+
+    @Override
+    public ArrayList<Event> fetchData() {
+        ArrayList<Event> res = new ArrayList();
+        List<JsonObject> all_docs = dbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+        for (JsonObject doc : all_docs) {
+            String name = doc.get("_id").getAsString();
+            JsonArray events = doc.get("events").getAsJsonArray();
+            for (JsonElement e : events) {
+                JsonObject ob = e.getAsJsonObject();
+                int step = ob.get("step").getAsInt();
+                PeopleManager.Action a = PeopleManager.Action.valueOf(ob.get("action").getAsString());
+                String dest = ob.get("dest").getAsString();
+                int next = ob.get("next").getAsInt();
+                int duration = ob.get("duration").getAsInt();
+                res.add(new Event(step, name, a, dest, next, duration));
+            }
+        }
+        res.sort(Comparator.comparingInt(Event::getStep));
+        return res;
+    }
+
+    @Override
+    public JsonObject createJsonObject(Person p) {
+        JsonObject ev = new JsonObject();
+        ev.addProperty("step", Manager.CURRENT_STEP);
+        ev.addProperty("action", p.getCurrentAction().toString());
+        ev.addProperty("dest", p.getLocation());
+        ev.addProperty("next", p.getNextActionSteps());
+        ev.addProperty("duration", p.getRemainingSteps());
+        return ev;
     }
 }

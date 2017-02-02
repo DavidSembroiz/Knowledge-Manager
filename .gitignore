@@ -3,6 +3,7 @@
 /servioticy*
 database.properties
 couchdb.properties
+buildingsdb.properties
 results/
 tests/
 res/building_*.json

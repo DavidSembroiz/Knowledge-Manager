@@ -70,10 +70,10 @@ public class Manager {
 		CURRENT_STEP = 0;
 		loadProperties();
 		uts = Utils.getInstance();
-		awsdb = IdentifierDB.getInstance();
+		//awsdb = IdentifierDB.getInstance();
 		eventsdb = EventsDB.getInstance();
 		models = ModelManager.getInstance();
-		mqtt = new Mqtt(this, awsdb);
+		//mqtt = new Mqtt(this, awsdb);
 		
 		building = uts.loadBuilding();
 		if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
@@ -180,7 +180,7 @@ public class Manager {
          * During normal simulation, all elements are ON between working hours
          */
         while (CURRENT_STEP < STEPS) {
-            ArrayList<Event> events = uts.fetchEventsFromFile();
+            ArrayList<Event> events = eventsdb.fetchData();
             while (CURRENT_STEP < STEPS) {
                 peopleManager.executeActions();
                 while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
@@ -195,8 +195,10 @@ public class Manager {
 
             if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
             writeHourlyConsumption();
+            finish();
         }
     }
+
 
     private void simulate() {
 
@@ -209,10 +211,11 @@ public class Manager {
 		}
 		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         writeHourlyConsumption();
+        finish();
 	}
 
     private void repeatSimulation() {
-		ArrayList<Event> events = uts.fetchEventsFromFile();
+		ArrayList<Event> events = eventsdb.fetchData();
         while (CURRENT_STEP < STEPS) {
             peopleManager.executeActions();
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
@@ -224,6 +227,7 @@ public class Manager {
         }
         if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         writeHourlyConsumption();
+        finish();
 	}
 
     private void emptyBuilding() {
@@ -234,6 +238,11 @@ public class Manager {
             peopleManager.assignSpecificAction(leave);
             peopleManager.logEvent(p);
         });
+    }
+
+    private void finish() {
+        eventsdb.shutdown();
+        mqtt.disconnect();
     }
 
 
