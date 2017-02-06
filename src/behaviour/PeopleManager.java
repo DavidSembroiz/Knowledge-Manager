@@ -1,12 +1,11 @@
 package behaviour;
 
 import building.Building;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import data.EventsDB;
 import iot.Manager;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -134,20 +133,20 @@ public class PeopleManager {
     }
 
 	private void getPeopleFromFile() {
-		JSONParser parser = new JSONParser();
+		JsonParser parser = new JsonParser();
 		people = new ArrayList<>();
 		try {
 			FileReader reader = new FileReader("./res/people.json");
-			JSONObject root = (JSONObject) parser.parse(reader);
+			JsonObject root = parser.parse(reader).getAsJsonObject();
 			
-			JSONArray ppl = (JSONArray) root.get("people");
+			JsonArray ppl = root.getAsJsonArray("people");
             for (Object per : ppl) {
-                JSONObject person = (JSONObject) per;
-                String type = (String) person.get("profile");
-                Person p = new Person((String) person.get("name"), type, getProfile(type), generateUserParams());
+                JsonObject person = (JsonObject) per;
+                String type = person.get("profile").getAsString();
+                Person p = new Person(person.get("name").getAsString(), type, getProfile(type), generateUserParams());
                 people.add(p);
             }
-		} catch (IOException | ParseException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

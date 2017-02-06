@@ -1,13 +1,14 @@
 package behaviour;
 
 import behaviour.PeopleManager.Type;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Random;
 
 class UserProfile implements Cloneable {
@@ -104,26 +105,27 @@ class UserProfile implements Cloneable {
 	 */
 	
 	private void loadProfileFromFile(Type t) {
-		JSONParser parser = new JSONParser();
+		JsonParser parser = new JsonParser();
 		try {
 			FileReader reader = new FileReader("./res/profiles.json");
-			JSONObject root = (JSONObject) parser.parse(reader);
-			JSONObject prof = (JSONObject) root.get(t.toString().toLowerCase());
+			JsonObject root = parser.parse(reader).getAsJsonObject();
+            JsonObject prof = root.get(t.toString().toLowerCase()).getAsJsonObject();
 			if (prof == null) return;
-            for (String k : (Iterable<String>) prof.keySet()) {
-                JSONArray values = (JSONArray) prof.get(k);
+            for (Map.Entry<String, JsonElement> k : prof.entrySet()) {
+                String key = k.getKey();
+                JsonArray values = prof.getAsJsonArray(key);
                 String[] vals = new String[values.size()];
                 for (int i = 0; i < values.size(); ++i) {
-                    vals[i] = (String) values.get(i);
+                    vals[i] = values.get(i).getAsString();
                 }
                 if (vals.length == 2) {
-                    assignDuration(k, vals);
+                    assignDuration(key, vals);
                 } else {
                     Probability p = new Probability(vals);
-                    assignProbability(k, p);
+                    assignProbability(key, p);
                 }
             }
-		} catch(IOException | ParseException e) {
+		} catch(IOException  e) {
 			e.printStackTrace();
 		}
 	}

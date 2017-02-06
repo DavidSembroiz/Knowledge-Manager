@@ -35,7 +35,8 @@ public class Building {
     private String[] meetingLocations;
     private String[] classLocations;
     private String[] specialLocations;
-	
+
+
 	public Building(String id, ArrayList<Room> rooms){
 		this.rooms = rooms;
 		addSpecialRooms();

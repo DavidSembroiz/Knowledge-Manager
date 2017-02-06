@@ -1,11 +1,8 @@
 package data;
 
-import com.google.gson.JsonObject;
 import iot.Manager;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
-
-import java.util.ArrayList;
 
 
 public abstract class NoSQLDB<Input, Output> {
@@ -22,9 +19,7 @@ public abstract class NoSQLDB<Input, Output> {
 
     abstract public void save(Input o);
 
-    abstract public ArrayList<Output> fetchData();
-
-    abstract public JsonObject createJsonObject(Input o);
+    abstract public Output fetchData();
 
 
     public void initComponents() {

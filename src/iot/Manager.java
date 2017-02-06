@@ -4,7 +4,9 @@ import behaviour.Event;
 import behaviour.PeopleManager;
 import behaviour.Person;
 import building.Building;
+import building.BuildingGenerator;
 import building.Room;
+import data.BuildingsDB;
 import data.EventsDB;
 import data.IdentifierDB;
 import domain.CustomFileWriter;
@@ -56,26 +58,39 @@ public class Manager {
     private static int STEPS;
 	public static int CURRENT_STEP;
 
+    /**
+     * Building parameters
+     */
+
+    private static Boolean NEW_BUILDING;
+    private static String BUILDING;
+    private static int OFFICE_ROOMS, MEETING_ROOMS, CLASS_ROOMS;
+
     private Building building;
 	private Mqtt mqtt;
 	private Utils uts;
-	private IdentifierDB awsdb;
-	private EventsDB eventsdb;
+	private IdentifierDB iddb;
 	private PeopleManager peopleManager;
 	private ModelManager models;
+
+    private EventsDB eventsdb;
+    private BuildingsDB buildingsdb;
 	
 	private CustomFileWriter consumption_writer;
 	
 	public Manager() {
 		CURRENT_STEP = 0;
-		loadProperties();
+        loadSimulationProperties();
 		uts = Utils.getInstance();
-		//awsdb = IdentifierDB.getInstance();
+		iddb = IdentifierDB.getInstance();
 		eventsdb = EventsDB.getInstance();
+		buildingsdb = BuildingsDB.getInstance();
 		models = ModelManager.getInstance();
-		//mqtt = new Mqtt(this, awsdb);
-		
-		building = uts.loadBuilding();
+		mqtt = new Mqtt(this, iddb);
+
+		if (NEW_BUILDING) buildingsdb.save(new BuildingGenerator(BUILDING, OFFICE_ROOMS, MEETING_ROOMS, CLASS_ROOMS).generateBuilding());
+
+        building = buildingsdb.fetchData();
 		if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
@@ -95,7 +110,11 @@ public class Manager {
         }
 	}
 
-	private void loadProperties() {
+	public static String getBuildingName() {
+	    return BUILDING;
+    }
+
+	private void loadSimulationProperties() {
 		Properties prop = new Properties();
 		try {
 			InputStream is = new FileInputStream("manager.properties");
@@ -107,6 +126,11 @@ public class Manager {
             NUM_PROFESSORS = Integer.parseInt(prop.getProperty("professors"));
             NUM_STUDENTS = Integer.parseInt(prop.getProperty("students"));
             NUM_PAS = Integer.parseInt(prop.getProperty("pas"));
+            NEW_BUILDING = Boolean.parseBoolean(prop.getProperty("new_building"));
+            BUILDING = prop.getProperty("building_name");
+            OFFICE_ROOMS = Integer.parseInt(prop.getProperty("office_rooms"));
+            MEETING_ROOMS = Integer.parseInt(prop.getProperty("meeting_rooms"));
+            CLASS_ROOMS = Integer.parseInt(prop.getProperty("class_rooms"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -114,7 +138,7 @@ public class Manager {
 
     public void manageMessage(String topic, String message) {
         String soID = uts.extractIdFromTopic(topic);
-        String location = awsdb.getLocation(soID);
+        String location = iddb.getLocation(soID);
         if (location != null) processMessage(message, location, soID);
 
         else {
@@ -132,7 +156,7 @@ public class Manager {
 			for (String type : types) {
 				System.out.println(type);
 				if (!r.sensorExists(soID, type)) {
-					Sensor s = r.fetchSensor(awsdb.getModel(soID), type);
+					Sensor s = r.fetchSensor(iddb.getModel(soID), type);
 					s.setSoID(soID);
 				}
 				Sensor s = r.getSensor(soID, type);

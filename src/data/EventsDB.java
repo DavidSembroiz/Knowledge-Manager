@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Properties;
 
 
-public class EventsDB extends NoSQLDB<Person, Event> {
+public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
 
 
     private static EventsDB instance = new EventsDB();
@@ -70,7 +70,7 @@ public class EventsDB extends NoSQLDB<Person, Event> {
 
     @Override
     public ArrayList<Event> fetchData() {
-        ArrayList<Event> res = new ArrayList();
+        ArrayList<Event> res = new ArrayList<>();
         List<JsonObject> all_docs = dbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
         for (JsonObject doc : all_docs) {
             String name = doc.get("_id").getAsString();
@@ -89,8 +89,7 @@ public class EventsDB extends NoSQLDB<Person, Event> {
         return res;
     }
 
-    @Override
-    public JsonObject createJsonObject(Person p) {
+    private JsonObject createJsonObject(Person p) {
         JsonObject ev = new JsonObject();
         ev.addProperty("step", Manager.CURRENT_STEP);
         ev.addProperty("action", p.getCurrentAction().toString());
