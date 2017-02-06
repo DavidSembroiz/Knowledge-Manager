@@ -46,7 +46,6 @@ public class BuildingsDB extends NoSQLDB<JsonObject, Building> {
 
     @Override
     public void save(JsonObject b) {
-        System.out.println(b);
         dbClient.save(b);
     }
 

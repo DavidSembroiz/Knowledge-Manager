@@ -1,6 +1,5 @@
 package data;
 
-import iot.Manager;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
@@ -31,10 +30,6 @@ public abstract class NoSQLDB<Input, Output> {
                 .setHost(HOST)
                 .setPort(PORT);
         dbClient = new CouchDbClient(properties);
-        if (Manager.MODE == 0) {
-            dbClient.context().deleteDB(DB, "delete database");
-            dbClient = new CouchDbClient(properties);
-        }
     }
 
     final public void shutdown() {
