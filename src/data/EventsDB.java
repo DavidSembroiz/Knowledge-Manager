@@ -49,9 +49,8 @@ public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
 
     @Override
     public void save(Person p) {
-        boolean found = dbClient.contains(p.getName());
         JsonObject ob;
-        if (found) {
+        if (dbClient.contains(p.getName())) {
             ob = dbClient.find(JsonObject.class, p.getName());
             JsonArray events = ob.getAsJsonArray("events");
             events.add(createJsonObject(p));
