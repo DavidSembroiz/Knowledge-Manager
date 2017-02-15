@@ -9,6 +9,7 @@ import building.Room;
 import data.BuildingsDB;
 import data.EventsDB;
 import data.IdentifierDB;
+import data.SchedulesDB;
 import domain.CustomFileWriter;
 import domain.Debugger;
 import domain.Mqtt;
@@ -75,6 +76,7 @@ public class Manager {
 
     private EventsDB eventsdb;
     private BuildingsDB buildingsdb;
+    private SchedulesDB schedulesdb;
 	
 	private CustomFileWriter consumption_writer;
 	
@@ -85,13 +87,14 @@ public class Manager {
 		iddb = IdentifierDB.getInstance();
 		eventsdb = EventsDB.getInstance();
 		buildingsdb = BuildingsDB.getInstance();
+		schedulesdb = SchedulesDB.getInstance();
 		models = ModelManager.getInstance();
-		mqtt = new Mqtt(this, iddb);
+        mqtt = new Mqtt(this, iddb);
 
 		if (NEW_BUILDING) buildingsdb.save(new BuildingGenerator(BUILDING, OFFICE_ROOMS, MEETING_ROOMS, CLASS_ROOMS).generateBuilding());
 
         building = buildingsdb.fetchData();
-		if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
+        if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 
@@ -266,6 +269,8 @@ public class Manager {
 
     private void finish() {
         eventsdb.shutdown();
+        buildingsdb.shutdown();
+        schedulesdb.shutdown();
         mqtt.disconnect();
     }
 

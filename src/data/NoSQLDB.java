@@ -1,27 +1,30 @@
 package data;
 
+import iot.Manager;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
 
 public abstract class NoSQLDB<Input, Output> {
 
-    protected String DB;
-    protected boolean CREATE_IF_NOT_EXIST;
-    protected String PROTOCOL;
-    protected String HOST;
-    protected int PORT;
+    String DB;
+    boolean CREATE_IF_NOT_EXIST;
+    String PROTOCOL;
+    String HOST;
+    int PORT;
 
-    protected CouchDbClient dbClient;
+    CouchDbClient dbClient;
 
     abstract public void loadProperties();
+
+    abstract public void correctInitialState();
 
     abstract public void save(Input o);
 
     abstract public Output fetchData();
 
 
-    public void initComponents() {
+    void initComponents() {
         loadProperties();
         CouchDbProperties properties = new CouchDbProperties()
                 .setDbName(DB)
@@ -30,6 +33,7 @@ public abstract class NoSQLDB<Input, Output> {
                 .setHost(HOST)
                 .setPort(PORT);
         dbClient = new CouchDbClient(properties);
+        if (Manager.MODE == 0) correctInitialState();
     }
 
     final public void shutdown() {

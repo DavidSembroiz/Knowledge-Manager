@@ -4,6 +4,7 @@ import building.Room;
 import domain.Debugger;
 import entity.Computer;
 import entity.Computer.State;
+import iot.Manager;
 import iot.Sensor;
 
 class SmartComputer extends ComputerRule {
@@ -55,6 +56,7 @@ class SmartComputer extends ComputerRule {
                     " awakened in room " + room.getLocation());
             comp.setCurrentState(State.ON);
         }
+        if (Manager.MODE == 0) saveAction();
 	}
 
 }

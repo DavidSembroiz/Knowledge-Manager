@@ -48,6 +48,12 @@ public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
     }
 
     @Override
+    public void correctInitialState() {
+        dbClient.context().deleteDB("events", "delete database");
+        dbClient.context().createDB("events");
+    }
+
+    @Override
     public void save(Person p) {
         JsonObject ob;
         if (dbClient.contains(p.getName())) {

@@ -45,6 +45,11 @@ public class BuildingsDB extends NoSQLDB<JsonObject, Building> {
     }
 
     @Override
+    public void correctInitialState() {
+
+    }
+
+    @Override
     public void save(JsonObject b) {
         if (dbClient.contains(b.get("_id").getAsString())) {
             JsonObject ob = dbClient.find(JsonObject.class, b.get("_id").getAsString());

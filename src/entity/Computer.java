@@ -10,6 +10,7 @@ public class Computer {
 	private State currentState;
     private double consumptionHistory[];
 
+
     /*
      * ON: 350 W
      * SUSPEND: 50 W
@@ -60,6 +61,7 @@ public class Computer {
 
 	public void setCurrentState(State currentState) {
 		this.currentState = currentState;
+
 	}
 
 

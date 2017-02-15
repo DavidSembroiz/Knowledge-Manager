@@ -39,6 +39,7 @@ class NormalComputer extends ComputerRule {
                     " switched OFF in room " + room.getLocation());
             comp.setCurrentState(State.OFF);
         }
+        saveAction();
 	}
-		
+
 }

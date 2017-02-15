@@ -2,7 +2,10 @@ package rule;
 
 import behaviour.Person;
 import building.Room;
+import com.google.gson.JsonObject;
+import data.SchedulesDB;
 import entity.Computer;
+import iot.Manager;
 import iot.Sensor;
 import org.easyrules.core.BasicRule;
 
@@ -38,4 +41,13 @@ class ComputerRule extends BasicRule {
         Person p = comp.getUsedBy();
         return p == null || !room.getLocation().equals(p.getLocation());
     }
+
+    void saveAction() {
+        JsonObject root = SchedulesDB.getInstance().createJsonObject(comp.getCurrentState(),
+                                                                        Manager.CURRENT_STEP,
+                                                                        room.getLocation(),
+                                                                        "computer_" + comp.getId());
+        SchedulesDB.getInstance().save(root);
+    }
+
 }

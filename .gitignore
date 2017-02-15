@@ -4,6 +4,7 @@
 database.properties
 couchdb.properties
 buildingsdb.properties
+schedulesdb.properties
 results/
 tests/
 res/building_*.json
