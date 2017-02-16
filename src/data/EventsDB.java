@@ -65,8 +65,8 @@ public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
         else {
             ob = new JsonObject();
             ob.addProperty("_id", p.getName());
-            ob.add("events", new JsonArray());
             ob.addProperty("_rev", (String) null);
+            ob.add("events", new JsonArray());
             JsonArray events = ob.getAsJsonArray("events");
             events.add(createJsonObject(p));
             dbClient.save(ob);
