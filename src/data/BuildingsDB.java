@@ -81,8 +81,10 @@ public class BuildingsDB extends NoSQLDB<JsonObject, Building> {
             }
             rooms.add(r);
         }
-        return new Building(id, rooms);
+        Building b = new Building(id, rooms);
+        return b;
     }
+
 
     private ArrayList<Sensor> loadMultipleSensor(JsonObject sen) {
         ArrayList<Sensor> ret = new ArrayList<>();

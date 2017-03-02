@@ -1,4 +1,4 @@
-package rule;
+package smart_rules;
 
 import building.Room;
 import domain.Debugger;
@@ -6,17 +6,19 @@ import entity.Computer;
 import entity.Computer.State;
 import iot.Manager;
 import iot.Sensor;
+import rule_headers.ComputerRule;
 
-class SmartComputer extends ComputerRule {
+public class SmartComputer extends ComputerRule {
 
 
-    SmartComputer(Room r, Computer c, Sensor s) {
+    public SmartComputer(Room r, Computer c, Sensor s) {
         super(r, c, s);
     }
 
 	
 	@Override
 	public boolean evaluate() {
+        Computer comp = getComputer();
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
 			if (isGuestComing()) return true;
@@ -33,6 +35,7 @@ class SmartComputer extends ComputerRule {
 
     @Override
 	public void execute() throws Exception {
+        Computer comp = getComputer();
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +

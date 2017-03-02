@@ -1,4 +1,4 @@
-package rule;
+package normal_rules;
 
 import building.Room;
 import domain.Debugger;
@@ -6,10 +6,11 @@ import entity.HVAC;
 import entity.Window;
 import iot.Manager;
 import iot.Sensor;
+import rule_headers.HVACRule;
 
-class NormalHVAC extends HVACRule {
+public class NormalHVAC extends HVACRule {
 
-	NormalHVAC(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
+	public NormalHVAC(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
         super(r, h, w, temp, hum);
 	}
 
@@ -20,7 +21,8 @@ class NormalHVAC extends HVACRule {
 	
 	@Override
 	public boolean evaluate() {
-        HVAC.State st = hvac.getCurrentState();
+	    Window window = getWindow();
+        HVAC.State st = getHvac().getCurrentState();
 
         if (st.equals(HVAC.State.OFF)) {
             moderateTemperature();
@@ -46,6 +48,9 @@ class NormalHVAC extends HVACRule {
 
     @Override
 	public void execute() throws Exception {
+	    HVAC hvac = getHvac();
+	    Room room = getRoom();
+	    Window window = getWindow();
         HVAC.State st = hvac.getCurrentState();
         if (workingHours()) {
             if (st.equals(HVAC.State.OFF)) {

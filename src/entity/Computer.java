@@ -3,12 +3,29 @@ package entity;
 import behaviour.Person;
 import iot.Manager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Computer {
 
     private int id;
     private Person usedBy;
 	private State currentState;
     private double consumptionHistory[];
+    private HashMap<State, ArrayList<Integer>> schedules;
+
+    public void addScheduleArray(State st, ArrayList<Integer> times) {
+        schedules.put(st, times);
+    }
+
+    public void addSchedule(State st, Integer time) {
+        if (schedules.containsKey(st)) schedules.get(st).add(time);
+        else {
+            ArrayList<Integer> times = new ArrayList<Integer>();
+            times.add(time);
+            schedules.put(st, times);
+        }
+    }
 
 
     /*
@@ -36,6 +53,7 @@ public class Computer {
         this.id = id;
         this.currentState = State.OFF;
         consumptionHistory = new double[Manager.CONSUMPTION_RESOLUTION];
+        schedules = new HashMap<>();
 	}
 
     public double getHourlyConsumption(int i) {
@@ -68,4 +86,12 @@ public class Computer {
 	public void addConsumption(double cons) {
         this.consumptionHistory[Manager.CURRENT_STEP/(360/(Manager.CONSUMPTION_RESOLUTION/24))] += cons;
 	}
+
+    public HashMap<State, ArrayList<Integer>> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(HashMap<State, ArrayList<Integer>> schedules) {
+        this.schedules = schedules;
+    }
 }

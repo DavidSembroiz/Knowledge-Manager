@@ -79,6 +79,7 @@ public class Manager {
     private SchedulesDB schedulesdb;
 	
 	private CustomFileWriter consumption_writer;
+
 	
 	public Manager() {
 		CURRENT_STEP = 0;
@@ -94,11 +95,14 @@ public class Manager {
 		if (NEW_BUILDING) buildingsdb.save(new BuildingGenerator(BUILDING, OFFICE_ROOMS, MEETING_ROOMS, CLASS_ROOMS).generateBuilding());
 
         building = buildingsdb.fetchData();
+        if (MODE != 0) building.fillSchedules();
         if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 
         consumption_writer = new CustomFileWriter("./res/results/consumption_" + MODE + ".log");
+
+
 
         switch (MODE) {
             case 0:
@@ -236,6 +240,7 @@ public class Manager {
 			building.updateConsumption();
 			++CURRENT_STEP;
 		}
+		building.saveSchedules();
 		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         writeHourlyConsumption();
         finish();
@@ -294,5 +299,4 @@ public class Manager {
 			}	
 		}
 	}
-	
 }

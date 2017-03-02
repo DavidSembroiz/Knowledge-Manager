@@ -1,4 +1,4 @@
-package rule;
+package rule_headers;
 
 import building.Room;
 import domain.Debugger;
@@ -16,7 +16,7 @@ class WindowRule extends BasicRule {
 
 
     WindowRule(Room r, Window w, Sensor s) {
-        super("Window rule #" + w.getId(), "Rule to manage Windows", w.getId());
+        super("Window rule_headers #" + w.getId(), "Rule to manage Windows", w.getId());
         this.room = r;
         this.window = w;
         this.airquality = s;

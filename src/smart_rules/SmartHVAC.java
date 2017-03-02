@@ -1,4 +1,4 @@
-package rule;
+package smart_rules;
 
 import building.Room;
 import domain.Debugger;
@@ -6,16 +6,21 @@ import entity.HVAC;
 import entity.HVAC.State;
 import entity.Window;
 import iot.Sensor;
+import rule_headers.HVACRule;
 
-class SmartHVAC extends HVACRule {
+public class SmartHVAC extends HVACRule {
 	
-	SmartHVAC(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
+	public SmartHVAC(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
         super(r, h, w, temp, hum);
 	}
 	
 	
 	@Override
 	public boolean evaluate() {
+	    HVAC hvac = getHvac();
+	    Room room = getRoom();
+	    Window window = getWindow();
+        int PREDICTION_THRESHOLD = getPredictionThreshold();
 		State st = hvac.getCurrentState();
 
         if (st.equals(State.OFF)) {
@@ -42,6 +47,9 @@ class SmartHVAC extends HVACRule {
 
     @Override
 	public void execute() throws Exception {
+	    HVAC hvac = getHvac();
+	    Room room = getRoom();
+	    Window window = getWindow();
 		State st = hvac.getCurrentState();
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("HVAC switched ON in room " + room.getLocation());

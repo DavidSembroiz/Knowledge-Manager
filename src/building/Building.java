@@ -1,6 +1,8 @@
 package building;
 
 import behaviour.Person;
+import data.Schedule;
+import data.SchedulesDB;
 import domain.Debugger;
 import entity.Computer;
 import entity.HVAC;
@@ -9,8 +11,30 @@ import iot.Manager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Building {
+
+    public void saveSchedules() {
+        for (Room r : rooms) {
+            r.saveSchedule();
+        }
+    }
+
+    private Room getRoomById(String roomId) {
+        for (Room r : rooms) {
+            if (r.getLocation().equals(roomId)) return r;
+        }
+        return null;
+    }
+
+    public void fillSchedules() {
+        List<Schedule> schedules = SchedulesDB.getInstance().fetchData();
+        for (Schedule s : schedules) {
+            Room r = getRoomById(s.get_id());
+            if (r != null) r.insertSchedule(s);
+        }
+    }
 
     public enum ROOM_TYPE {
         OFFICE(3),

@@ -1,42 +1,36 @@
-package rule;
+package normal_rules;
 
 import building.Room;
 import domain.Debugger;
 import entity.Lamp;
 import iot.Sensor;
+import rule_headers.LampRule;
 
-class SmartLamp extends LampRule {
+public class NormalLamp extends LampRule {
 
-    SmartLamp(Room r, Lamp l, Sensor light) {
+    public NormalLamp(Room r, Lamp l, Sensor light) {
         super(r, l, light);
     }
 
     @Override
     public boolean evaluate() {
-
-        int PREDICTION_THRESHOLD = 5;
-
-		/*
-		 * If light is ON:
-		 *  - OFF: room is empty or environmental light is OK
-		 *
-		 * If light is OFF:
-		 *  - ON: people inside or coming to the room and environmental light is bad
-		 */
+        Lamp lamp = getLamp();
+        Room room = getRoom();
 
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
-            if ((room.arePeopleInside() || room.arePeopleComing(PREDICTION_THRESHOLD))
-                    && !environmentalLightOK()) return true;
+            if (room.arePeopleInside()) return true;
         }
         if (st.equals(Lamp.State.ON)) {
-            if (room.isEmpty() || environmentalLightOK()) return true;
+            if (room.isEmpty()) return true;
         }
         return false;
     }
 
     @Override
     public void execute() throws Exception {
+        Lamp lamp = getLamp();
+        Room room = getRoom();
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Lamp switched ON in room " + room.getLocation());

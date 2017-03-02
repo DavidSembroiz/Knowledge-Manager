@@ -1,4 +1,4 @@
-package rule;
+package rule_headers;
 
 import building.Room;
 import domain.Debugger;
@@ -16,7 +16,7 @@ class DoorRule extends BasicRule {
 
 	
 	DoorRule(Room r, Door d, Sensor s) {
-        super("Door rule #" + d.getId(), "Rule to manage doors", d.getId());
+        super("Door rule_headers #" + d.getId(), "Rule to manage doors", d.getId());
 
         this.room = r;
         this.door = d;

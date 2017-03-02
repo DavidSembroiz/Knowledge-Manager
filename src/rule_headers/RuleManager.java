@@ -1,10 +1,16 @@
-package rule;
+package rule_headers;
 
 import building.Room;
 import entity.*;
 import iot.Manager;
 import iot.Sensor;
+import normal_rules.NormalComputer;
+import normal_rules.NormalHVAC;
+import normal_rules.NormalLamp;
 import org.easyrules.api.RulesEngine;
+import smart_rules.SmartComputer;
+import smart_rules.SmartHVAC;
+import smart_rules.SmartLamp;
 
 import java.util.ArrayList;
 

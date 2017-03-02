@@ -1,11 +1,13 @@
 package building;
 
 import behaviour.Person;
+import data.Schedule;
+import data.SchedulesDB;
 import domain.Debugger;
 import entity.*;
 import iot.Actuator;
 import iot.Sensor;
-import rule.RuleManager;
+import rule_headers.RuleManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,7 +24,8 @@ public class Room {
 	private ArrayList<Person> peopleActing;
     private ArrayList<Person> peopleComing;
 	private HashSet<Object> entities;
-	
+	private Schedule schedule;
+
 	public Room(String location, String size, String type) {
 		this.location = location;
 		this.size = size;
@@ -33,7 +36,12 @@ public class Room {
 		this.ruleManager = new RuleManager(this);
 		this.peopleActing = new ArrayList<>();
         this.peopleComing = new ArrayList<>();
+        this.schedule = new Schedule(location, new ArrayList<>());
 	}
+
+	public void addTimeToSchedule(String elementId, int time, String st) {
+	    schedule.addTimeToSchedule(elementId, time, st);
+    }
 
 
 	public String getLocation() {
@@ -196,5 +204,13 @@ public class Room {
 
     public boolean isAvailable() {
         return peopleActing.size() + peopleComing.size() < type.getLimit();
+    }
+
+    public void saveSchedule() {
+        SchedulesDB.getInstance().save(schedule);
+    }
+
+    public void insertSchedule(Schedule s) {
+	    this.schedule = s;
     }
 }
