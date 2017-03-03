@@ -5,6 +5,7 @@ import domain.Debugger;
 import entity.HVAC;
 import entity.HVAC.State;
 import entity.Window;
+import iot.Manager;
 import iot.Sensor;
 import rule_headers.HVACRule;
 
@@ -77,5 +78,6 @@ public class SmartHVAC extends HVACRule {
                 hvac.setCurrentState(State.ON);
             }
         }
+        if (Manager.MODE == 0) saveAction();
 	}
 }

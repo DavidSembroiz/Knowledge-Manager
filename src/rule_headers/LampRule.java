@@ -2,6 +2,7 @@ package rule_headers;
 
 import building.Room;
 import entity.Lamp;
+import iot.Manager;
 import iot.Sensor;
 import model.ModelManager;
 import org.easyrules.core.BasicRule;
@@ -36,4 +37,8 @@ public class LampRule extends BasicRule {
 		double modelValue = models.getCurrentEnvironmentalLight();
 		return modelValue > ENVIRONMENTAL_LIGHT_THRESHOLD;
 	}
+
+    protected void saveAction() {
+        room.addTimeToSchedule("lamp_" + lamp.getId(), Manager.CURRENT_STEP, lamp.getCurrentState().toString());
+    }
 }

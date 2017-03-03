@@ -4,6 +4,7 @@ import behaviour.Person;
 import building.Room;
 import entity.HVAC;
 import entity.Window;
+import iot.Manager;
 import iot.Sensor;
 import model.ModelManager;
 import org.easyrules.core.BasicRule;
@@ -133,5 +134,8 @@ public class HVACRule extends BasicRule {
         return Math.abs(pplTemp - roomTemp) > 3;
     }
 
+    protected void saveAction() {
+        room.addTimeToSchedule("hvac_" + hvac.getId(), Manager.CURRENT_STEP, hvac.getCurrentState().toString());
+    }
 
 }
