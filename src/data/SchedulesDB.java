@@ -45,7 +45,11 @@ public class SchedulesDB extends NoSQLDB<Schedule, List<Schedule>> {
 
     @Override
     public void save(Schedule s) {
-        dbClient.save(s);
+        if (dbClient.contains(s.get_id())) {
+            s.set_rev(dbClient.find(Schedule.class, s.get_id()).get_rev());
+            dbClient.update(s);
+        }
+        else dbClient.save(s);
     }
 
 

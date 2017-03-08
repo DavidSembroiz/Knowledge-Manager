@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 
+import static java.lang.System.exit;
+
 public class Manager {
 
 	/**
@@ -114,10 +116,17 @@ public class Manager {
             case 2:
                 baseSimulation();
                 break;
+            case 3:
+                learningSimulation();
+                break;
+            default:
+                System.out.println("Case not defined.");
+                exit(-1);
         }
 	}
 
-	public static String getBuildingName() {
+
+    public static String getBuildingName() {
 	    return BUILDING;
     }
 
@@ -230,9 +239,23 @@ public class Manager {
         }
     }
 
+    private void learningSimulation() {
+        while (CURRENT_STEP < STEPS) {
+            building.performActuations();
+            //peopleManager.updateActions();
+            if (CURRENT_STEP == 6840) emptyBuilding();
+            //building.fireRules();
+            building.updateConsumption();
+            ++CURRENT_STEP;
+        }
+        building.saveSchedules();
+        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+        writeHourlyConsumption();
+        finish();
+    }
+
 
     private void simulate() {
-
 		while (CURRENT_STEP < STEPS) {
             peopleManager.updateActions();
             if (CURRENT_STEP == 6840) emptyBuilding();

@@ -8,21 +8,26 @@ import java.util.ArrayList;
 public class Schedule {
 
 
-    private class Element {
-        private String elementId;
+    public class Element {
+        private String elementType;
+        private int elementIndex;
         private ArrayList<Pair<Integer, String>> times;
 
         Element(String elementId, ArrayList<Pair<Integer, String>> times) {
-            this.elementId = elementId;
+            this.elementType = elementId.split("_")[0];
+            this.elementIndex = Integer.parseInt(elementId.split("_")[1]);
             this.times = times;
         }
 
-        String getElementId() {
-            return elementId;
+        public String getElementType() {
+            return elementType;
         }
 
+        public int getElementIndex() {
+            return elementIndex;
+        }
 
-        ArrayList<Pair<Integer, String>> getTimes() {
+        public ArrayList<Pair<Integer, String>> getTimes() {
             return times;
         }
 
@@ -31,6 +36,7 @@ public class Schedule {
 
     private String _id;
     private ArrayList<Element> elements;
+    private String _rev;
 
     public Schedule(String _id, ArrayList<Element> elements) {
         this.elements = elements;
@@ -49,12 +55,28 @@ public class Schedule {
         }
     }
 
+    String get_rev() {
+        return _rev;
+    }
+
+    void set_rev(String _rev) {
+        this._rev = _rev;
+    }
+
+    public ArrayList<Element> getElements() {
+        return elements;
+    }
+
     public String get_id() {
         return _id;
     }
 
     private Element contains(String elementId) {
-        for (Element e : elements) if (e.getElementId().equals(elementId)) return e;
+
+        for (Element e : elements) {
+            String current = e.getElementType() + "_" + e.getElementIndex();
+            if (current.equals(elementId)) return e;
+        }
         return null;
     }
 }

@@ -4,6 +4,7 @@ import building.Room;
 import entity.*;
 import iot.Manager;
 import iot.Sensor;
+import learn_rules.LearnComputer;
 import normal_rules.NormalComputer;
 import normal_rules.NormalHVAC;
 import normal_rules.NormalLamp;
@@ -40,16 +41,18 @@ public class RuleManager {
         ArrayList<Sensor> sens = r.getSensors();
 		for (Sensor s : sens) {
 			if (!s.isAssigned() && s.getType().toLowerCase().equals("power")) {
-                s.setAssigned(true);
-                SmartComputer cr;
-                NormalComputer crn;
-                if (Manager.MODE == 2) {
-                    crn = new NormalComputer(r, c, s);
-                    rulesEngine.registerRule(crn);
-                }
-                else {
-                    cr = new SmartComputer(r, c, s);
-                    rulesEngine.registerRule(cr);
+                s.setAssigned();
+                switch (Manager.MODE) {
+                    case 0:
+                    case 1:
+                        rulesEngine.registerRule(new SmartComputer(r, c, s));
+                        break;
+                    case 2:
+                        rulesEngine.registerRule(new NormalComputer(r, c, s));
+                        break;
+                    case 3:
+                        rulesEngine.registerRule(new LearnComputer(r, c, s));
+                        break;
                 }
                 return;
 			}
@@ -66,20 +69,18 @@ public class RuleManager {
 
                 if (temp != null && hum != null) {
                     temp.setValue(DEFAULT_TEMPERATURE);
-                    temp.setAssigned(true);
+                    temp.setAssigned();
                     hum.setValue(DEFAULT_HUMIDITY);
-                    hum.setAssigned(true);
-                    w.setAssigned(true);
-
-                    SmartHVAC hr;
-                    NormalHVAC hrn;
-                    if (Manager.MODE == 2) {
-                        hrn = new NormalHVAC(r, h, w, temp, hum);
-                        rulesEngine.registerRule(hrn);
-                    }
-                    else {
-                        hr = new SmartHVAC(r, h, w, temp, hum);
-                        rulesEngine.registerRule(hr);
+                    hum.setAssigned();
+                    w.setAssigned();
+                    switch (Manager.MODE) {
+                        case 0:
+                        case 1:
+                            rulesEngine.registerRule(new SmartHVAC(r, h, w, temp, hum));
+                            break;
+                        case 2:
+                            rulesEngine.registerRule(new NormalHVAC(r, h, w, temp, hum));
+                            break;
                     }
                     return;
                 }
@@ -92,16 +93,16 @@ public class RuleManager {
         for (Sensor s : sens) {
             if (!s.isAssigned() && s.getType().toLowerCase().equals("luminosity")) {
                 s.setValue(DEFAULT_LIGHT);
-                s.setAssigned(true);
-                NormalLamp ln;
-                SmartLamp sln;
-                if (Manager.MODE == 2) {
-                    ln = new NormalLamp(r, l, s);
-                    rulesEngine.registerRule(ln);
-                }
-                else {
-                    sln = new SmartLamp(r, l, s);
-                    rulesEngine.registerRule(sln);
+                s.setAssigned();
+                switch (Manager.MODE) {
+                    case 0:
+                    case 1:
+                        rulesEngine.registerRule(new SmartLamp(r, l, s));
+                        break;
+                    case 2:
+                        rulesEngine.registerRule(new NormalLamp(r, l, s));
+                        break;
+                    case 3:
                 }
                 return;
             }
@@ -113,7 +114,7 @@ public class RuleManager {
         for (Sensor s : sens) {
             if (!s.isAssigned() && s.getType().toLowerCase().equals("electromagnetic")) {
                 DoorRule dr = new DoorRule(r, d, s);
-                s.setAssigned(true);
+                s.setAssigned();
                 rulesEngine.registerRule(dr);
                 return;
             }
@@ -125,7 +126,7 @@ public class RuleManager {
         for (Sensor s : sens) {
             if (!s.isAssigned() && s.getType().toLowerCase().equals("airquality")) {
                 s.setValue(DEFAULT_AIR_QUALITY);
-                s.setAssigned(true);
+                s.setAssigned();
                 WindowRule wr = new WindowRule(r, w, s);
                 rulesEngine.registerRule(wr);
                 return;

@@ -99,8 +99,8 @@ public class Sensor {
 		return assigned;
 	}
 
-	public void setAssigned(boolean assigned) {
-		this.assigned = assigned;
+	public void setAssigned() {
+		this.assigned = true;
 	}
 	
 	

@@ -80,7 +80,7 @@ public class Person {
 		return params;
 	}
 
-	public void assignAction(Action a, String dest, int next, int duration) {
+	void assignAction(Action a, String dest, int next, int duration) {
 		this.currentAction = a;
 		this.location = dest;
 		this.nextActionSteps = next;
@@ -105,6 +105,7 @@ public class Person {
 			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
 					   " changed from " + currentState.toString() +
 					   " to " + State.ROOM.toString());
+
 			currentState = State.ROOM;
 			
 		}
@@ -136,16 +137,16 @@ public class Person {
 		return params.hadLunch();
 	}
 
-    void setHadLunch(boolean b) {
-		params.setHadLunch(b);
+    void setHadLunch() {
+		params.setHadLunch();
 	}
 
     boolean hadEntered() {
         return params.hadEntered();
     }
 
-    void sethadEntered(boolean b) {
-        params.setHadEntered(b);
+    void sethadEntered() {
+        params.setHadEntered();
     }
 
     boolean isProfessor() {
@@ -154,10 +155,6 @@ public class Person {
 
     boolean isStudent() {
         return type.equals(Type.STUDENT.toString().toLowerCase());
-    }
-
-    public boolean isPas() {
-        return type.equals(Type.PAS.toString().toLowerCase());
     }
 
     String getPastLocation() {

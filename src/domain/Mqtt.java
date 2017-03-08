@@ -26,19 +26,12 @@ public class Mqtt {
 	private String PASSWORD;
 	private String APIKEY;
 	private String CLIENTID;
-	private MqttConnectOptions connOpts;
-	private MqttAsyncClient client;
-	private MqttCb callback;
-	private ArrayList<String> ids;
-	private String topic;
-	private Utils uts;
-	private Manager manager;
-	private int subs;
+    private MqttAsyncClient client;
+    private ArrayList<String> ids;
+    private Manager manager;
 
 	public Mqtt(Manager m, IdentifierDB awsdb) {
-		subs = 0;
 		ids = new ArrayList<>();
-		uts = Utils.getInstance();
 		this.manager = m;
 		loadProperties();
 		ids = awsdb.queryIds(QUERY_ALL);
@@ -71,7 +64,7 @@ public class Mqtt {
 	 * 
 	 */
 	private void connect() {
-		connOpts = new MqttConnectOptions();
+        MqttConnectOptions connOpts = new MqttConnectOptions();
 		
 		/*
 		 * Session has to be set to TRUE
@@ -83,7 +76,7 @@ public class Mqtt {
 		//connOpts.setKeepAliveInterval(600);
 		try {
 			client = new MqttAsyncClient(ADDRESS, CLIENTID);
-			callback = new MqttCb(manager);
+            MqttCb callback = new MqttCb(manager);
 			client.setCallback(callback);
 			client.connect(connOpts);
 			while (!client.isConnected());
@@ -131,7 +124,7 @@ public class Mqtt {
 		String[] topics = new String[ids.size()];
 		int[] qos = new int[ids.size()];
 		for (int i = 0; i < ids.size(); ++i) {
-			topic = APIKEY + "/" + ids.get(i) + "/streams/data/updates";
+            String topic = APIKEY + "/" + ids.get(i) + "/streams/data/updates";
 			topics[i] = topic;
 			qos[i] = 0;
 		}
@@ -141,11 +134,6 @@ public class Mqtt {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	
-	public ArrayList<String> getIds() {
-		return ids;
 	}
 	
     public void addId(String id) {

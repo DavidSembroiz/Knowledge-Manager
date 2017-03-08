@@ -34,16 +34,16 @@ public class UserParams {
 		return hadLunch;
 	}
 
-	void setHadLunch(boolean hadLunch) {
-		this.hadLunch = hadLunch;
+	void setHadLunch() {
+		this.hadLunch = true;
 	}
 
     boolean hadEntered() {
         return hadEntered;
     }
 
-    void setHadEntered(boolean hadEntered) {
-        this.hadEntered = hadEntered;
+    void setHadEntered() {
+        this.hadEntered = true;
     }
 
 }

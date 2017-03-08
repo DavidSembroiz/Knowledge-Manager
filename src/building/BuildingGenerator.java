@@ -129,7 +129,7 @@ public class BuildingGenerator {
             e = MULTIPLE_ENT_SIZE;
             start = rand.nextInt(MULTIPLE_ENT_SIZE);
             for (int j = 0; j < e; ++j) {
-                int qtt = getMultipleEntityQtt(type);;
+                int qtt = getMultipleEntityQtt(type);
                 if (qtt > 0) {
                     entroot = new JsonObject();
                     String ent = MULTIPLE_ENTITY.values()[start].toString().toLowerCase();

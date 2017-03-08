@@ -53,8 +53,8 @@ public class HVACRule extends BasicRule {
     }
 
     protected boolean currentTemperatureOK() {
-        double pplTemp = getPeopleTemperature();
         double roomTemp = Double.parseDouble(temperature.getValue());
+        double pplTemp = getPeopleTemperature();
         return Math.abs(pplTemp - roomTemp) < 0.5;
     }
 
@@ -131,11 +131,15 @@ public class HVACRule extends BasicRule {
     protected boolean reactivateFromSuspend() {
         double pplTemp = getPeopleTemperature();
         double roomTemp = Double.parseDouble(temperature.getValue());
-        return Math.abs(pplTemp - roomTemp) > 3;
+        return Math.abs(pplTemp - roomTemp) > 2;
     }
 
     protected void saveAction() {
         room.addTimeToSchedule("hvac_" + hvac.getId(), Manager.CURRENT_STEP, hvac.getCurrentState().toString());
+    }
+
+    public Sensor getTemperatureSensor() {
+        return temperature;
     }
 
 }

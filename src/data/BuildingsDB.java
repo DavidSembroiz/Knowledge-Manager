@@ -62,7 +62,6 @@ public class BuildingsDB extends NoSQLDB<JsonObject, Building> {
     public Building fetchData() {
         ArrayList<Room> rooms = new ArrayList<>();
         JsonObject root = dbClient.find(JsonObject.class, Manager.getBuildingName());
-        String id = root.get("_id").getAsString();
         JsonArray rms = root.getAsJsonArray("rooms");
         for (Object rm1 : rms) {
             JsonObject rm = (JsonObject) rm1;
@@ -81,8 +80,7 @@ public class BuildingsDB extends NoSQLDB<JsonObject, Building> {
             }
             rooms.add(r);
         }
-        Building b = new Building(id, rooms);
-        return b;
+        return new Building(rooms);
     }
 
 

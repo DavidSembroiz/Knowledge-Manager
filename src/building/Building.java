@@ -2,16 +2,16 @@ package building;
 
 import behaviour.Person;
 import data.Schedule;
+import data.Schedule.Element;
 import data.SchedulesDB;
 import domain.Debugger;
 import entity.Computer;
 import entity.HVAC;
 import entity.Lamp;
 import iot.Manager;
+import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Building {
 
@@ -36,6 +36,21 @@ public class Building {
         }
     }
 
+    public void performActuations() {
+        for (Room r : rooms) {
+            ArrayList<Element> elements = r.getSchedule().getElements();
+            for (Element e : elements) {
+                ArrayList<Pair<Integer, String>> times = e.getTimes();
+                for (Pair<Integer, String> time : times) {
+                    if (time.getKey().equals(Manager.CURRENT_STEP)) {
+                        r.performActuation(e.getElementType(), e.getElementIndex(), time.getValue());
+                    }
+                }
+            }
+
+        }
+    }
+
     public enum ROOM_TYPE {
         OFFICE(3),
         MEETING_ROOM(20),
@@ -50,21 +65,16 @@ public class Building {
         }
     }
 
-	private String id;
 	private ArrayList<Room> rooms;
 
-
-    public int NUM_PLACES = 3;
 	private String[] officeLocations;
     private String[] meetingLocations;
     private String[] classLocations;
-    private String[] specialLocations;
 
 
-	public Building(String id, ArrayList<Room> rooms){
+	public Building(ArrayList<Room> rooms){
 		this.rooms = rooms;
 		addSpecialRooms();
-		this.id = id;
 		parseLocations();
 	}
 	
@@ -78,19 +88,16 @@ public class Building {
 		HashSet<String> officeLocs = new HashSet<>();
         HashSet<String> meetingLocs = new HashSet<>();
         HashSet<String> classLocs = new HashSet<>();
-        HashSet<String> specialLocs = new HashSet<>();
 		for (Room r : rooms) {
 			if (Integer.parseInt(r.getSize()) > 0) {
                 if (r.getType().equals(ROOM_TYPE.MEETING_ROOM)) meetingLocs.add(r.getLocation());
                 else if (r.getType().equals(ROOM_TYPE.OFFICE)) officeLocs.add(r.getLocation());
                 else if (r.getType().equals(ROOM_TYPE.CLASSROOM)) classLocs.add(r.getLocation());
-                else if (r.getType().equals(ROOM_TYPE.UNDEFINED)) specialLocs.add(r.getLocation());
             }
 		}
 		officeLocations = officeLocs.toArray(new String[officeLocs.size()]);
         meetingLocations = meetingLocs.toArray(new String[meetingLocs.size()]);
         classLocations = classLocs.toArray(new String[classLocs.size()]);
-        specialLocations = specialLocs.toArray(new String[specialLocs.size()]);
 	}
 
 
@@ -104,10 +111,6 @@ public class Building {
 
     public String[] getClassromLocations() {
         return classLocations;
-    }
-
-    public String[] getSpecialLocations() {
-        return specialLocations;
     }
 
 

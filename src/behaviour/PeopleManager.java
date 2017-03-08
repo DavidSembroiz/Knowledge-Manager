@@ -224,7 +224,7 @@ public class PeopleManager {
                  */
 				next = 60 + rand.nextInt(120);
 				duration = 1;
-                p.sethadEntered(true);
+                p.sethadEntered();
                 assigned = true;
 			}
 		}
@@ -247,7 +247,7 @@ public class PeopleManager {
                  */
 				next = 30 + rand.nextInt(30);
 				duration = p.getProfile().getLunchDuration();
-				p.setHadLunch(true);
+				p.setHadLunch();
                 assigned = true;
 			}
 		}
@@ -303,7 +303,7 @@ public class PeopleManager {
         String office = getSpecificDestination(currentLoc, building.getOfficeLocations());
         String classroom = getSpecificDestination(currentLoc, building.getClassromLocations());
         String meeting = getSpecificDestination(currentLoc, building.getMeetingLocations());
-        double office_threshold = 0, class_threshold = 0, meeting_threshold = 0;
+        double office_threshold, class_threshold, meeting_threshold;
 
         /*
          * Thresholds must add 1

@@ -5,7 +5,6 @@ import data.Schedule;
 import data.SchedulesDB;
 import domain.Debugger;
 import entity.*;
-import iot.Actuator;
 import iot.Sensor;
 import rule_headers.RuleManager;
 
@@ -19,7 +18,6 @@ public class Room {
 	private String size;
     private Building.ROOM_TYPE type;
 	private ArrayList<Sensor> sensors;
-	private ArrayList<Actuator> actuators;
 	private RuleManager ruleManager;
 	private ArrayList<Person> peopleActing;
     private ArrayList<Person> peopleComing;
@@ -31,7 +29,6 @@ public class Room {
 		this.size = size;
         this.type = Building.ROOM_TYPE.valueOf(type.toUpperCase());
 		sensors = new ArrayList<>();
-		actuators = new ArrayList<>();
 		this.entities = new HashSet<>();
 		this.ruleManager = new RuleManager(this);
 		this.peopleActing = new ArrayList<>();
@@ -43,8 +40,11 @@ public class Room {
 	    schedule.addTimeToSchedule(elementId, time, st);
     }
 
+    Schedule getSchedule() {
+        return schedule;
+    }
 
-	public String getLocation() {
+    public String getLocation() {
 		return location;
 	}
 
@@ -70,26 +70,6 @@ public class Room {
 		}
 		return null;
 	}
-
-
-    public void turnHVACon() {
-        for (Object e : entities) {
-            if (e instanceof HVAC) {
-                if (((HVAC) e).getCurrentState().equals(HVAC.State.OFF))
-                ((HVAC) e).setCurrentState(HVAC.State.ON);
-            }
-        }
-    }
-
-    public void turnHVACoff() {
-        for (Object e : entities) {
-            if (e instanceof HVAC) {
-                if (!((HVAC) e).getCurrentState().equals(HVAC.State.OFF))
-                    ((HVAC) e).setCurrentState(HVAC.State.OFF);
-            }
-        }
-    }
-
 
 
 	void fireRules() {
@@ -206,11 +186,36 @@ public class Room {
         return peopleActing.size() + peopleComing.size() < type.getLimit();
     }
 
-    public void saveSchedule() {
+    void saveSchedule() {
         SchedulesDB.getInstance().save(schedule);
     }
 
-    public void insertSchedule(Schedule s) {
+    void insertSchedule(Schedule s) {
 	    this.schedule = s;
     }
+
+    void performActuation(String element, int index, String value) {
+	    if (element.toLowerCase().equals("computer")) {
+            for (Object e : entities) {
+                if (e instanceof Computer && ((Computer) e).getId() == index) {
+                    ((Computer) e).setCurrentState(Computer.State.valueOf(value));
+                }
+            }
+        }
+        else if (element.toLowerCase().equals("hvac")) {
+            for (Object e : entities) {
+                if (e instanceof HVAC && ((HVAC) e).getId() == index) {
+                    ((HVAC) e).setCurrentState(HVAC.State.valueOf(value));
+                }
+            }
+        }
+        else if (element.toLowerCase().equals("lamp")) {
+            for (Object e : entities) {
+                if (e instanceof Lamp && ((Lamp) e).getId() == index) {
+                    ((Lamp) e).setCurrentState(Lamp.State.valueOf(value));
+                }
+            }
+        }
+    }
+
 }

@@ -35,22 +35,12 @@ class UserProfile implements Cloneable {
 	Probability getEntrance() {
 		return entrance;
 	}
-	public void setEntrance(Probability entrance) {
-		this.entrance = entrance;
-	}
     Probability getRandomWalks() {
 		return randomWalks;
-	}
-	public void setRandomWalks(Probability randomWalks) {
-		this.randomWalks = randomWalks;
 	}
 	
     Probability getLunch() {
 		return lunch;
-	}
-	
-	public void setLunch(Probability lunch) {
-		this.lunch = lunch;
 	}
 	
     Probability getExit() {
@@ -69,10 +59,6 @@ class UserProfile implements Cloneable {
 
     Probability getMeeting() {
         return meeting;
-    }
-
-    public void setMeeting(Probability meeting) {
-        this.meeting = meeting;
     }
 
     /**
