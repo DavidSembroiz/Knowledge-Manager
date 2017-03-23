@@ -1,7 +1,6 @@
 package learn_rules;
 
 import building.Room;
-import domain.Debugger;
 import entity.Computer;
 import entity.Computer.State;
 import iot.Sensor;
@@ -20,7 +19,7 @@ public class LearnComputer extends ComputerRule {
         Computer comp = getComputer();
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
-			if (isGuestComing()) return true;
+			if (isGuestComing(60)) return true;
 		}
 		if (st.equals(State.ON)) {
 			if (guestLeft()) return true;
@@ -34,7 +33,7 @@ public class LearnComputer extends ComputerRule {
 
     @Override
 	public void execute() throws Exception {
-        Computer comp = getComputer();
+        /*Computer comp = getComputer();
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
@@ -53,7 +52,7 @@ public class LearnComputer extends ComputerRule {
         else if (st.equals(State.SUSPEND)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                     " awakened in room " + room.getLocation());
-        }
+        }*/
 	}
 
 }

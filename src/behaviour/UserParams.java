@@ -6,12 +6,15 @@ public class UserParams {
 	private double light;
 	private boolean hadLunch;
     private boolean hadEntered;
+
+    private int computerId;
 	
 	UserParams(double t, double l) {
 		temperature = t;
 		light = l;
 		this.hadLunch = false;
         this.hadEntered = false;
+        this.computerId = -1;
 	}
 
 	public double getTemperature() {
@@ -44,6 +47,14 @@ public class UserParams {
 
     void setHadEntered() {
         this.hadEntered = true;
+    }
+
+    public void setComputerId(int id) {
+	    this.computerId = id;
+    }
+
+    public int getComputerId() {
+	    return computerId;
     }
 
 }

@@ -21,6 +21,7 @@ public class NormalHVAC extends HVACRule {
 	
 	@Override
 	public boolean evaluate() {
+        sampleTemperature();
 	    Window window = getWindow();
         HVAC.State st = getHvac().getCurrentState();
 
@@ -87,5 +88,6 @@ public class NormalHVAC extends HVACRule {
             if (Debugger.isEnabled()) Debugger.log("HVAC switched OFF in room " + room.getLocation());
             hvac.setCurrentState(HVAC.State.OFF);
         }
+        saveAction();
 	}
 }

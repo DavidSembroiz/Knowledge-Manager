@@ -5,7 +5,7 @@ import static iot.Manager.CURRENT_STEP;
 public class Debugger {
 
     public static boolean isEnabled() {
-        return true;
+        return false;
 	}
 	
 	public static void log(Object o) {

@@ -100,44 +100,36 @@ public class Room {
 
         switch(type) {
             case "computer":
-                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-                    Computer c = new Computer(i);
-                    entities.add(c);
-                    ruleManager.addComputerRule(c);
-                }
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) entities.add(new Computer(i));
                 break;
             case "lamp":
-                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-                    Lamp l = new Lamp(i);
-                    entities.add(l);
-                    ruleManager.addLampRule(l);
-                }
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) entities.add(new Lamp(i));
                 break;
             case "hvac":
-                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-                    HVAC hvac = new HVAC(i);
-                    Window w = findUnassignedWindow();
-                    entities.add(hvac);
-                    if (w != null) ruleManager.addHVACRule(hvac, w);
-                }
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) entities.add(new HVAC(i));
                 break;
             case "door":
-                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-                    Door door = new Door(i);
-                    entities.add(door);
-                    ruleManager.addDoorRule(door);
-                }
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) ruleManager.addDoorRule(new Door(i));
                 break;
             case "window":
-                for (int i = 0; i < Integer.parseInt(qtt); ++i) {
-                    Window window = new Window(i);
-                    entities.add(window);
-                    ruleManager.addWindowRule(window);
-                }
+                for (int i = 0; i < Integer.parseInt(qtt); ++i) entities.add(new Window(i));
                 break;
             default: break;
 		}
 	}
+
+	public void addRules() {
+	    for (Object e : entities) {
+	        if (e instanceof HVAC) {
+                Window w = findUnassignedWindow();
+                if (w != null) ruleManager.addHVACRule((HVAC) e, w);
+            }
+            else if (e instanceof Computer) ruleManager.addComputerRule((Computer) e);
+	        else if (e instanceof Lamp) ruleManager.addLampRule((Lamp) e);
+	        else if (e instanceof Window) ruleManager.addWindowRule((Window) e);
+	        else if (e instanceof Door) ruleManager.addDoorRule((Door) e);
+        }
+    }
 
     private Window findUnassignedWindow() {
         return (Window) entities.stream().filter(o ->
@@ -199,6 +191,7 @@ public class Room {
             for (Object e : entities) {
                 if (e instanceof Computer && ((Computer) e).getId() == index) {
                     ((Computer) e).setCurrentState(Computer.State.valueOf(value));
+                    return;
                 }
             }
         }
@@ -218,4 +211,25 @@ public class Room {
         }
     }
 
+    public double getTemperature() {
+	    for (Sensor s : sensors) {
+	        if (s.getType().equals("temperature")) {
+	            double res = Double.parseDouble(s.getValue());
+	            if (res > 0) return res;
+            }
+        }
+        return 0;
+    }
+
+    public Computer.State getUsedComputer(String name) {
+	    for (Object o : entities) {
+	        if (o instanceof Computer) {
+	            Person p = ((Computer) o).getUsedBy();
+	            if (p != null && p.getName().equals(name)) {
+	                return ((Computer) o).getCurrentState();
+                }
+            }
+        }
+        return null;
+    }
 }

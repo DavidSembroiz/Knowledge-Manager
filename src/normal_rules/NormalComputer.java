@@ -18,11 +18,12 @@ public class NormalComputer extends ComputerRule {
 	@Override
 	public boolean evaluate() {
 		State st = getComputer().getCurrentState();
+		int threshold = 0;
 		if (st.equals(State.OFF)) {
-			if (isGuestComing()) return true;
+			if (isGuestComing(threshold)) return true;
 		}
 		if (st.equals(State.ON)) {
-			if (!isGuestComing() || room.isEmpty()) return true;
+			if (!isGuestComing(threshold) || room.isEmpty()) return true;
 		}
 		return false;
 	}
@@ -41,6 +42,7 @@ public class NormalComputer extends ComputerRule {
                     " switched OFF in room " + room.getLocation());
             comp.setCurrentState(State.OFF);
         }
+        saveAction();
 	}
 
 }

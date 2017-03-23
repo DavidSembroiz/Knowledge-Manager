@@ -21,7 +21,7 @@ public class SmartComputer extends ComputerRule {
         Computer comp = getComputer();
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
-			if (isGuestComing()) return true;
+			if (isGuestComing(60)) return true;
 		}
 		if (st.equals(State.ON)) {
 			if (guestLeft()) return true;
@@ -40,26 +40,29 @@ public class SmartComputer extends ComputerRule {
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                     " switched ON in room " + room.getLocation());
+            System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON " + room.getLocation());
             comp.setCurrentState(State.ON);
         }
 		else if (st.equals(State.ON)) {
             if (comp.getUsedBy() == null) {
                 if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                         " switched OFF in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " OFF " + room.getLocation());
                 comp.setCurrentState(State.OFF);
             }
             else {
                 if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                         " SUSPENDED in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " SUSP " + room.getLocation());
                 comp.setCurrentState(State.SUSPEND);
             }
         }
         else if (st.equals(State.SUSPEND)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                     " awakened in room " + room.getLocation());
+            System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON from SUS " + room.getLocation());
             comp.setCurrentState(State.ON);
         }
-        if (Manager.MODE == 0) saveAction();
 	}
 
 }

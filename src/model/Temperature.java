@@ -15,10 +15,10 @@ class Temperature {
 	};*/
 
     private static final double[] environmentalTemperature = {
-            9, 9, 8, 8, 7, 7,
-            6, 6, 7, 8, 9, 12,
-            14, 16, 16, 16, 16, 15,
-            14, 13, 12, 11, 10, 10
+            12, 12, 11, 11, 10, 10,
+            11, 11, 12, 13, 15, 16,
+            17, 19, 20, 22, 21, 20,
+            18, 17, 15, 14, 13, 12
     };
 
     static double[] getEnvironmentalTemperature() {

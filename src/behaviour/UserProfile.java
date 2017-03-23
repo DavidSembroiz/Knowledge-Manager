@@ -62,7 +62,7 @@ class UserProfile implements Cloneable {
     }
 
     /**
-	 * Returns a value within min <= value <= max
+	 * Returns a value between min and max
 	 */
     int getLunchDuration() {
 		return rand.nextInt((lunchDurationRange[1] - lunchDurationRange[0]) + 1) + lunchDurationRange[0];

@@ -1,10 +1,12 @@
 package behaviour;
 
 import building.Building;
+import building.Room;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import data.EventsDB;
+import entity.Computer;
 import iot.Manager;
 
 import java.io.FileReader;
@@ -164,18 +166,47 @@ public class PeopleManager {
 	
 	private void executeAction(Person p) {
 		p.setActing(true);
+		if (building.isPhysicalRoom(p.getLocation())) computeComfort(p, building.getRoom(p.getLocation()));
         building.getRoom(p.getLocation()).shiftPerson(p);
         p.changeState();
 	}
 
-	public void assignSpecificAction(Event e) {
+	/*
+	 Comfort is calculated using the values gathered when a person enters a room:
+
+	  - Room temperature vs desired temperature
+	  - Light status
+	  - Computer status when entering
+
+	 */
+
+
+    private void computeComfort(Person p, Room room) {
+
+	    /*
+	     Temperature Comfort
+	     */
+	    double roomTemp = room.getTemperature();
+	    double desiredTemp = p.getParams().getTemperature();
+        System.out.println(Manager.CURRENT_STEP + " Person " + p.getName() + " entered " + room.getLocation() +
+        " with temperature: " + roomTemp);
+
+
+	    /*
+	     Computer Comfort
+	     */
+        Computer.State state = room.getUsedComputer(p.getName());
+    }
+
+    public void assignSpecificAction(Event e) {
         Person p = getPerson(e.getName());
         String currentLoc = p.getLocation();
         p.assignAction(e.getAction(), e.getDest(), e.getNext(), e.getDuration());
         building.movePerson(p, currentLoc);
         if (!wasHavingLunch(p)) {
             building.unassignRoomElements(p, currentLoc);
-            building.assignRoomElements(p, e.getDest());
+            p.getParams().setComputerId(e.getComputerId());
+            building.setRoomElements(p, e.getDest());
         }
     }
 
@@ -195,7 +226,7 @@ public class PeopleManager {
                 if (wasHavingLunch(p)) dest = p.getPastLocation();
                 else dest = getDestination(p);
                 if (dest == null) return;
-                next = 1 + rand.nextInt(30);
+                next = 120 + rand.nextInt(30);
                 duration = p.getProfile().getRandomWalksDuration();
                 assigned = true;
             }

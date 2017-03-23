@@ -40,5 +40,6 @@ public class NormalLamp extends LampRule {
             if (Debugger.isEnabled()) Debugger.log("Lamp switched OFF in room " + room.getLocation());
             lamp.setCurrentState(Lamp.State.OFF);
         }
+        saveAction();
     }
 }

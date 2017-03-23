@@ -5,6 +5,8 @@ import entity.*;
 import iot.Manager;
 import iot.Sensor;
 import learn_rules.LearnComputer;
+import learn_rules.LearnHVAC;
+import learn_rules.LearnLamp;
 import normal_rules.NormalComputer;
 import normal_rules.NormalHVAC;
 import normal_rules.NormalLamp;
@@ -81,6 +83,9 @@ public class RuleManager {
                         case 2:
                             rulesEngine.registerRule(new NormalHVAC(r, h, w, temp, hum));
                             break;
+                        case 3:
+                            rulesEngine.registerRule(new LearnHVAC(r, h, w, temp, hum));
+                            break;
                     }
                     return;
                 }
@@ -103,6 +108,8 @@ public class RuleManager {
                         rulesEngine.registerRule(new NormalLamp(r, l, s));
                         break;
                     case 3:
+                        rulesEngine.registerRule(new LearnLamp(r, l, s));
+                        break;
                 }
                 return;
             }

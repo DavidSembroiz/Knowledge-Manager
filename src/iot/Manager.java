@@ -97,13 +97,12 @@ public class Manager {
 		if (NEW_BUILDING) buildingsdb.save(new BuildingGenerator(BUILDING, OFFICE_ROOMS, MEETING_ROOMS, CLASS_ROOMS).generateBuilding());
 
         building = buildingsdb.fetchData();
-        if (MODE != 0) building.fillSchedules();
+        if (MODE == 3) building.fillSchedules();
         if (MODE == 0 && GENERATE_PEOPLE == 1) uts.generatePeople();
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 
         consumption_writer = new CustomFileWriter("./res/results/consumption_" + MODE + ".log");
-
 
 
         switch (MODE) {
@@ -215,7 +214,37 @@ public class Manager {
 		}
 	}
 
-	private void baseSimulation() {
+
+    private void simulate() {
+		while (CURRENT_STEP < STEPS) {
+            peopleManager.updateActions();
+            if (CURRENT_STEP == 6840) emptyBuilding();
+            building.fireRules();
+			building.updateConsumption();
+			++CURRENT_STEP;
+		}
+		Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+        writeHourlyConsumption();
+        finish();
+	}
+
+    private void repeatSimulation() {
+		ArrayList<Event> events = eventsdb.fetchData();
+        while (CURRENT_STEP < STEPS) {
+            peopleManager.executeActions();
+            while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
+                peopleManager.assignSpecificAction(events.remove(0));
+            }
+            building.fireRules();
+            building.updateConsumption();
+            ++CURRENT_STEP;
+        }
+        Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+        writeHourlyConsumption();
+        finish();
+	}
+
+    private void baseSimulation() {
         /*
          * During normal simulation, all elements are ON between working hours
          */
@@ -232,46 +261,17 @@ public class Manager {
                 building.updateConsumption();
                 ++CURRENT_STEP;
             }
-
-            if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+            building.saveSchedules();
+            Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
             writeHourlyConsumption();
             finish();
         }
     }
 
     private void learningSimulation() {
+        ArrayList<Event> events = eventsdb.fetchData();
         while (CURRENT_STEP < STEPS) {
             building.performActuations();
-            //peopleManager.updateActions();
-            if (CURRENT_STEP == 6840) emptyBuilding();
-            //building.fireRules();
-            building.updateConsumption();
-            ++CURRENT_STEP;
-        }
-        building.saveSchedules();
-        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
-        finish();
-    }
-
-
-    private void simulate() {
-		while (CURRENT_STEP < STEPS) {
-            peopleManager.updateActions();
-            if (CURRENT_STEP == 6840) emptyBuilding();
-            building.fireRules();
-			building.updateConsumption();
-			++CURRENT_STEP;
-		}
-		building.saveSchedules();
-		if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
-        finish();
-	}
-
-    private void repeatSimulation() {
-		ArrayList<Event> events = eventsdb.fetchData();
-        while (CURRENT_STEP < STEPS) {
             peopleManager.executeActions();
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                 peopleManager.assignSpecificAction(events.remove(0));
@@ -280,10 +280,11 @@ public class Manager {
             building.updateConsumption();
             ++CURRENT_STEP;
         }
-        if (Debugger.isEnabled()) Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
+        Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         writeHourlyConsumption();
         finish();
-	}
+    }
+
 
     private void emptyBuilding() {
         Random rand = new Random();

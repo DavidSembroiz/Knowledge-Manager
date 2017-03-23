@@ -1,17 +1,15 @@
-package smart_rules;
+package learn_rules;
 
 import building.Room;
-import domain.Debugger;
 import entity.HVAC;
 import entity.HVAC.State;
 import entity.Window;
-import iot.Manager;
 import iot.Sensor;
 import rule_headers.HVACRule;
 
-public class SmartHVAC extends HVACRule {
-	
-	public SmartHVAC(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
+public class LearnHVAC extends HVACRule {
+
+	public LearnHVAC(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
         super(r, h, w, temp, hum);
 	}
 	
@@ -49,7 +47,7 @@ public class SmartHVAC extends HVACRule {
 
     @Override
 	public void execute() throws Exception {
-	    HVAC hvac = getHvac();
+	    /*HVAC hvac = getHvac();
 	    Room room = getRoom();
 	    Window window = getWindow();
 		State st = hvac.getCurrentState();
@@ -84,5 +82,6 @@ public class SmartHVAC extends HVACRule {
                 hvac.setCurrentState(State.ON);
             }
         }
+        if (Manager.MODE == 0) saveAction();*/
 	}
 }

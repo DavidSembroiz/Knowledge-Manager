@@ -78,6 +78,7 @@ public class BuildingsDB extends NoSQLDB<JsonObject, Building> {
                 JsonObject ent = (JsonObject) ent1;
                 r.addEntity(ent.get("type").getAsString(), ent.get("quantity").getAsString());
             }
+            r.addRules();
             rooms.add(r);
         }
         return new Building(rooms);

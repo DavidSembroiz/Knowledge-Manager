@@ -11,6 +11,8 @@ public class Event implements Comparable<Event> {
     private String dest;
     private int next;
     private int duration;
+    private int computerId;
+
 
     public Event(int step, String name, Action a, String dest, int next, int duration) {
         this.step = step;
@@ -19,6 +21,7 @@ public class Event implements Comparable<Event> {
         this.dest = dest;
         this.next = next;
         this.duration = duration;
+        this.computerId = -1;
     }
 
     public int getStep() {
@@ -48,5 +51,13 @@ public class Event implements Comparable<Event> {
     @Override
     public int compareTo(Event other) {
         return Integer.compare(step, other.getStep());
+    }
+
+    public void addComputerId(int computerId) {
+        this.computerId = computerId;
+    }
+
+    int getComputerId() {
+        return computerId;
     }
 }

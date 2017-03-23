@@ -2,6 +2,7 @@ package rule_headers;
 
 import behaviour.Person;
 import building.Room;
+import domain.CustomFileWriter;
 import entity.HVAC;
 import entity.Window;
 import iot.Manager;
@@ -13,15 +14,16 @@ import java.util.ArrayList;
 
 public class HVACRule extends BasicRule {
 
-    private int PREDICTION_THRESHOLD = 60;
+    private int PREDICTION_THRESHOLD = 120;
 
     private Room room;
     private ModelManager models;
 
-    Sensor temperature;
+    private Sensor temperature;
     private Sensor humidity;
     private Window window;
     private HVAC hvac;
+    private CustomFileWriter writer;
 
     public HVACRule(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
         super("HVAC rule_headers #" + h.getId(), "Rule to manage HVAC", h.getId());
@@ -31,6 +33,14 @@ public class HVACRule extends BasicRule {
         this.window = w;
         hvac = h;
         this.room = r;
+        writer = new CustomFileWriter("./res/results/temperature.log");
+    }
+
+    protected void sampleTemperature() {
+        String room = "upc/campusnord/d3001";
+        if (getRoom().getLocation().equals(room) && Manager.CURRENT_STEP%60 == 0) {
+            writer.write(temperature.getValue());
+        }
     }
 
     public HVAC getHvac() { return hvac; }
@@ -95,9 +105,10 @@ public class HVACRule extends BasicRule {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double environTemp = models.getCurrentEnvironmentalTemperature();
         double newTemp;
+        double factor = 0.005;
         if (roomTemp == environTemp) return;
-        if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.005;
-        else newTemp = roomTemp + (environTemp - roomTemp) * 0.005;
+        if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * factor;
+        else newTemp = roomTemp + (environTemp - roomTemp) * factor;
         temperature.setValue(Double.toString(newTemp));
     }
 
@@ -109,8 +120,9 @@ public class HVACRule extends BasicRule {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double pplTemp = getPeopleTemperature();
         double newTemp = 0;
-        if (roomTemp < pplTemp) newTemp = roomTemp + (pplTemp - roomTemp) * 0.01;
-        else if (pplTemp < roomTemp) newTemp = roomTemp - (roomTemp - pplTemp) * 0.01;
+        double factor = 0.01;
+        if (roomTemp < pplTemp) newTemp = roomTemp + (pplTemp - roomTemp) * factor;
+        else if (pplTemp < roomTemp) newTemp = roomTemp - (roomTemp - pplTemp) * factor;
         temperature.setValue(Double.toString(newTemp));
     }
 
@@ -122,24 +134,21 @@ public class HVACRule extends BasicRule {
         double roomTemp = Double.parseDouble(temperature.getValue());
         double environTemp = models.getCurrentEnvironmentalTemperature();
         double newTemp;
+        double factor = 0.0025;
         if (roomTemp == environTemp) return;
-        if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * 0.0025;
-        else newTemp = roomTemp + (environTemp - roomTemp) * 0.0025;
+        if (roomTemp > environTemp) newTemp = roomTemp - (roomTemp - environTemp) * factor;
+        else newTemp = roomTemp + (environTemp - roomTemp) * factor;
         temperature.setValue(Double.toString(newTemp));
     }
 
     protected boolean reactivateFromSuspend() {
         double pplTemp = getPeopleTemperature();
         double roomTemp = Double.parseDouble(temperature.getValue());
-        return Math.abs(pplTemp - roomTemp) > 2;
+        return Math.abs(pplTemp - roomTemp) > 1;
     }
 
     protected void saveAction() {
         room.addTimeToSchedule("hvac_" + hvac.getId(), Manager.CURRENT_STEP, hvac.getCurrentState().toString());
-    }
-
-    public Sensor getTemperatureSensor() {
-        return temperature;
     }
 
 }

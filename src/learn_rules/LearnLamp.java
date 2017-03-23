@@ -1,15 +1,13 @@
-package smart_rules;
+package learn_rules;
 
 import building.Room;
-import domain.Debugger;
 import entity.Lamp;
-import iot.Manager;
 import iot.Sensor;
 import rule_headers.LampRule;
 
-public class SmartLamp extends LampRule {
+public class LearnLamp extends LampRule {
 
-    public SmartLamp(Room r, Lamp l, Sensor light) {
+    public LearnLamp(Room r, Lamp l, Sensor light) {
         super(r, l, light);
     }
 
@@ -40,7 +38,7 @@ public class SmartLamp extends LampRule {
 
     @Override
     public void execute() throws Exception {
-        Lamp lamp = getLamp();
+        /*Lamp lamp = getLamp();
         Room room = getRoom();
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
@@ -53,5 +51,6 @@ public class SmartLamp extends LampRule {
             System.out.println(Manager.CURRENT_STEP + " LAMP " + lamp.getId() + " OFF " + room.getLocation());
             lamp.setCurrentState(Lamp.State.OFF);
         }
+        if (Manager.MODE == 0) saveAction();*/
     }
 }

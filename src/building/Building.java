@@ -51,6 +51,26 @@ public class Building {
         }
     }
 
+    public boolean isPhysicalRoom(String loc) {
+        return !(loc.equals("inside") || loc.equals("outside") || loc.equals("salon"));
+    }
+
+    public void setRoomElements(Person p, String dest) {
+        int computerId = p.getParams().getComputerId();
+        Room r = getRoom(dest);
+        if (r != null) {
+            HashSet<Object> ents = r.getEntities();
+            for (Object e : ents) {
+                if (e instanceof Computer) {
+                    if (((Computer) e).getId() == computerId) {
+                        ((Computer) e).setUsedBy(p);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public enum ROOM_TYPE {
         OFFICE(3),
         MEETING_ROOM(20),
@@ -168,6 +188,7 @@ public class Building {
                     if (((Computer) e).getUsedBy() == null &&
                             ((Computer) e).getCurrentState().equals(Computer.State.OFF)) {
                         ((Computer) e).setUsedBy(p);
+                        p.getParams().setComputerId(((Computer) e).getId());
                         return;
                     }
                 }
@@ -184,6 +205,7 @@ public class Building {
                     Person c = ((Computer) e).getUsedBy();
                     if (c != null && c.getName().equals(p.getName())) {
                         ((Computer) e).setUsedBy(null);
+                        p.getParams().setComputerId(-1);
                     }
                 }
             }

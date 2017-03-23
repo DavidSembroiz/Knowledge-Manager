@@ -23,10 +23,9 @@ public class ComputerRule extends BasicRule {
         this.power = s;
     }
 
-    protected boolean isGuestComing() {
-        int PREDICTION_THRESHOLD = 30;
+    protected boolean isGuestComing(int threshold) {
         Person guest = comp.getUsedBy();
-        return guest != null && guest.getNextActionSteps() < PREDICTION_THRESHOLD
+        return guest != null && guest.getNextActionSteps() < threshold
                 && room.getLocation().equals(guest.getLocation());
     }
 

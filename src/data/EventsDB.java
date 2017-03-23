@@ -49,6 +49,7 @@ public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
 
     @Override
     public void correctInitialState() {
+        if (Manager.MODE != 0) return;
         dbClient.context().deleteDB("events", "delete database");
         dbClient.context().createDB("events");
     }
@@ -87,7 +88,12 @@ public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
                 String dest = ob.get("dest").getAsString();
                 int next = ob.get("next").getAsInt();
                 int duration = ob.get("duration").getAsInt();
-                res.add(new Event(step, name, a, dest, next, duration));
+                Event event = new Event(step, name, a, dest, next, duration);
+                if (ob.has("assignments")) {
+                    JsonObject assigns = ob.get("assignments").getAsJsonObject();
+                    event.addComputerId(assigns.get("computer").getAsInt());
+                }
+                res.add(event);
             }
         }
         res.sort(Comparator.comparingInt(Event::getStep));
@@ -101,6 +107,12 @@ public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
         ev.addProperty("dest", p.getLocation());
         ev.addProperty("next", p.getNextActionSteps());
         ev.addProperty("duration", p.getRemainingSteps());
+        int computerId = p.getParams().getComputerId();
+        if (computerId > -1) {
+            JsonObject c = new JsonObject();
+            c.addProperty("computer", p.getParams().getComputerId());
+            ev.add("assignments", c);
+        }
         return ev;
     }
 }

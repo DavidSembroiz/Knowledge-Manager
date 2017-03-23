@@ -44,8 +44,8 @@ public class ModelManager {
      */
 
     private double getWeightedValue(double val1, double val2) {
-        val1 = val1 > val2 ?  val1 - (val1 - val2) : val1 + (val2 - val1);
-        return val1 * (Manager.CURRENT_STEP%360/360.0);
+        double diff = Math.abs(val1 - val2) * (Manager.CURRENT_STEP%360/360.0);
+        return val1 > val2 ?  val1 - diff : val1 + diff;
     }
 
 }

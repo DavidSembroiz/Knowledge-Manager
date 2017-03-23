@@ -8,8 +8,9 @@ public class Main {
 	public static void main(String[] args) {
 		
 		System.err.close();
-		
-		new Manager();
-		
+
+		for (int iter = 0; iter < 1; ++iter) {
+            new Manager();
+        }
 	}
 }
