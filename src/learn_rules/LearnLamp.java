@@ -23,8 +23,8 @@ public class LearnLamp extends LampRule {
 		 * If light is OFF:
 		 *  - ON: people inside or coming to the room and environmental light is bad
 		 */
-        Lamp lamp = getLamp();
-        Room room = getRoom();
+        Lamp lamp = super.lamp;
+        Room room = super.room;
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
             if ((room.arePeopleInside() || room.arePeopleComing(PREDICTION_THRESHOLD))
@@ -38,19 +38,5 @@ public class LearnLamp extends LampRule {
 
     @Override
     public void execute() throws Exception {
-        /*Lamp lamp = getLamp();
-        Room room = getRoom();
-        Lamp.State st = lamp.getCurrentState();
-        if (st.equals(Lamp.State.OFF)) {
-            if (Debugger.isEnabled()) Debugger.log("Lamp switched ON in room " + room.getLocation());
-            System.out.println(Manager.CURRENT_STEP + " LAMP " + lamp.getId() + " ON " + room.getLocation());
-            lamp.setCurrentState(Lamp.State.ON);
-        }
-        else if (st.equals(Lamp.State.ON)) {
-            if (Debugger.isEnabled()) Debugger.log("Lamp switched OFF in room " + room.getLocation());
-            System.out.println(Manager.CURRENT_STEP + " LAMP " + lamp.getId() + " OFF " + room.getLocation());
-            lamp.setCurrentState(Lamp.State.OFF);
-        }
-        if (Manager.MODE == 0) saveAction();*/
     }
 }
