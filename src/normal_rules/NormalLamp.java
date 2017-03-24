@@ -3,6 +3,7 @@ package normal_rules;
 import building.Room;
 import domain.Debugger;
 import entity.Lamp;
+import iot.Manager;
 import iot.Sensor;
 import rule_headers.LampRule;
 
@@ -40,6 +41,7 @@ public class NormalLamp extends LampRule {
             if (Debugger.isEnabled()) Debugger.log("Lamp switched OFF in room " + room.getLocation());
             lamp.setCurrentState(Lamp.State.OFF);
         }
+        lamp.setTimeChanged(Manager.CURRENT_STEP);
         saveAction();
     }
 }

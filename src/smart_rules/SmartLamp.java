@@ -53,5 +53,6 @@ public class SmartLamp extends LampRule {
             System.out.println(Manager.CURRENT_STEP + " LAMP " + lamp.getId() + " OFF " + room.getLocation());
             lamp.setCurrentState(Lamp.State.OFF);
         }
+        lamp.setTimeChanged(Manager.CURRENT_STEP);
     }
 }

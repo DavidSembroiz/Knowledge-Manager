@@ -8,6 +8,7 @@ public class Computer {
     private int id;
     private Person usedBy;
 	private State currentState;
+	private int timeChanged;
     private double consumptionHistory[];
 
 
@@ -68,4 +69,12 @@ public class Computer {
 	public void addConsumption(double cons) {
         this.consumptionHistory[Manager.CURRENT_STEP/(360/(Manager.CONSUMPTION_RESOLUTION/24))] += cons;
 	}
+
+    public int getTimeChanged() {
+        return timeChanged;
+    }
+
+    public void setTimeChanged(int timeChanged) {
+        this.timeChanged = timeChanged;
+    }
 }

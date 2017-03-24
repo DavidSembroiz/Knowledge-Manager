@@ -60,9 +60,10 @@ public class SmartComputer extends ComputerRule {
         else if (st.equals(State.SUSPEND)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                     " awakened in room " + room.getLocation());
-            System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON from SUS " + room.getLocation());
+            System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON from SUSP " + room.getLocation());
             comp.setCurrentState(State.ON);
         }
+        comp.setTimeChanged(Manager.CURRENT_STEP);
 	}
 
 }

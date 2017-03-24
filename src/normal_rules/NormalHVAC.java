@@ -88,6 +88,7 @@ public class NormalHVAC extends HVACRule {
             if (Debugger.isEnabled()) Debugger.log("HVAC switched OFF in room " + room.getLocation());
             hvac.setCurrentState(HVAC.State.OFF);
         }
+        hvac.setTimeChanged(Manager.CURRENT_STEP);
         saveAction();
 	}
 }

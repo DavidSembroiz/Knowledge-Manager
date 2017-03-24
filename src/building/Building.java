@@ -2,8 +2,8 @@ package building;
 
 import behaviour.Person;
 import data.Schedule;
-import data.Schedule.Element;
 import data.SchedulesDB;
+import domain.CustomFileWriter;
 import domain.Debugger;
 import entity.Computer;
 import entity.HVAC;
@@ -11,65 +11,12 @@ import entity.Lamp;
 import iot.Manager;
 import javafx.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class Building {
 
-    public void saveSchedules() {
-        for (Room r : rooms) {
-            r.saveSchedule();
-        }
-    }
-
-    private Room getRoomById(String roomId) {
-        for (Room r : rooms) {
-            if (r.getLocation().equals(roomId)) return r;
-        }
-        return null;
-    }
-
-    public void fillSchedules() {
-        List<Schedule> schedules = SchedulesDB.getInstance().fetchData();
-        for (Schedule s : schedules) {
-            Room r = getRoomById(s.get_id());
-            if (r != null) r.insertSchedule(s);
-        }
-    }
-
-    public void performActuations() {
-        for (Room r : rooms) {
-            ArrayList<Element> elements = r.getSchedule().getElements();
-            for (Element e : elements) {
-                ArrayList<Pair<Integer, String>> times = e.getTimes();
-                for (Pair<Integer, String> time : times) {
-                    if (time.getKey().equals(Manager.CURRENT_STEP)) {
-                        r.performActuation(e.getElementType(), e.getElementIndex(), time.getValue());
-                    }
-                }
-            }
-
-        }
-    }
-
-    public boolean isPhysicalRoom(String loc) {
-        return !(loc.equals("inside") || loc.equals("outside") || loc.equals("salon"));
-    }
-
-    public void setRoomElements(Person p, String dest) {
-        int computerId = p.getParams().getComputerId();
-        Room r = getRoom(dest);
-        if (r != null) {
-            HashSet<Object> ents = r.getEntities();
-            for (Object e : ents) {
-                if (e instanceof Computer) {
-                    if (((Computer) e).getId() == computerId) {
-                        ((Computer) e).setUsedBy(p);
-                        return;
-                    }
-                }
-            }
-        }
-    }
 
     public enum ROOM_TYPE {
         OFFICE(3),
@@ -90,12 +37,14 @@ public class Building {
 	private String[] officeLocations;
     private String[] meetingLocations;
     private String[] classLocations;
+    private CustomFileWriter consumption_writer;
 
 
 	public Building(ArrayList<Room> rooms){
 		this.rooms = rooms;
 		addSpecialRooms();
 		parseLocations();
+        consumption_writer = new CustomFileWriter("./res/results/consumption_" + Manager.MODE + ".log");
 	}
 	
 	private void addSpecialRooms() {
@@ -213,9 +162,13 @@ public class Building {
     }
 
     public double calculateAccumulatedConsumption() {
-        double fcons[] = getHourlyConsumption();
-        double res = 0;
-        for (double fcon : fcons) res += fcon;
+        double ccons[] = getHourlyConsumption("computer");
+        double hcons[] = getHourlyConsumption("hvac");
+        double lcons[] = getHourlyConsumption("lamp");
+        double cres = 0, hres = 0, lres = 0;
+        for (double ccon : ccons) cres += ccon;
+        for (double hcon : hcons) hres += hcon;
+        for (double lcon : lcons) lres += lcon;
 
         /*
          * Every step equals to 10 seconds, and consumption is added every step.
@@ -224,18 +177,25 @@ public class Building {
          * Equals to (fcons/360)/1000 for 1 day
          *
          */
-        return res;
+        Debugger.log("Computer " + cres + " kWh");
+        Debugger.log("HVAC " + hres + " kWh");
+        Debugger.log("LAMP " + lres + " kWh");
+        for (int i = 0; i < ccons.length; ++i) {
+            consumption_writer.write(Double.toString(ccons[i] + hcons[i] + lcons[i]));
+        }
+
+        return cres + hres + lres;
 	}
 
-	public double[] getHourlyConsumption() {
+	private double[] getHourlyConsumption(String t) {
         double fcons[] = new double[Manager.CONSUMPTION_RESOLUTION];
         for (int i = 0; i < fcons.length; ++i) {
             for (Room r : rooms) {
                 HashSet<Object> ents = r.getEntities();
                 for (Object e : ents) {
-                    if (e instanceof Computer) fcons[i] += ((Computer) e).getHourlyConsumption(i);
-                    else if (e instanceof HVAC) fcons[i] += ((HVAC) e).getHourlyConsumption(i);
-                    else if (e instanceof Lamp) fcons[i] += ((Lamp) e).getHourlyConsumption(i);
+                    if (t.equals("computer") && e instanceof Computer) fcons[i] += ((Computer) e).getHourlyConsumption(i);
+                    else if (t.equals("hvac") && e instanceof HVAC) fcons[i] += ((HVAC) e).getHourlyConsumption(i);
+                    else if (t.equals("lamp") && e instanceof Lamp) fcons[i] += ((Lamp) e).getHourlyConsumption(i);
                 }
             }
             fcons[i] /= (360*1000);
@@ -254,5 +214,61 @@ public class Building {
             if (r.getLocation().equals(location)) return r.getType();
         }
         return null;
+    }
+
+    public void saveSchedules() {
+        for (Room r : rooms) {
+            r.saveSchedule();
+        }
+    }
+
+    private Room getRoomById(String roomId) {
+        for (Room r : rooms) {
+            if (r.getLocation().equals(roomId)) return r;
+        }
+        return null;
+    }
+
+    public void fillSchedules() {
+        List<Schedule> schedules = SchedulesDB.getInstance().fetchData();
+        for (Schedule s : schedules) {
+            Room r = getRoomById(s.get_id());
+            if (r != null) r.insertSchedule(s);
+        }
+    }
+
+    public void performActuations() {
+        for (Room r : rooms) {
+            ArrayList<Schedule.Element> elements = r.getSchedule().getElements();
+            for (Schedule.Element e : elements) {
+                ArrayList<Pair<Integer, String>> times = e.getTimes();
+                for (Pair<Integer, String> time : times) {
+                    if (time.getKey().equals(Manager.CURRENT_STEP)) {
+                        r.performActuation(e.getElementType(), e.getElementIndex(), time.getValue());
+                    }
+                }
+            }
+
+        }
+    }
+
+    public boolean isPhysicalRoom(String loc) {
+        return !(loc.equals("inside") || loc.equals("outside") || loc.equals("salon"));
+    }
+
+    public void setRoomElements(Person p, String dest) {
+        int computerId = p.getParams().getComputerId();
+        Room r = getRoom(dest);
+        if (r != null) {
+            HashSet<Object> ents = r.getEntities();
+            for (Object e : ents) {
+                if (e instanceof Computer) {
+                    if (((Computer) e).getId() == computerId) {
+                        ((Computer) e).setUsedBy(p);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

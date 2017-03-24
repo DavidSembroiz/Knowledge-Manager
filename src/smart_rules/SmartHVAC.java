@@ -80,9 +80,10 @@ public class SmartHVAC extends HVACRule {
             else {
                 if (Debugger.isEnabled())
                     Debugger.log("HVAC switched from SUSPENDED to ON in room " + room.getLocation());
-                System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " ON to SUSP" + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " ON to SUSP " + room.getLocation());
                 hvac.setCurrentState(State.ON);
             }
         }
+        hvac.setTimeChanged(Manager.CURRENT_STEP);
 	}
 }

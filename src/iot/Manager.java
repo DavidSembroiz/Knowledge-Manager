@@ -10,7 +10,6 @@ import data.BuildingsDB;
 import data.EventsDB;
 import data.IdentifierDB;
 import data.SchedulesDB;
-import domain.CustomFileWriter;
 import domain.Debugger;
 import domain.Mqtt;
 import domain.Utils;
@@ -80,7 +79,7 @@ public class Manager {
     private BuildingsDB buildingsdb;
     private SchedulesDB schedulesdb;
 	
-	private CustomFileWriter consumption_writer;
+
 
 	
 	public Manager() {
@@ -102,7 +101,7 @@ public class Manager {
 		peopleManager = PeopleManager.getInstance();
 		peopleManager.setBuilding(building);
 
-        consumption_writer = new CustomFileWriter("./res/results/consumption_" + MODE + ".log");
+
 
 
         switch (MODE) {
@@ -224,7 +223,6 @@ public class Manager {
 			++CURRENT_STEP;
 		}
 		Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
         finish();
 	}
 
@@ -240,7 +238,6 @@ public class Manager {
             ++CURRENT_STEP;
         }
         Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
         finish();
 	}
 
@@ -263,7 +260,6 @@ public class Manager {
             }
             building.saveSchedules();
             Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-            writeHourlyConsumption();
             finish();
         }
     }
@@ -281,7 +277,6 @@ public class Manager {
             ++CURRENT_STEP;
         }
         Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
-        writeHourlyConsumption();
         finish();
     }
 
@@ -303,13 +298,6 @@ public class Manager {
         mqtt.disconnect();
     }
 
-
-    private void writeHourlyConsumption() {
-        double cons[] = building.getHourlyConsumption();
-        for (double con : cons) {
-            consumption_writer.write(Double.toString(con));
-        }
-    }
 
 	
 	private void printBuilding() {

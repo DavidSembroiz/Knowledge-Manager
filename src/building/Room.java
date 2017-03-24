@@ -5,6 +5,7 @@ import data.Schedule;
 import data.SchedulesDB;
 import domain.Debugger;
 import entity.*;
+import iot.Manager;
 import iot.Sensor;
 import rule_headers.RuleManager;
 
@@ -191,6 +192,7 @@ public class Room {
             for (Object e : entities) {
                 if (e instanceof Computer && ((Computer) e).getId() == index) {
                     ((Computer) e).setCurrentState(Computer.State.valueOf(value));
+                    ((Computer) e).setTimeChanged(Manager.CURRENT_STEP);
                     return;
                 }
             }
@@ -199,6 +201,8 @@ public class Room {
             for (Object e : entities) {
                 if (e instanceof HVAC && ((HVAC) e).getId() == index) {
                     ((HVAC) e).setCurrentState(HVAC.State.valueOf(value));
+                    ((HVAC) e).setTimeChanged(Manager.CURRENT_STEP);
+                    return;
                 }
             }
         }
@@ -206,6 +210,8 @@ public class Room {
             for (Object e : entities) {
                 if (e instanceof Lamp && ((Lamp) e).getId() == index) {
                     ((Lamp) e).setCurrentState(Lamp.State.valueOf(value));
+                    ((Lamp) e).setTimeChanged(Manager.CURRENT_STEP);
+                    return;
                 }
             }
         }

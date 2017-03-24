@@ -4,6 +4,7 @@ import building.Room;
 import domain.Debugger;
 import entity.Computer;
 import entity.Computer.State;
+import iot.Manager;
 import iot.Sensor;
 import rule_headers.ComputerRule;
 
@@ -42,6 +43,7 @@ public class NormalComputer extends ComputerRule {
                     " switched OFF in room " + room.getLocation());
             comp.setCurrentState(State.OFF);
         }
+        comp.setTimeChanged(Manager.CURRENT_STEP);
         saveAction();
 	}
 
