@@ -25,8 +25,8 @@ public class SmartLamp extends LampRule {
 		 * If light is OFF:
 		 *  - ON: people inside or coming to the room and environmental light is bad
 		 */
-        Lamp lamp = getLamp();
-        Room room = getRoom();
+        Lamp lamp = super.lamp;
+        Room room = super.room;
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
             if ((room.arePeopleInside() || room.arePeopleComing(PREDICTION_THRESHOLD))
@@ -40,8 +40,8 @@ public class SmartLamp extends LampRule {
 
     @Override
     public void execute() throws Exception {
-        Lamp lamp = getLamp();
-        Room room = getRoom();
+        Lamp lamp = super.lamp;
+        Room room = super.room;
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Lamp switched ON in room " + room.getLocation());

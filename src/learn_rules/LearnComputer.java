@@ -3,6 +3,7 @@ package learn_rules;
 import building.Room;
 import entity.Computer;
 import entity.Computer.State;
+import iot.Manager;
 import iot.Sensor;
 import rule_headers.ComputerRule;
 
@@ -13,12 +14,26 @@ public class LearnComputer extends ComputerRule {
         super(r, c, s);
     }
 
+    /*
+        Checks if the computer was changed too soon, too late or at the necessary time:
+            * 1 for too soon
+            * 0 for correctly
+            * -1 for too late
+     */
+
+    private int checkWhen(Computer comp) {
+        int res = Manager.CURRENT_STEP - super.comp.getTimeChanged();
+        if (res == 60) return 0;
+        return res > 60 ? 1 : -1;
+
+    }
+
 	
 	@Override
 	public boolean evaluate() {
-        Computer comp = getComputer();
+        Computer comp = super.comp;
 		State st = comp.getCurrentState();
-		if (st.equals(State.OFF)) {
+		/*if (st.equals(State.OFF)) {
 			if (isGuestComing(60)) return true;
 		}
 		if (st.equals(State.ON)) {
@@ -27,8 +42,19 @@ public class LearnComputer extends ComputerRule {
 		if (st.equals(State.SUSPEND)) {
             if (guestReturned()) return true;
         }
-		return false;
+		return false;*/
+
+		if (st.equals(State.ON)) {
+            int r = checkWhen(comp);
+            if (r != 0) adjustSchedule(r);
+        }
+        return false;
 	}
+
+    private void adjustSchedule(int r) {
+        if (r == 1) {
+        }
+    }
 
 
     @Override

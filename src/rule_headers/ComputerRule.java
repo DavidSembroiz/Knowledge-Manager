@@ -11,8 +11,8 @@ public class ComputerRule extends BasicRule {
 
     protected Room room;
 
-    private Sensor power;
-    private Computer comp;
+    protected Sensor power;
+    protected Computer comp;
 
 
 
@@ -42,7 +42,5 @@ public class ComputerRule extends BasicRule {
     protected void saveAction() {
         room.addTimeToSchedule("computer_" + comp.getId(), Manager.CURRENT_STEP, comp.getCurrentState().toString());
     }
-
-    public Computer getComputer() { return comp; }
 
 }

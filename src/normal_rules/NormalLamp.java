@@ -15,8 +15,8 @@ public class NormalLamp extends LampRule {
 
     @Override
     public boolean evaluate() {
-        Lamp lamp = getLamp();
-        Room room = getRoom();
+        Lamp lamp = super.lamp;
+        Room room = super.room;
 
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
@@ -30,8 +30,8 @@ public class NormalLamp extends LampRule {
 
     @Override
     public void execute() throws Exception {
-        Lamp lamp = getLamp();
-        Room room = getRoom();
+        Lamp lamp = super.lamp;
+        Room room = super.room;
         Lamp.State st = lamp.getCurrentState();
         if (st.equals(Lamp.State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Lamp switched ON in room " + room.getLocation());

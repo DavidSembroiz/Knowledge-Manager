@@ -18,7 +18,7 @@ public class NormalComputer extends ComputerRule {
 	
 	@Override
 	public boolean evaluate() {
-		State st = getComputer().getCurrentState();
+		State st = super.comp.getCurrentState();
 		int threshold = 0;
 		if (st.equals(State.OFF)) {
 			if (isGuestComing(threshold)) return true;
@@ -31,7 +31,7 @@ public class NormalComputer extends ComputerRule {
 	
 	@Override
 	public void execute() throws Exception {
-        Computer comp = getComputer();
+        Computer comp = super.comp;
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +

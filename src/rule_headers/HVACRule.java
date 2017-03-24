@@ -16,13 +16,13 @@ public class HVACRule extends BasicRule {
 
     private int PREDICTION_THRESHOLD = 120;
 
-    private Room room;
+    protected Room room;
     private ModelManager models;
 
-    private Sensor temperature;
-    private Sensor humidity;
-    private Window window;
-    private HVAC hvac;
+    protected Sensor temperature;
+    protected Sensor humidity;
+    protected Window window;
+    protected HVAC hvac;
     private CustomFileWriter writer;
 
     public HVACRule(Room r, HVAC h, Window w, Sensor temp, Sensor hum) {
@@ -38,19 +38,9 @@ public class HVACRule extends BasicRule {
 
     protected void sampleTemperature() {
         String room = "upc/campusnord/d3001";
-        if (getRoom().getLocation().equals(room) && Manager.CURRENT_STEP%60 == 0) {
+        if (this.room.getLocation().equals(room) && Manager.CURRENT_STEP%60 == 0) {
             writer.write(temperature.getValue());
         }
-    }
-
-    public HVAC getHvac() { return hvac; }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    protected Window getWindow() {
-        return window;
     }
 
     protected Integer getPredictionThreshold() { return PREDICTION_THRESHOLD; }

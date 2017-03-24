@@ -22,8 +22,8 @@ public class NormalHVAC extends HVACRule {
 	@Override
 	public boolean evaluate() {
         sampleTemperature();
-	    Window window = getWindow();
-        HVAC.State st = getHvac().getCurrentState();
+	    Window window = super.window;
+        HVAC.State st = super.hvac.getCurrentState();
 
         if (st.equals(HVAC.State.OFF)) {
             moderateTemperature();
@@ -49,9 +49,9 @@ public class NormalHVAC extends HVACRule {
 
     @Override
 	public void execute() throws Exception {
-	    HVAC hvac = getHvac();
-	    Room room = getRoom();
-	    Window window = getWindow();
+	    HVAC hvac = super.hvac;
+	    Room room = super.room;
+	    Window window = super.window;
         HVAC.State st = hvac.getCurrentState();
         if (workingHours()) {
             if (st.equals(HVAC.State.OFF)) {

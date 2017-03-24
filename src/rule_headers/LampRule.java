@@ -9,11 +9,11 @@ import org.easyrules.core.BasicRule;
 
 public class LampRule extends BasicRule {
 
-    private Room room;
+    protected Room room;
 	private ModelManager models;
 	
 	private Sensor luminosity;
-    private Lamp lamp;
+    protected Lamp lamp;
 
 	
 	public LampRule(Room r, Lamp l, Sensor light) {
@@ -23,14 +23,6 @@ public class LampRule extends BasicRule {
 		this.lamp = l;
 		this.luminosity = light;
 	}
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public Lamp getLamp() {
-        return lamp;
-    }
 
     protected boolean environmentalLightOK() {
         int ENVIRONMENTAL_LIGHT_THRESHOLD = 500;
