@@ -1,22 +1,16 @@
 package domain;
 
+import data.IdentifierDB;
 import iot.Manager;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
-
-import org.eclipse.paho.client.mqttv3.*;
-
-/**
- * 
- * @author David
- *
- *TODO utils might not be necessary
- *
- */
 
 
 public class Mqtt {
@@ -32,25 +26,16 @@ public class Mqtt {
 	private String PASSWORD;
 	private String APIKEY;
 	private String CLIENTID;
-	private MqttConnectOptions connOpts;
-	//private MqttClient client;
-	private MqttAsyncClient client;
-	private MqttCb callback;
-	private ArrayList<String> ids;
-	private String topic;
-	private Utils uts;
-	private Properties prop;
-	private Manager manager;
-	private int subs;
+    private MqttAsyncClient client;
+    private ArrayList<String> ids;
+    private Manager manager;
 
-	public Mqtt(Manager m, Database awsdb) {
-		subs = 0;
-		ids = new ArrayList<String>();
-		uts = Utils.getInstance();
+	public Mqtt(Manager m, IdentifierDB awsdb) {
+		ids = new ArrayList<>();
 		this.manager = m;
 		loadProperties();
-		connect();
 		ids = awsdb.queryIds(QUERY_ALL);
+        connect();
 		subscribe(ids);
 	}
 	
@@ -59,7 +44,7 @@ public class Mqtt {
 	 */
 	
 	private void loadProperties() {
-		prop = new Properties();
+		Properties prop = new Properties();
 		try {
 			InputStream is = new FileInputStream("database.properties");
 			prop.load(is);
@@ -79,9 +64,9 @@ public class Mqtt {
 	 * 
 	 */
 	private void connect() {
-		connOpts = new MqttConnectOptions();
+        MqttConnectOptions connOpts = new MqttConnectOptions();
 		
-		/**
+		/*
 		 * Session has to be set to TRUE
 		 */
 		
@@ -91,7 +76,7 @@ public class Mqtt {
 		//connOpts.setKeepAliveInterval(600);
 		try {
 			client = new MqttAsyncClient(ADDRESS, CLIENTID);
-			callback = new MqttCb(manager);
+            MqttCb callback = new MqttCb(manager);
 			client.setCallback(callback);
 			client.connect(connOpts);
 			while (!client.isConnected());
@@ -135,11 +120,11 @@ public class Mqtt {
 		System.out.println("Subscriptions: " + subs);
 	}*/
 	
-	public void subscribe(ArrayList<String> ids) {
+    public void subscribe(ArrayList<String> ids) {
 		String[] topics = new String[ids.size()];
 		int[] qos = new int[ids.size()];
 		for (int i = 0; i < ids.size(); ++i) {
-			topic = APIKEY + "/" + ids.get(i) + "/streams/data/updates";
+            String topic = APIKEY + "/" + ids.get(i) + "/streams/data/updates";
 			topics[i] = topic;
 			qos[i] = 0;
 		}
@@ -151,18 +136,12 @@ public class Mqtt {
 		}
 	}
 	
-	
-	public ArrayList<String> getIds() {
-		return ids;
-	}
-	
-	public void addId(String id) {
+    public void addId(String id) {
 		ids.add(id);
 	}
 	
 	/**
 	 * Disconnects the client from the ServIoTicy endpoint
-	 * 
 	 */
 	public void disconnect() {
 		try {

@@ -1,25 +1,46 @@
 package behaviour;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import building.Building;
+import building.Room;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import data.EventsDB;
+import entity.Computer;
+import iot.Manager;
 
-import behaviour.Person.State;
-import behaviour.Person.Type;
-import domain.Utils;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+
+import static iot.Manager.LOG_EVENTS;
+
 
 public class PeopleManager {
+
+    /**
+     * TODO Possible enhancement:
+     * Modify the rooms so the number of people has a limit. When selecting the destination room,
+     * create an index and, from this index, traverse the location vector to get the first available
+     * room. If all rooms are full, avoid actuating.
+     */
+
+
+    public enum Action {
+		MOVE, LUNCH, ENTER, EXIT, MEETING
+	}
+	
+	public enum State {
+		OUTSIDE, INSIDE, ROOM, SALON
+	}
+	
+	enum Type {
+		PROFESSOR, PAS, STUDENT
+	}
 	
 	private static PeopleManager instance = new PeopleManager();
+	
 	
 	private PeopleManager() {
 		initComponents();
@@ -29,385 +50,326 @@ public class PeopleManager {
 		return instance;
 	}
 	
-	
-	private ArrayList<Person> unassigned;
-	private ArrayList<Person> peopleOutside;
-	private ArrayList<Person> peopleInside;
-	private ArrayList<Person> peopleRandomWalks;
-	private ArrayList<Person> peopleLunch;
-	private ArrayList<UserProfile> profiles;
-	
-	private boolean writeToFile = false;
-	private PrintWriter writer;
+	private ArrayList<Person> people;
+	private ArrayList<UserProfile> defaultProfiles;
+	private Building building;
+	private Random rand;
 	
 	/**
-	 * Initialise all the components required to manage people.
+	 * Initialize all the components required to manage people.
 	 */
 	
 	private void initComponents() {
-		unassigned = new ArrayList<Person>();
-		peopleOutside = new ArrayList<Person>();
-		peopleInside = new ArrayList<Person>();
-		peopleRandomWalks = new ArrayList<Person>();
-		peopleLunch = new ArrayList<Person>();
-		profiles = new ArrayList<UserProfile>();
-		readPeople();
-		generateProfiles();
+		rand = new Random();
+		fetchProfiles();
+		getPeopleFromFile();
 	}
-	
-	/**
-	 * Makes a simulation step by moving people through the states.
-	 */
-	
-	public void makeStep() {
-		int t = Utils.CURRENT_STEP;
-		resetChanged();
-		
-		enterBuilding(t);
-		
-		goForRandomWalk(t);
-		returnFromWalk(t);
-		
-		goForLunch(t);
-		finishLunch(t);
-		
-		leaveBuilding(t);
-		
-		if (t > 7620 && !peopleInside.isEmpty()) emptyBuilding();
-		
-		//printPeople();
+
+	private void fetchProfiles() {
+		defaultProfiles = new ArrayList<>();
+		for (Type t : Type.values()) { defaultProfiles.add(new UserProfile(t)); }
 	}
+
+
+
+    private Person getPerson(String name) {
+        return people.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public void updateActions() {
+        for (Person p : people) {
+            if (!p.isActing()) {
+                if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
+                else if (p.getNextActionSteps() == 0) {
+
+					/*
+					 * Action is executed and nextActionSteps is set to -1
+					 */
+
+                    p.decreaseNextActionSteps();
+                    executeAction(p);
+                }
+                else if (p.getNextActionSteps() < 0) {
+                    assignNewAction(p);
+                }
+            }
+            else if (p.isActing()) {
+                if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
+                else if(p.getRemainingSteps() == 0) {
+                    p.decreaseRemainingSteps();
+                    /*if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                            " " + p.getCurrentAction().toString());*/
+                    assignNewAction(p);
+                }
+            }
+        }
+    }
+
+    public void executeActions() {
+        for (Person p : people) {
+            if (!p.isActing()) {
+                if (p.getNextActionSteps() > 0) p.decreaseNextActionSteps();
+                else if (p.getNextActionSteps() == 0) {
+                    p.decreaseNextActionSteps();
+                    executeAction(p);
+                }
+            }
+            else if (p.isActing()){
+                if (p.getRemainingSteps() > 0) p.decreaseRemainingSteps();
+                else if (p.getRemainingSteps() == 0) {
+                    p.decreaseRemainingSteps();
+                    /*if (Debugger.isEnabled()) Debugger.log("Action finished " + p.getName() +
+                            " " + p.getCurrentAction().toString());*/
+                    p.setActing(false);
+                }
+
+            }
+
+        }
+    }
 	
-	/**
-	 * Enables to recording of events that happens during the simulation to allow
-	 * further repetitions.
-	 */
-	
-	public void enableRecordFile() {
-		writeToFile = true;
+	private UserProfile getProfile(String s) {
+        return defaultProfiles.stream().filter(up ->
+                up.getType().equals(Type.valueOf(s.toUpperCase()))).findFirst().map(up ->
+                (UserProfile) up.clone()).orElse(null);
+    }
+
+	private void getPeopleFromFile() {
+		JsonParser parser = new JsonParser();
+		people = new ArrayList<>();
 		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter("res/events.txt")));
+			FileReader reader = new FileReader("./res/people.json");
+			JsonObject root = parser.parse(reader).getAsJsonObject();
+			
+			JsonArray ppl = root.getAsJsonArray("people");
+            for (Object per : ppl) {
+                JsonObject person = (JsonObject) per;
+                String type = person.get("profile").getAsString();
+                Person p = new Person(person.get("name").getAsString(), type, getProfile(type), generateUserParams());
+                people.add(p);
+            }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void flushData(int steps, int current) {
-		if (writer != null && current % steps == 0) writer.flush();
-	}
 	
-	private UserProfile getProfile(Type t) {
-		for (int i = 0; i < profiles.size(); ++i) {
-			if (profiles.get(i).getType().equals(t)) {
-				return profiles.get(i);
-			}
-		}
-		return null;
+	private UserParams generateUserParams() {
+		Random r = new Random();
+        double t = 21;
+		//double t = 20 + (23 - 20) * r.nextDouble();
+		double l = 100 + (800 - 100) * r.nextDouble();
+		return new UserParams(t, l);
 	}
+
+
 	
-	private void emptyBuilding() {
-		for (int i = peopleInside.size() - 1; i >= 0; --i) {
-			Person cur = peopleInside.get(i);
-			if (!cur.hasChanged()) {
-				cur.setState(State.OUTSIDE);
-				cur.setChanged(true);
-				peopleOutside.add(peopleInside.remove(i));
-				if (writeToFile) writer.println(cur.getName() + ",leave," + Utils.CURRENT_STEP);
-			}
-		}
+	private void executeAction(Person p) {
+		p.setActing(true);
+		if (building.isPhysicalRoom(p.getLocation())) computeComfort(p, building.getRoom(p.getLocation()));
+        building.getRoom(p.getLocation()).shiftPerson(p);
+        p.changeState();
 	}
-	
-	/**
-	 * Checks whether the person is entering the building and changes his status to INSIDE
-	 * 
+
+	/*
+	 Comfort is calculated using the values gathered when a person enters a room:
+
+	  - Room temperature vs desired temperature
+	  - Light status
+	  - Computer status when entering
+
 	 */
-	
-	public void enterBuilding(int t) {
-		for (int i = peopleOutside.size() - 1; i >= 0; --i) {
-			Person cur = peopleOutside.get(i);
-			if (!cur.hasChanged() && !cur.hasEntered() && getProfile(cur.getType()).getEntrance().triggerStatus(t)) {
-				cur.setState(State.INSIDE);
-				cur.setChanged(true);
-				cur.setEntered(true);
-				peopleInside.add(peopleOutside.remove(i));
-				if (writeToFile) writer.println(cur.getName() + ",enter," + Utils.CURRENT_STEP);
+
+
+    private void computeComfort(Person p, Room room) {
+
+	    /*
+	     Temperature Comfort
+	     */
+	    double roomTemp = room.getTemperature();
+	    double desiredTemp = p.getParams().getTemperature();
+        System.out.println(Manager.CURRENT_STEP + " Person " + p.getName() + " entered " + room.getLocation() +
+        " with temperature: " + roomTemp);
+
+
+	    /*
+	     Computer Comfort
+	     */
+        Computer.State state = room.getUsedComputer(p.getName());
+    }
+
+    public void assignSpecificAction(Event e) {
+        Person p = getPerson(e.getName());
+        String currentLoc = p.getLocation();
+        p.assignAction(e.getAction(), e.getDest(), e.getNext(), e.getDuration());
+        building.movePerson(p, currentLoc);
+        if (!wasHavingLunch(p)) {
+            building.unassignRoomElements(p, currentLoc);
+            p.getParams().setComputerId(e.getComputerId());
+            building.setRoomElements(p, e.getDest());
+        }
+    }
+
+	private void assignNewAction(Person p) {
+		p.setActing(false);
+
+		Action a = getNextAction(p);
+        if (a == null) return;
+		String dest = null;
+		int next = 0, duration = 0;
+		boolean assigned = false;
+        if (a.equals(Action.MOVE)) {
+            if (p.isInside()) {
+                /*
+                 * Return from lunch
+                 */
+                if (wasHavingLunch(p)) dest = p.getPastLocation();
+                else dest = getDestination(p);
+                if (dest == null) return;
+                next = 120 + rand.nextInt(30);
+                duration = p.getProfile().getRandomWalksDuration();
+                assigned = true;
+            }
+        }
+        if (a.equals(Action.MEETING)) {
+            if (p.isInside()) {
+                /*
+                 * Return from lunch
+                 */
+                if (wasHavingLunch(p)) dest = p.getPastLocation();
+                else dest = getSpecificDestination(p.getLocation(), building.getMeetingLocations());
+                if (dest == null) return;
+                /*
+                 * From 5 to 15 minutes to arrive
+                 */
+                next = 30 + rand.nextInt(60);
+                duration = p.getProfile().getRandomWalksDuration();
+                assigned = true;
+            }
+        }
+		else if (a.equals(Action.ENTER)) {
+			if (!p.isInside() && !p.hadEntered()) {
+				dest = "inside";
+                /*
+                 * From 10 to 30 minutes to enter, 1 step to execute action
+                 */
+				next = 60 + rand.nextInt(120);
+				duration = 1;
+                p.sethadEntered();
+                assigned = true;
 			}
 		}
-		//System.out.println("People Outside: " + peopleOutside.size());
-	}
-	
-	
-	/**
-	 * Checks whether the person is going for lunch and changes his status to LUNCH
-	 * 
-	 */
-	
-	public void goForLunch(int t) {
-		for (int i = peopleInside.size() - 1; i >= 0; --i) {
-			Person cur = peopleInside.get(i);
-			if (!cur.hasChanged() && !cur.hasEaten() && getProfile(cur.getType()).getLunch().triggerStatus(t)) {
-				cur.setState(State.LUNCH);
-				cur.setChanged(true);
-				cur.setEaten(true);
-				cur.setLunchReturn(Utils.CURRENT_STEP, getProfile(cur.getType()).getLunchDuration());
-				peopleLunch.add(peopleInside.remove(i));
-				if (writeToFile) writer.println(cur.getName() + ",lunch," + Utils.CURRENT_STEP);
+		else if (a.equals(Action.EXIT)) {
+			if (p.isInside()) {
+				dest = "outside";
+                /*
+                 * 1 step to exit the building, stays outside for 10 to 30 minutes
+                 */
+                next = 1;
+				duration = 60 + rand.nextInt(120);
+                assigned = true;
 			}
 		}
-	}
-	
-	/**
-	 * Checks whether the person has finished lunch and changes his status to INSIDE
-	 * 
-	 */
-	
-	public void finishLunch(int t) {
-		for (int i = peopleLunch.size() - 1; i >= 0; --i) {
-			Person cur = peopleLunch.get(i);
-			//if (!cur.hasChanged() && getProfile(cur.getType()).getLunchDuration().triggerStatus(t)) {
-			if (!cur.hasChanged() && cur.getLunchReturn() <= Utils.CURRENT_STEP) {
-				cur.setState(State.INSIDE);
-				cur.setChanged(true);
-				peopleInside.add(peopleLunch.remove(i));
-				if (writeToFile) writer.println(cur.getName() + ",returnLunch," + Utils.CURRENT_STEP);
+		else if (a.equals(Action.LUNCH)) {
+			if (p.isInside() && !p.hadLunch()) {
+				dest = "salon";
+                /*
+                 * lunch in the next 5 to 10 minutes
+                 */
+				next = 30 + rand.nextInt(30);
+				duration = p.getProfile().getLunchDuration();
+				p.setHadLunch();
+                assigned = true;
 			}
 		}
-	}
-	
-	/**
-	 * Checks whether the person is leaving the building and changes his status to OUTSIDE
-	 * 
-	 */
-	
-	public void leaveBuilding(int t) {
-		for (int i = peopleInside.size() - 1; i >= 0; --i) {
-			Person cur = peopleInside.get(i);
-			if (!cur.hasChanged() && getProfile(cur.getType()).getExit().triggerStatus(t)) {
-				cur.setState(State.OUTSIDE);
-				cur.setChanged(true);
-				peopleOutside.add(peopleInside.remove(i));
-				if (writeToFile) writer.println(cur.getName() + ",leave," + Utils.CURRENT_STEP);
-			}
-		}
-	}
-	
-	public void goForRandomWalk(int t) {
-		for (int i = peopleInside.size() - 1; i >= 0; --i) {
-			Person cur = peopleInside.get(i);
-			if (!cur.hasChanged() && cur.canRandomWalk() && getProfile(cur.getType()).getRandomWalks().triggerStatus(t)) {
-				cur.setState(State.RANDOM_WALKS);
-				cur.setChanged(true);
-				cur.setRandomWalksReturn(Utils.CURRENT_STEP, getProfile(cur.getType()).getRandomWalksDuration());
-				cur.addRandomWalk();
-				peopleRandomWalks.add(peopleInside.remove(i));
-				if (writeToFile) writer.println(cur.getName() + ",randomWalk," + Utils.CURRENT_STEP);
-			}
-		}
-	}
-	
-	public void returnFromWalk(int t) {
-		for (int i = peopleRandomWalks.size() - 1; i >= 0; --i) {
-			Person cur = peopleRandomWalks.get(i);
-			//if (!cur.hasChanged() && getProfile(cur.getType()).getRandomWalksDuration().triggerStatus(t)) {
-			if (!cur.hasChanged() && cur.getRandomWalksReturn() <= Utils.CURRENT_STEP) {
-				cur.setState(State.INSIDE);
-				cur.setChanged(true);
-				peopleInside.add(peopleRandomWalks.remove(i));
-				if (writeToFile) writer.println(cur.getName() + ",returnRandomWalk," + Utils.CURRENT_STEP);
-			}
-		}
-	}
-	
-		
-	private void generateProfiles() {
-		profiles.add(new UserProfile(Type.PROFESSOR));
-		profiles.add(new UserProfile(Type.PAS));
-		profiles.add(new UserProfile(Type.STUDENT));
-	}
-	
-	
-	public void printPeople() {
-		if (!peopleOutside.isEmpty()) System.out.println("---------- OUTSIDE ----------");
-		for (Person p : peopleOutside) {
-			System.out.println("Name " + p.getName());
-			System.out.println("State " + p.getState());
-		}
-		if (!peopleInside.isEmpty()) System.out.println("---------- INSIDE ----------");
-		for (Person p : peopleInside) {
-			System.out.println("Name " + p.getName());
-			System.out.println("State " + p.getState());
-		}
-		if (!peopleRandomWalks.isEmpty()) System.out.println("---------- WALKING ----------");
-		for (Person p : peopleRandomWalks) {
-			System.out.println("Name " + p.getName());
-			System.out.println("State " + p.getState());
-		}
-		if (!peopleLunch.isEmpty()) System.out.println("---------- LUNCH ----------");
-		for (Person p : peopleLunch) {
-			System.out.println("Name " + p.getName());
-			System.out.println("State " + p.getState());
+		if (assigned) {
+            p.setPastLocation(p.getLocation());
+			p.assignAction(a, dest, next, duration);
+			building.movePerson(p, p.getPastLocation());
+            if (!wasHavingLunch(p)) {
+                building.unassignRoomElements(p, p.getPastLocation());
+                building.assignRoomElements(p, dest);
+            }
+			logEvent(p);
 		}
 	}
 
-	public ArrayList<Person> assignPeopleToRoom(String location) {
-		ArrayList<Person> people = new ArrayList<Person>();
-		for (int i = unassigned.size() - 1; i >= 0; --i) {
-			Person cur = unassigned.get(i);
-			if (cur.getLocation().equals(location)) {
-				cur.setState(State.OUTSIDE);
-				peopleOutside.add(unassigned.remove(i));
-				people.add(cur);
-			}
-		}
-		return people;
-	}
-	
-	private void resetChanged() {
-		for (Person p : peopleOutside) p.setChanged(false);
-		for (Person p : peopleInside) p.setChanged(false);
-		for (Person p : peopleRandomWalks) p.setChanged(false);
-		for (Person p : peopleLunch) p.setChanged(false);
-	}
-	
-	public HashMap<String, ArrayList<Map.Entry<String, String>>> getPeopleFromFile() {
-		HashMap<String, ArrayList<Map.Entry<String,String>>> ppl = new HashMap<String, ArrayList<Map.Entry<String, String>>>();
-		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
-	        String line = br.readLine();
-	        String[] values = line.split(",");
-	        String currentRoom = values[1];
-	        ArrayList<Map.Entry<String, String>> names = new ArrayList<Map.Entry<String, String>>();
-	        Map.Entry<String, String> entry =  new AbstractMap.SimpleEntry<String, String>(values[0], values[2]);
-	        boolean more = false;
-	        names.add(entry);
-	        while ((line = br.readLine()) != null) {
-	        	more = true;
-	        	values = line.split(",");
-	        	if (values[1].equals(currentRoom)) {
-	        		names.add(new AbstractMap.SimpleEntry<String, String>(values[0], values[2]));
-	        	}
-	        	else {
-	        		ppl.put(currentRoom, names);
-	        		currentRoom = values[1];
-	        		names = new ArrayList<Map.Entry<String, String>>();
-	        		names.add(new AbstractMap.SimpleEntry<String, String>(values[0], values[2]));
-	        	}
-	        }
-	        if (!more) ppl.put(currentRoom, names);
-	        return ppl;
-	    } catch (IOException e) {
-	    	System.err.println("ERROR: Unable to read people from file.");
-	    	e.printStackTrace();
-	    } catch(IllegalArgumentException e) {
-	    	System.err.println("ERROR: Person does not contain a valid type.");
-	    	e.printStackTrace();
-	    }
-		return ppl;
-	}
-	
-	/*public void printHash() {
-		HashMap<String, ArrayList<Entry<String, String>>> ppl = getPeopleFromFile();
-		Iterator it = ppl.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pair = (Entry) it.next();
-			System.out.println(pair.getKey() + " = " + pair.getValue());
-			it.remove();
-		}
-	}*/
-	
-	private void readPeople() {
-		HashMap<String, ArrayList<Entry<String, String>>> ppl = getPeopleFromFile();
-		Iterator<?> it = ppl.entrySet().iterator();
-		while (it.hasNext()) {
-			@SuppressWarnings("unchecked")
-			Map.Entry<String, ArrayList<Entry<String, String>>> pair = (Entry<String, ArrayList<Entry<String, String>>>) it.next();
-			for (int i = 0; i < pair.getValue().size(); ++i) {
-				Map.Entry<String, String> vals = pair.getValue().get(i);
-				Person p = new Person(vals.getKey(), pair.getKey(), State.UNASSIGNED, Type.valueOf(vals.getValue().toUpperCase()));
-				this.unassigned.add(p);
-			}
-		}
+	public void logEvent(Person p) {
+        if (LOG_EVENTS) { EventsDB.getInstance().save(p); }
+    }
+
+	private boolean wasHavingLunch(Person p) {
+        return p.getCurrentAction().equals(Action.LUNCH);
+    }
+
+
+    private Action getNextAction(Person p) {
+        UserProfile up = p.getProfile();
+        if (p.getCurrentAction().equals(Action.LUNCH)) {
+            Building.ROOM_TYPE type = building.getLocationType(p.getPastLocation());
+            if (type.equals(Building.ROOM_TYPE.OFFICE) ||
+            type.equals(Building.ROOM_TYPE.CLASSROOM)) return Action.MOVE;
+            if (type.equals(Building.ROOM_TYPE.MEETING_ROOM)) return Action.MEETING;
+        }
+        if (up.getEntrance().triggerStatus(Manager.CURRENT_STEP)) return Action.ENTER;
+        if (up.getRandomWalks().triggerStatus(Manager.CURRENT_STEP)) return Action.MOVE;
+        if (up.getLunch().triggerStatus(Manager.CURRENT_STEP)) return Action.LUNCH;
+        if (up.getExit().triggerStatus(Manager.CURRENT_STEP)) return Action.EXIT;
+        if (up.getMeeting().triggerStatus(Manager.CURRENT_STEP)) return Action.MEETING;
+        return null;
+    }
+
+    private String getSpecificDestination(String currentLoc, String[] locs) {
+        if (locs.length == 1) return locs[0];
+        int start = rand.nextInt(locs.length - 1);
+        for (int i = start + 1; i != start; i = (i+1)%locs.length) {
+            if (!locs[i].equals(currentLoc) &&
+                    building.getRoom(locs[i]).isAvailable()) return locs[i];
+        }
+        return null;
+    }
+
+	private String getDestination(Person p) {
+        String currentLoc = p.getLocation();
+        String office = getSpecificDestination(currentLoc, building.getOfficeLocations());
+        String classroom = getSpecificDestination(currentLoc, building.getClassromLocations());
+        String meeting = getSpecificDestination(currentLoc, building.getMeetingLocations());
+        double office_threshold, class_threshold, meeting_threshold;
+
+        /*
+         * Thresholds must add 1
+         */
+
+
+        if (p.isProfessor()) {
+            office_threshold = office == null ? 0 : 0.5;
+            class_threshold = classroom == null ? 0 : 0.25;
+            meeting_threshold = meeting == null ? 0 : 0.25;
+        }
+        else if (p.isStudent()) {
+            office_threshold = office == null ? 0 : 0.2;
+            class_threshold = classroom == null ? 0 : 0.6;
+            meeting_threshold = meeting == null ? 0 : 0.2;
+        }
+        else {
+            office_threshold = office == null ? 0 : 1/3;
+            class_threshold = classroom == null ? 0 : 1/3;
+            meeting_threshold = meeting == null ? 0 : 1/3;
+        }
+
+
+        double decide = rand.nextDouble();
+        if (decide < office_threshold) return office;
+        else if (decide < office_threshold + class_threshold) return classroom;
+        else if (decide < office_threshold + class_threshold + meeting_threshold) return meeting;
+        return null;
+    }
+
+	public void setBuilding(Building b) {
+		this.building = b;
 	}
 
-	
-	/*private void readPeopleFromFile() {
-		try(BufferedReader br = new BufferedReader(new FileReader("res/people.txt"))) {
-	        String line;
-	        while ((line = br.readLine()) != null) {
-	        	String[] values = line.split(",");
-	        	System.out.println(values[1] + " " + values[0] + " " + values[2]);
-	        	Person p = new Person(values[0], values[1], State.UNASSIGNED, Type.valueOf(values[2].toUpperCase()));
-	        	this.unassigned.add(p);
-	        }
-	    } catch (IOException e) {
-	    	System.err.println("ERROR: Unable to read people from file.");
-	    	e.printStackTrace();
-	    } catch(IllegalArgumentException e) {
-	    	System.err.println("ERROR: Person does not contain a valid type.");
-	    	e.printStackTrace();
-	    }
-	}*/
-	 
-	
-	public boolean isAllPeopleAssigned() {
-		return unassigned.isEmpty();
-	}
-	
-	public void executeAction(String person, String action) {
-		int i = 0;
-		if (action.equals("enter")) {
-			while (!peopleOutside.get(i).getName().equals(person)) ++i;
-			Person p = peopleOutside.get(i);
-			p.setState(State.INSIDE);
-			peopleOutside.remove(p);
-			peopleInside.add(p);
-			//System.out.println(p.getName() + " has entered");
-		}
-		else if (action.equals("leave")) {
-			while (!peopleInside.get(i).getName().equals(person)) ++i;
-			Person p = peopleInside.get(i);
-			p.setState(State.OUTSIDE);
-			peopleInside.remove(p);
-			peopleOutside.add(p);
-			//System.out.println(p.getName() + " has left");
-		}
-		else if (action.equals("lunch")) {
-			while (!peopleInside.get(i).getName().equals(person)) ++i;
-			Person p = peopleInside.get(i);
-			p.setState(State.LUNCH);
-			peopleInside.remove(p);
-			peopleLunch.add(p);
-			//System.out.println(p.getName() + " is going for lunch");
-		}
-		else if (action.equals("returnLunch")) {
-			while (!peopleLunch.get(i).getName().equals(person)) ++i;
-			Person p = peopleLunch.get(i);
-			p.setState(State.INSIDE);
-			peopleLunch.remove(p);
-			peopleInside.add(p);
-			//System.out.println(p.getName() + " has come back");
-		}
-		else if (Utils.RANDOM_WALKS && action.equals("randomWalk")) {
-			while (!peopleInside.get(i).getName().equals(person)) ++i;
-			Person p = peopleInside.get(i);
-			p.setState(State.RANDOM_WALKS);
-			peopleInside.remove(p);
-			peopleRandomWalks.add(p);
-			//System.out.println(p.getName() + " is walking");
-		}
-		else if (Utils.RANDOM_WALKS && action.equals("returnRandomWalk")) {
-			while (!peopleRandomWalks.get(i).getName().equals(person)) ++i;
-			Person p = peopleRandomWalks.get(i);
-			p.setState(State.INSIDE);
-			peopleRandomWalks.remove(p);
-			peopleInside.add(p);
-			//System.out.println(p.getName() + " has returned from walking");
-		}
-		else {
-			System.out.println("Action is not correct");
-		}
-	}
-
-	public void closeFile() {
-		if (writer != null) writer.close();
-	}
+    public ArrayList<Person> getPeople() {
+        return people;
+    }
 }

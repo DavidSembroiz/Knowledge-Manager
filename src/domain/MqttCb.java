@@ -10,12 +10,12 @@ import org.eclipse.paho.client.mqttv3.*;
  * 
  */
 
-public class MqttCb implements MqttCallback {
+class MqttCb implements MqttCallback {
 	
 	private Manager manager;
 	private int messCount;
 	
-	public MqttCb(Manager m) {
+	MqttCb(Manager m) {
 		this.manager = m;
 		this.messCount = 0;
 	}
@@ -29,7 +29,7 @@ public class MqttCb implements MqttCallback {
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken arg0) {
-		/**
+		/*
 		 * No publications will be performed
 		 */
 	}

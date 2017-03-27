@@ -1,52 +1,51 @@
 package behaviour;
 
-import domain.Utils;
+import behaviour.PeopleManager.Action;
+import behaviour.PeopleManager.State;
+import behaviour.PeopleManager.Type;
+import domain.Debugger;
 
 public class Person {
 	
-	public enum State {
-		OUTSIDE, INSIDE, RANDOM_WALKS, LUNCH, UNASSIGNED
-	}
-	
-	public enum Type {
-		PROFESSOR, PAS, STUDENT
-	}
-	
 	private String name;
+	private State currentState;
+	private Action currentAction;
 	private String location;
-	private State state;
-	private Type type;
-	private boolean changed;
-	private boolean eaten;
-	private boolean entered;
-	private int lunchReturn;
-	private int randomWalksReturn;
-	private int numRandomWalks;
+    private String pastLocation;
+    private String type;
+	private UserProfile profile;
+	private UserParams params;
+	private int nextActionSteps;
+	private int remainingSteps;
+	private boolean acting;
 	
-	private int insideTime;
-	
-	public Person(String name, String location, State state, Type type) {
+	Person(String name, String type, UserProfile prof, UserParams param) {
+		this.currentAction = Action.MOVE;
+		this.currentState = State.OUTSIDE;
 		this.name = name;
-		this.location = location;
-		this.state = state;
-		this.type = type;
-		this.changed = false;
-		this.eaten = false;
-		this.entered = false;
-		this.lunchReturn = -1;
-		this.randomWalksReturn = -1;
-		this.numRandomWalks = 0;
-		this.insideTime = 0;
-	}
-	
-	
-
-	public int getInsideTime() {
-		return insideTime;
+        this.type = type;
+		this.profile = prof;
+		this.params = param;
+		this.nextActionSteps = -9999;
+		this.remainingSteps = -9999;
+		this.location = "";
+		this.acting = false;
 	}
 
-	public void setInsideTime(int insideTime) {
-		this.insideTime = insideTime;
+	public int getRemainingSteps() {
+		return remainingSteps;
+	}
+	
+	void decreaseRemainingSteps() {
+		--remainingSteps;
+	}
+
+	public int getNextActionSteps() {
+		return nextActionSteps;
+	}
+	
+	void decreaseNextActionSteps() {
+		--nextActionSteps;
 	}
 
 	public String getName() {
@@ -57,75 +56,113 @@ public class Person {
 		this.name = name;
 	}
 
+	public State getCurrentState() {
+		return currentState;
+	}
+
+	UserProfile getProfile() {
+		return profile;
+	}
+
+	boolean isActing() {
+		return acting;
+	}
+
+	void setActing(boolean acting) {
+		this.acting = acting;
+	}
+
+	public Action getCurrentAction() {
+		return currentAction;
+	}
+
+	public UserParams getParams() {
+		return params;
+	}
+
+	void assignAction(Action a, String dest, int next, int duration) {
+		this.currentAction = a;
+		this.location = dest;
+		this.nextActionSteps = next;
+		this.remainingSteps = duration;
+        this.setActing(false);
+		if (Debugger.isEnabled()) {
+			Debugger.log("Action " + a.toString() +
+						 " assigned to Person " + this.getName() +
+					     " next " + next +
+					     " duration " + duration);
+		}
+											   
+	}
+
 	public String getLocation() {
 		return location;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	void changeState() {
+		if (Debugger.isEnabled()) Debugger.log("Executing action...");
+		if (currentAction.equals(Action.MOVE)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.ROOM.toString());
+
+			currentState = State.ROOM;
+			
+		}
+		else if (currentAction.equals(Action.ENTER)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.INSIDE.toString());
+			currentState = State.INSIDE;
+		}
+		else if (currentAction.equals(Action.EXIT)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.OUTSIDE.toString());
+			currentState = State.OUTSIDE;
+		}
+		else if (currentAction.equals(Action.LUNCH)) {
+			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
+					   " changed from " + currentState.toString() +
+					   " to " + State.SALON.toString());
+			currentState = State.SALON;
+		}
 	}
 
-	public State getState() {
-		return state;
+    public boolean isInside() {
+		return !(currentState.equals(State.OUTSIDE));
+	}
+	
+    boolean hadLunch() {
+		return params.hadLunch();
 	}
 
-	public void setState(State state) {
-		this.state = state;
+    void setHadLunch() {
+		params.setHadLunch();
 	}
 
-	public Type getType() {
-		return type;
-	}
+    boolean hadEntered() {
+        return params.hadEntered();
+    }
 
-	public void setType(Type type) {
-		this.type = type;
-	}
+    void sethadEntered() {
+        params.setHadEntered();
+    }
 
-	public boolean hasChanged() {
-		return changed;
-	}
+    boolean isProfessor() {
+        return type.equals(Type.PROFESSOR.toString().toLowerCase());
+    }
 
-	public void setChanged(boolean changed) {
-		this.changed = changed;
-	}
-	
-	public boolean hasEaten() {
-		return eaten;
-	}
+    boolean isStudent() {
+        return type.equals(Type.STUDENT.toString().toLowerCase());
+    }
 
-	public void setEaten(boolean eaten) {
-		this.eaten = eaten;
-	}
-	
-	public boolean hasEntered() {
-		return entered;
-	}
+    String getPastLocation() {
+        return pastLocation;
+    }
 
-	public void setEntered(boolean entered) {
-		this.entered = entered;
-	}
-	
-	public int getLunchReturn() {
-		return lunchReturn;
-	}
-	
-	public void setLunchReturn(int current, int duration) {
-		this.lunchReturn = current + duration;
-	}
-	
-	public int getRandomWalksReturn() {
-		return randomWalksReturn;
-	}
-	
-	public void setRandomWalksReturn(int current, int duration) {
-		this.randomWalksReturn = current + duration;
-	}
-	
-	public void addRandomWalk() {
-		this.numRandomWalks++;
-	}
-	
-	public boolean canRandomWalk() {
-		return numRandomWalks < Utils.MAX_RANDOM_WALKS;
-	}
+    void setPastLocation(String pastLocation) {
+        this.pastLocation = pastLocation;
+    }
+
 }

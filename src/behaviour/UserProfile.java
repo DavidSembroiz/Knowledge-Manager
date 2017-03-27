@@ -1,19 +1,22 @@
 package behaviour;
 
-import java.io.BufferedReader;
+import behaviour.PeopleManager.Type;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Random;
 
-import behaviour.Person.Type;
-
-public class UserProfile {
+class UserProfile implements Cloneable {
 	
 	private Probability entrance;
 	private Probability randomWalks;
-	//private Probability randomWalksDuration;
+    private Probability meeting;
 	private Probability lunch;
-	//private Probability lunchDuration;
 	private Probability exit;
 	
 	private int[] lunchDurationRange;
@@ -22,46 +25,25 @@ public class UserProfile {
 	private Type type;
 	private Random rand;
 	
-	public UserProfile(Type t) {
+	UserProfile(Type t) {
 		this.type = t;
-		loadProfileFromFile();
 		rand = new Random();
+		loadProfileFromFile(t);
 	}
 	
 	
-	public Probability getEntrance() {
+	Probability getEntrance() {
 		return entrance;
 	}
-	public void setEntrance(Probability entrance) {
-		this.entrance = entrance;
-	}
-	public Probability getRandomWalks() {
+    Probability getRandomWalks() {
 		return randomWalks;
 	}
-	public void setRandomWalks(Probability randomWalks) {
-		this.randomWalks = randomWalks;
-	}
 	
-	/*public Probability getRandomWalksDuration() {
-		return randomWalksDuration;
-	}
-	public void setRandomWalksDuration(Probability randomWalksDuration) {
-		this.randomWalksDuration = randomWalksDuration;
-	}
-	public Probability getLunchDuration() {
-		return lunchDuration;
-	}
-	public void setLunchDuration(Probability lunchDuration) {
-		this.lunchDuration = lunchDuration;
-	}*/
-	public Probability getLunch() {
+    Probability getLunch() {
 		return lunch;
 	}
-	public void setLunch(Probability lunch) {
-		this.lunch = lunch;
-	}
 	
-	public Probability getExit() {
+    Probability getExit() {
 		return exit;
 	}
 	public void setExit(Probability exit) {
@@ -74,15 +56,19 @@ public class UserProfile {
 	public void setType(Type t) {
 		this.type = t;
 	}
-	
-	/**
-	 * Returns a value within min <= value <= max
+
+    Probability getMeeting() {
+        return meeting;
+    }
+
+    /**
+	 * Returns a value between min and max
 	 */
-	public int getLunchDuration() {
+    int getLunchDuration() {
 		return rand.nextInt((lunchDurationRange[1] - lunchDurationRange[0]) + 1) + lunchDurationRange[0];
 	}
 	
-	public int getRandomWalksDuration() {
+    int getRandomWalksDuration() {
 		return rand.nextInt((randomWalksDurationRange[1] - randomWalksDurationRange[0]) + 1) + randomWalksDurationRange[0];
 	}
 	
@@ -90,41 +76,44 @@ public class UserProfile {
 	/**
 	 * Profile file is divided in blocks of two lines with the following format:
 	 * 
-	 * probabilityName
-	 * value,value,value,value...
+	 * "profileName": {
+     *     "action": ["prob0", "prob1", ... ],
+     *     "action": ["prob0", "prob1", ... ],
+     * }
+     *
 	 * 
-	 * For the actions that requiere a range instead of a probability, the format is the following:
+	 * For the actions that require a range (duration) instead of a probability, the format is the following:
 	 * 
-	 * actionName
-	 * minValue,maxValue
+	 * "profileName": {
+     *     "actionDuration": ["min", "max"]
+     * }
+     *
 	 */
 	
-	private void loadProfileFromFile() {
-		String path = "res/profile/" + this.type.toString().toLowerCase() + ".txt";
-		try(BufferedReader br = new BufferedReader(new FileReader(path))) {
-	        String line;
-	        while ((line = br.readLine()) != null) {
-	        	String[] values = br.readLine().split(",");
-	        	/**
-	        	 * Reading duration action
-	        	 */
-	        	if (values.length == 2) {
-	        		assignDuration(line, values);
-	        	}
-	        	/**
-	        	 * Reading probability distribution of an action
-	        	 */
-	        	else {
-	        		Probability p = new Probability(values);
-	        		assignProbability(line, p);
-	        	}
-	        	
-	        }
-	        br.close();
-	    } catch (IOException e) {
-	    	System.err.println("ERROR: Unable to read probability from file.");
-	    	e.printStackTrace();
-	    }
+	private void loadProfileFromFile(Type t) {
+		JsonParser parser = new JsonParser();
+		try {
+			FileReader reader = new FileReader("./res/profiles.json");
+			JsonObject root = parser.parse(reader).getAsJsonObject();
+            JsonObject prof = root.get(t.toString().toLowerCase()).getAsJsonObject();
+			if (prof == null) return;
+            for (Map.Entry<String, JsonElement> k : prof.entrySet()) {
+                String key = k.getKey();
+                JsonArray values = prof.getAsJsonArray(key);
+                String[] vals = new String[values.size()];
+                for (int i = 0; i < values.size(); ++i) {
+                    vals[i] = values.get(i).getAsString();
+                }
+                if (vals.length == 2) {
+                    assignDuration(key, vals);
+                } else {
+                    Probability p = new Probability(vals);
+                    assignProbability(key, p);
+                }
+            }
+		} catch(IOException  e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private int[] arrayStringToInt(String[] values) {
@@ -158,18 +147,24 @@ public class UserProfile {
 		case "lunch":
 			lunch = p;
 			break;
-		/*case "lunchDuration":
-			lunchDuration = p;
-			break;*/
 		case "randomWalks":
 			randomWalks = p;
 			break;
-		/*case "randomWalksDuration":
-			randomWalksDuration = p;
-			break;*/
+        case "meeting":
+            meeting = p;
+            break;
 		default:
 			System.err.println("ERROR: profile file wrongly formatted");
 			break;
 		}
+	}
+	
+	protected Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
