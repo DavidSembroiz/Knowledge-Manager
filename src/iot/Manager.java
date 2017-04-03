@@ -102,8 +102,6 @@ public class Manager {
 		peopleManager.setBuilding(building);
 
 
-
-
         switch (MODE) {
             case 0:
                 simulate();

@@ -2,7 +2,8 @@
 /knowledge*
 /servioticy*
 database.properties
-couchdb.properties
+eventsdb.properties
+comfortdb.properties
 buildingsdb.properties
 schedulesdb.properties
 results/

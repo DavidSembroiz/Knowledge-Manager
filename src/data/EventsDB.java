@@ -34,7 +34,7 @@ public class EventsDB extends NoSQLDB<Person, ArrayList<Event>> {
     public void loadProperties() {
         Properties prop = new Properties();
         try {
-            InputStream is = new FileInputStream("couchdb.properties");
+            InputStream is = new FileInputStream("eventsdb.properties");
             prop.load(is);
             DB = prop.getProperty("couchdb.name");
             CREATE_IF_NOT_EXIST = Boolean.parseBoolean(prop.getProperty("couchdb.createdb.if-not-exist"));
