@@ -227,6 +227,16 @@ public class Room {
         return 0;
     }
 
+    public double getLuminosity() {
+        for (Sensor s : sensors) {
+            if (s.getType().equals("luminosity")) {
+                double res = Double.parseDouble(s.getValue());
+                if (res > 0) return res;
+            }
+        }
+        return 0;
+    }
+
     public Computer.State getUsedComputer(String name) {
 	    for (Object o : entities) {
 	        if (o instanceof Computer) {

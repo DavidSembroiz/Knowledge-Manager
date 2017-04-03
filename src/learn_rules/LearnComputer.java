@@ -1,6 +1,7 @@
 package learn_rules;
 
 import building.Room;
+import domain.Debugger;
 import entity.Computer;
 import entity.Computer.State;
 import iot.Manager;
@@ -14,42 +15,51 @@ public class LearnComputer extends ComputerRule {
         super(r, c, s);
     }
 
-    /*
-        Checks if the computer was changed too soon, too late or at the necessary time:
-            * 1 for too soon
-            * 0 for correctly
-            * -1 for too late
-     */
-
-    private int checkWhen() {
-        int res = Manager.CURRENT_STEP - super.comp.getTimeChanged();
-        if (res == 60) return 0;
-        return res > 60 ? 1 : -1;
-
-    }
-
-	
 	@Override
 	public boolean evaluate() {
         Computer comp = super.comp;
-		State st = comp.getCurrentState();
-
-		if (st.equals(State.ON)) {
-            int time = checkWhen();
-            if (time != 0) adjustSchedule(time);
+        State st = comp.getCurrentState();
+        if (st.equals(State.ON)) {
+            if (guestLeft()) return true;
+        }
+        if (st.equals(State.SUSPEND)) {
+            if (guestReturned()) return true;
         }
         return false;
 	}
 
-    private void adjustSchedule(int time) {
-        if (time == 1) {
-
-        }
-    }
-
 
     @Override
 	public void execute() throws Exception {
+        Computer comp = super.comp;
+        State st = comp.getCurrentState();
+        if (st.equals(State.OFF)) {
+            if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
+                    " switched ON in room " + room.getLocation());
+            System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON " + room.getLocation());
+            comp.setCurrentState(State.ON);
+        }
+        else if (st.equals(State.ON)) {
+            if (comp.getUsedBy() == null) {
+                if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
+                        " switched OFF in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " OFF " + room.getLocation());
+                comp.setCurrentState(State.OFF);
+            }
+            else {
+                if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
+                        " SUSPENDED in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " SUSP " + room.getLocation());
+                comp.setCurrentState(State.SUSPEND);
+            }
+        }
+        else if (st.equals(State.SUSPEND)) {
+            if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
+                    " awakened in room " + room.getLocation());
+            System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON from SUSP " + room.getLocation());
+            comp.setCurrentState(State.ON);
+        }
+        comp.setTimeChanged(Manager.CURRENT_STEP);
 	}
 
 }

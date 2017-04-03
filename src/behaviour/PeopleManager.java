@@ -5,6 +5,7 @@ import building.Room;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import data.ComfortDB;
 import data.EventsDB;
 import entity.Computer;
 import iot.Manager;
@@ -18,6 +19,12 @@ import static iot.Manager.LOG_EVENTS;
 
 
 public class PeopleManager {
+
+    public void saveComforts() {
+        for (Person p : people) {
+            ComfortDB.getInstance().save(p);
+        }
+    }
 
     /**
      * TODO Possible enhancement:
@@ -183,6 +190,8 @@ public class PeopleManager {
 
     private void computeComfort(Person p, Room room) {
 
+        double comfort = 0;
+
 	    /*
 	     Temperature Comfort
 	     */
@@ -191,11 +200,18 @@ public class PeopleManager {
         System.out.println(Manager.CURRENT_STEP + " Person " + p.getName() + " entered " + room.getLocation() +
         " with temperature: " + roomTemp);
 
+        /*
+	     Light Comfort
+	     */
+        double light = room.getLuminosity();
 
-	    /*
+
+        /*
 	     Computer Comfort
 	     */
         Computer.State state = room.getUsedComputer(p.getName());
+
+        p.addComfort(Manager.CURRENT_STEP, comfort);
     }
 
     public void assignSpecificAction(Event e) {

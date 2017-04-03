@@ -15,6 +15,7 @@ public class NormalLamp extends LampRule {
 
     @Override
     public boolean evaluate() {
+        adjustRoomLight();
         Lamp lamp = super.lamp;
         Room room = super.room;
 
@@ -42,6 +43,5 @@ public class NormalLamp extends LampRule {
             lamp.setCurrentState(Lamp.State.OFF);
         }
         lamp.setTimeChanged(Manager.CURRENT_STEP);
-        saveAction();
     }
 }

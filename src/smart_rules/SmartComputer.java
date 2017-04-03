@@ -18,10 +18,10 @@ public class SmartComputer extends ComputerRule {
 	
 	@Override
 	public boolean evaluate() {
-        Computer comp = getComputer();
+        Computer comp = super.comp;
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
-			if (isGuestComing(60)) return true;
+			if (isGuestComing(super.PREDICTION_THRESHOLD)) return true;
 		}
 		if (st.equals(State.ON)) {
 			if (guestLeft()) return true;
@@ -35,13 +35,14 @@ public class SmartComputer extends ComputerRule {
 
     @Override
 	public void execute() throws Exception {
-        Computer comp = getComputer();
+        Computer comp = super.comp;
 		State st = comp.getCurrentState();
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                     " switched ON in room " + room.getLocation());
             System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON " + room.getLocation());
             comp.setCurrentState(State.ON);
+            saveAction();
         }
 		else if (st.equals(State.ON)) {
             if (comp.getUsedBy() == null) {

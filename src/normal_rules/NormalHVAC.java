@@ -89,6 +89,5 @@ public class NormalHVAC extends HVACRule {
             hvac.setCurrentState(HVAC.State.OFF);
         }
         hvac.setTimeChanged(Manager.CURRENT_STEP);
-        saveAction();
 	}
 }

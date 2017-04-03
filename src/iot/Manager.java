@@ -6,10 +6,7 @@ import behaviour.Person;
 import building.Building;
 import building.BuildingGenerator;
 import building.Room;
-import data.BuildingsDB;
-import data.EventsDB;
-import data.IdentifierDB;
-import data.SchedulesDB;
+import data.*;
 import domain.Debugger;
 import domain.Mqtt;
 import domain.Utils;
@@ -78,6 +75,7 @@ public class Manager {
     private EventsDB eventsdb;
     private BuildingsDB buildingsdb;
     private SchedulesDB schedulesdb;
+    private ComfortDB comfortdb;
 	
 
 
@@ -90,8 +88,9 @@ public class Manager {
 		eventsdb = EventsDB.getInstance();
 		buildingsdb = BuildingsDB.getInstance();
 		schedulesdb = SchedulesDB.getInstance();
+        comfortdb = ComfortDB.getInstance();
 		models = ModelManager.getInstance();
-        mqtt = new Mqtt(this, iddb);
+        //mqtt = new Mqtt(this, iddb);
 
 		if (NEW_BUILDING) buildingsdb.save(new BuildingGenerator(BUILDING, OFFICE_ROOMS, MEETING_ROOMS, CLASS_ROOMS).generateBuilding());
 
@@ -235,6 +234,8 @@ public class Manager {
             building.updateConsumption();
             ++CURRENT_STEP;
         }
+        peopleManager.saveComforts();
+        building.saveSchedules();
         Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         finish();
 	}
@@ -256,7 +257,6 @@ public class Manager {
                 building.updateConsumption();
                 ++CURRENT_STEP;
             }
-            building.saveSchedules();
             Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
             finish();
         }
@@ -265,8 +265,8 @@ public class Manager {
     private void learningSimulation() {
         ArrayList<Event> events = eventsdb.fetchData();
         while (CURRENT_STEP < STEPS) {
-            building.performActuations();
             peopleManager.executeActions();
+            building.performActuations();
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                 peopleManager.assignSpecificAction(events.remove(0));
             }
@@ -293,6 +293,7 @@ public class Manager {
         eventsdb.shutdown();
         buildingsdb.shutdown();
         schedulesdb.shutdown();
+        comfortdb.shutdown();
         mqtt.disconnect();
     }
 

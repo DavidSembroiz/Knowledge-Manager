@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class HVACRule extends BasicRule {
 
-    private int PREDICTION_THRESHOLD = 120;
+    protected int PREDICTION_THRESHOLD = 0;
 
     protected Room room;
     private ModelManager models;

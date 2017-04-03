@@ -9,10 +9,12 @@ import org.easyrules.core.BasicRule;
 
 public class LampRule extends BasicRule {
 
+    protected int PREDICTION_THRESHOLD = 0;
+
     protected Room room;
 	private ModelManager models;
 	
-	private Sensor luminosity;
+	protected Sensor luminosity;
     protected Lamp lamp;
 
 	
@@ -29,6 +31,11 @@ public class LampRule extends BasicRule {
 		double modelValue = models.getCurrentEnvironmentalLight();
 		return modelValue > ENVIRONMENTAL_LIGHT_THRESHOLD;
 	}
+
+	protected void adjustRoomLight() {
+	    if (lamp.getCurrentState().equals(Lamp.State.ON)) this.luminosity.setValue(Integer.toString(2000));
+        else this.luminosity.setValue(Double.toString(models.getCurrentEnvironmentalLight()));
+    }
 
     protected void saveAction() {
         room.addTimeToSchedule("lamp_" + lamp.getId(), Manager.CURRENT_STEP, lamp.getCurrentState().toString());

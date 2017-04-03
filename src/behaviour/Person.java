@@ -4,6 +4,9 @@ import behaviour.PeopleManager.Action;
 import behaviour.PeopleManager.State;
 import behaviour.PeopleManager.Type;
 import domain.Debugger;
+import javafx.util.Pair;
+
+import java.util.ArrayList;
 
 public class Person {
 	
@@ -18,6 +21,7 @@ public class Person {
 	private int nextActionSteps;
 	private int remainingSteps;
 	private boolean acting;
+	private ArrayList<Pair<Integer, Double>> comoforts;
 	
 	Person(String name, String type, UserProfile prof, UserParams param) {
 		this.currentAction = Action.MOVE;
@@ -30,6 +34,7 @@ public class Person {
 		this.remainingSteps = -9999;
 		this.location = "";
 		this.acting = false;
+		this.comoforts = new ArrayList<>();
 	}
 
 	public int getRemainingSteps() {
@@ -163,6 +168,14 @@ public class Person {
 
     void setPastLocation(String pastLocation) {
         this.pastLocation = pastLocation;
+    }
+
+    public void addComfort(int step, double value) {
+	    this.comoforts.add(new Pair(step, value));
+    }
+
+    public ArrayList<Pair<Integer, Double>> getComforts() {
+	    return comoforts;
     }
 
 }

@@ -19,29 +19,28 @@ public class SmartHVAC extends HVACRule {
 	@Override
 	public boolean evaluate() {
         sampleTemperature();
-	    HVAC hvac = getHvac();
-	    Room room = getRoom();
-	    Window window = getWindow();
-        int PREDICTION_THRESHOLD = getPredictionThreshold();
+	    HVAC hvac = super.hvac;
+	    Room room = super.room;
+	    Window window = super.window;
 		State st = hvac.getCurrentState();
 
         if (st.equals(State.OFF)) {
             moderateTemperature();
-			if ((room.arePeopleInside() || room.arePeopleComing(PREDICTION_THRESHOLD))
+			if ((room.arePeopleInside() || room.arePeopleComing(super.PREDICTION_THRESHOLD))
                     && !temperatureOK() && !window.isOpen()) return true;
 		}
 		
 		if (st.equals(State.ON)) {
             adjustTemperature();
 			if (currentTemperatureOK() || window.isOpen()) return true;
-			else if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
+			else if (room.isEmpty() && !room.arePeopleComing(super.PREDICTION_THRESHOLD)) return true;
 		}
 
 		if (st.equals(State.SUSPEND)) {
             suspendTemperature();
             if (window.isOpen()) return true;
             if (!room.isEmpty() && reactivateFromSuspend()) return true;
-            if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
+            if (room.isEmpty() && !room.arePeopleComing(super.PREDICTION_THRESHOLD)) return true;
         }
 		return false;
 	}
@@ -49,14 +48,15 @@ public class SmartHVAC extends HVACRule {
 
     @Override
 	public void execute() throws Exception {
-	    HVAC hvac = getHvac();
-	    Room room = getRoom();
-	    Window window = getWindow();
+	    HVAC hvac = super.hvac;
+	    Room room = super.room;
+	    Window window = super.window;
 		State st = hvac.getCurrentState();
 		if (st.equals(State.OFF)) {
             if (Debugger.isEnabled()) Debugger.log("HVAC switched ON in room " + room.getLocation());
             System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " ON " + room.getLocation());
             hvac.setCurrentState(State.ON);
+            saveAction();
         }
 		else if (st.equals(State.ON)) {
 			if (room.isEmpty() || window.isOpen()) {

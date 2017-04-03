@@ -41,7 +41,7 @@ public class SchedulesDB extends NoSQLDB<Schedule, List<Schedule>> {
 
     @Override
     public void correctInitialState() {
-        if (Manager.MODE != 2) return;
+        if (Manager.MODE != 1) return;
         dbClient.context().deleteDB("schedules", "delete database");
         dbClient.context().createDB("schedules");
     }

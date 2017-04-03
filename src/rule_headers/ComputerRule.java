@@ -9,9 +9,11 @@ import org.easyrules.core.BasicRule;
 
 public class ComputerRule extends BasicRule {
 
+    protected int PREDICTION_THRESHOLD = 0;
+
     protected Room room;
 
-    protected Sensor power;
+    private Sensor power;
     protected Computer comp;
 
 

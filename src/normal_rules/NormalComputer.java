@@ -44,7 +44,6 @@ public class NormalComputer extends ComputerRule {
             comp.setCurrentState(State.OFF);
         }
         comp.setTimeChanged(Manager.CURRENT_STEP);
-        saveAction();
 	}
 
 }

@@ -1,9 +1,11 @@
 package learn_rules;
 
 import building.Room;
+import domain.Debugger;
 import entity.HVAC;
 import entity.HVAC.State;
 import entity.Window;
+import iot.Manager;
 import iot.Sensor;
 import rule_headers.HVACRule;
 
@@ -23,11 +25,7 @@ public class LearnHVAC extends HVACRule {
         int PREDICTION_THRESHOLD = getPredictionThreshold();
 		State st = hvac.getCurrentState();
 
-        if (st.equals(State.OFF)) {
-            moderateTemperature();
-			if ((room.arePeopleInside() || room.arePeopleComing(PREDICTION_THRESHOLD))
-                    && !temperatureOK() && !window.isOpen()) return true;
-		}
+        if (st.equals(State.OFF)) moderateTemperature();
 		
 		if (st.equals(State.ON)) {
             adjustTemperature();
@@ -47,5 +45,41 @@ public class LearnHVAC extends HVACRule {
 
     @Override
 	public void execute() throws Exception {
+        HVAC hvac = super.hvac;
+        Room room = super.room;
+        Window window = super.window;
+        State st = hvac.getCurrentState();
+        if (st.equals(State.OFF)) {
+            if (Debugger.isEnabled()) Debugger.log("HVAC switched ON in room " + room.getLocation());
+            System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " ON " + room.getLocation());
+            hvac.setCurrentState(State.ON);
+        }
+        else if (st.equals(State.ON)) {
+            if (room.isEmpty() || window.isOpen()) {
+                if (Debugger.isEnabled()) Debugger.log("HVAC switched OFF in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " OFF " + room.getLocation());
+                hvac.setCurrentState(State.OFF);
+            }
+            else {
+                if (Debugger.isEnabled()) Debugger.log("HVAC SUSPENDED in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " SUSP " + room.getLocation());
+                hvac.setCurrentState(State.SUSPEND);
+            }
+        }
+        else if (st.equals(State.SUSPEND)) {
+            if (room.isEmpty() || window.isOpen()) {
+                if (Debugger.isEnabled())
+                    Debugger.log("HVAC switched from SUSPENDED to OFF in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " SUSP to OFF " + room.getLocation());
+                hvac.setCurrentState(State.OFF);
+            }
+            else {
+                if (Debugger.isEnabled())
+                    Debugger.log("HVAC switched from SUSPENDED to ON in room " + room.getLocation());
+                System.out.println(Manager.CURRENT_STEP + " HVAC " + hvac.getId() + " ON to SUSP " + room.getLocation());
+                hvac.setCurrentState(State.ON);
+            }
+        }
+        hvac.setTimeChanged(Manager.CURRENT_STEP);
 	}
 }
