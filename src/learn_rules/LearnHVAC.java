@@ -30,14 +30,14 @@ public class LearnHVAC extends HVACRule {
 		if (st.equals(State.ON)) {
             adjustTemperature();
 			if (currentTemperatureOK() || window.isOpen()) return true;
-			else if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
+			//else if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
 		}
 
 		if (st.equals(State.SUSPEND)) {
             suspendTemperature();
             if (window.isOpen()) return true;
-            if (!room.isEmpty() && reactivateFromSuspend()) return true;
-            if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
+            if (reactivateFromSuspend()) return true;
+            //if (room.isEmpty() && !room.arePeopleComing(PREDICTION_THRESHOLD)) return true;
         }
 		return false;
 	}

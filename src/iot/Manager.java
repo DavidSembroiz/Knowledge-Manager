@@ -214,6 +214,7 @@ public class Manager {
     private void simulate() {
 		while (CURRENT_STEP < STEPS) {
             peopleManager.updateActions();
+            peopleManager.computeComforts();
             if (CURRENT_STEP == 6840) emptyBuilding();
             building.fireRules();
 			building.updateConsumption();
@@ -227,6 +228,7 @@ public class Manager {
 		ArrayList<Event> events = eventsdb.fetchData();
         while (CURRENT_STEP < STEPS) {
             peopleManager.executeActions();
+            peopleManager.computeComforts();
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                 peopleManager.assignSpecificAction(events.remove(0));
             }
@@ -248,6 +250,7 @@ public class Manager {
             ArrayList<Event> events = eventsdb.fetchData();
             while (CURRENT_STEP < STEPS) {
                 peopleManager.executeActions();
+                peopleManager.computeComforts();
                 while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                     Event e = events.remove(0);
                     peopleManager.assignSpecificAction(e);
@@ -264,9 +267,11 @@ public class Manager {
 
     private void learningSimulation() {
         ArrayList<Event> events = eventsdb.fetchData();
+        //peopleManager.fetchComforts();
         while (CURRENT_STEP < STEPS) {
             peopleManager.executeActions();
             building.performActuations();
+            peopleManager.computeComforts();
             while (!events.isEmpty() && events.get(0).getStep() == CURRENT_STEP) {
                 peopleManager.assignSpecificAction(events.remove(0));
             }
@@ -274,6 +279,8 @@ public class Manager {
             building.updateConsumption();
             ++CURRENT_STEP;
         }
+        peopleManager.saveComforts();
+        //building.saveSchedules();
         Debugger.log("Consumption " + building.calculateAccumulatedConsumption() + " kWh");
         finish();
     }

@@ -21,7 +21,7 @@ public class Person {
 	private int nextActionSteps;
 	private int remainingSteps;
 	private boolean acting;
-	private ArrayList<Pair<Integer, Double>> comoforts;
+	private ArrayList<Pair<Integer, Double>> comforts;
 	
 	Person(String name, String type, UserProfile prof, UserParams param) {
 		this.currentAction = Action.MOVE;
@@ -34,7 +34,7 @@ public class Person {
 		this.remainingSteps = -9999;
 		this.location = "";
 		this.acting = false;
-		this.comoforts = new ArrayList<>();
+		this.comforts = new ArrayList<>();
 	}
 
 	public int getRemainingSteps() {
@@ -106,7 +106,7 @@ public class Person {
 
 	void changeState() {
 		if (Debugger.isEnabled()) Debugger.log("Executing action...");
-		if (currentAction.equals(Action.MOVE)) {
+		if (currentAction.equals(Action.MOVE) || currentAction.equals(Action.MEETING)) {
 			if (Debugger.isEnabled()) Debugger.log("Person " + this.getName() +
 					   " changed from " + currentState.toString() +
 					   " to " + State.ROOM.toString());
@@ -170,12 +170,23 @@ public class Person {
         this.pastLocation = pastLocation;
     }
 
-    public void addComfort(int step, double value) {
-	    this.comoforts.add(new Pair(step, value));
+    void addComfort(int step, double value) {
+	    this.comforts.add(new Pair(step, value));
     }
 
     public ArrayList<Pair<Integer, Double>> getComforts() {
-	    return comoforts;
+	    return comforts;
     }
 
+    void setComforts(ArrayList<Pair<Integer,Double>> comforts) {
+        this.comforts = comforts;
+    }
+
+    boolean justEntered() {
+	    if (currentState == State.ROOM && nextActionSteps == -1) {
+	        nextActionSteps--;
+	        return true;
+        }
+        return false;
+    }
 }

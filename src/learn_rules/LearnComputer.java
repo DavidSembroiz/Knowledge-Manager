@@ -33,13 +33,7 @@ public class LearnComputer extends ComputerRule {
 	public void execute() throws Exception {
         Computer comp = super.comp;
         State st = comp.getCurrentState();
-        if (st.equals(State.OFF)) {
-            if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
-                    " switched ON in room " + room.getLocation());
-            System.out.println(Manager.CURRENT_STEP + " Computer " + comp.getId() + " ON " + room.getLocation());
-            comp.setCurrentState(State.ON);
-        }
-        else if (st.equals(State.ON)) {
+        if (st.equals(State.ON)) {
             if (comp.getUsedBy() == null) {
                 if (Debugger.isEnabled()) Debugger.log("Computer " + comp.getId() +
                         " switched OFF in room " + room.getLocation());

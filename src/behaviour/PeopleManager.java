@@ -9,30 +9,16 @@ import data.ComfortDB;
 import data.EventsDB;
 import entity.Computer;
 import iot.Manager;
+import javafx.util.Pair;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 import static iot.Manager.LOG_EVENTS;
 
 
 public class PeopleManager {
-
-    public void saveComforts() {
-        for (Person p : people) {
-            ComfortDB.getInstance().save(p);
-        }
-    }
-
-    /**
-     * TODO Possible enhancement:
-     * Modify the rooms so the number of people has a limit. When selecting the destination room,
-     * create an index and, from this index, traverse the location vector to get the first available
-     * room. If all rooms are full, avoid actuating.
-     */
-
 
     public enum Action {
 		MOVE, LUNCH, ENTER, EXIT, MEETING
@@ -169,14 +155,38 @@ public class PeopleManager {
 		return new UserParams(t, l);
 	}
 
-
 	
 	private void executeAction(Person p) {
 		p.setActing(true);
-		if (building.isPhysicalRoom(p.getLocation())) computeComfort(p, building.getRoom(p.getLocation()));
+		//if (building.isPhysicalRoom(p.getLocation())) computeComfort(p, building.getRoom(p.getLocation()));
         building.getRoom(p.getLocation()).shiftPerson(p);
         p.changeState();
 	}
+
+    public void saveComforts() {
+        for (Person p : people) {
+            ComfortDB.getInstance().save(p);
+        }
+    }
+
+
+    private void insertComfort(String name, ArrayList<Pair<Integer, Double>> comfs) {
+	    for (Person p : people) {
+	        if (p.getName().equals(name)) p.setComforts(comfs);
+        }
+    }
+
+    public void computeComforts() {
+        for (Person p : people) if (p.justEntered() && building.isPhysicalRoom(p.getLocation()))
+            computeComfort(p, building.getRoom(p.getLocation()));
+    }
+
+    public void fetchComforts() {
+        HashMap<String, ArrayList<Pair<Integer, Double>>> comforts = ComfortDB.getInstance().fetchData();
+        for (Map.Entry<String, ArrayList<Pair<Integer, Double>>> pair : comforts.entrySet()) {
+            insertComfort(pair.getKey(), pair.getValue());
+        }
+    }
 
 	/*
 	 Comfort is calculated using the values gathered when a person enters a room:
@@ -184,9 +194,7 @@ public class PeopleManager {
 	  - Room temperature vs desired temperature
 	  - Light status
 	  - Computer status when entering
-
 	 */
-
 
     private void computeComfort(Person p, Room room) {
 
@@ -197,22 +205,23 @@ public class PeopleManager {
 	     */
 	    double roomTemp = room.getTemperature();
 	    double desiredTemp = p.getParams().getTemperature();
-        System.out.println(Manager.CURRENT_STEP + " Person " + p.getName() + " entered " + room.getLocation() +
-        " with temperature: " + roomTemp);
+        comfort += desiredTemp - roomTemp;
 
         /*
 	     Light Comfort
 	     */
         double light = room.getLuminosity();
 
-
         /*
 	     Computer Comfort
 	     */
         Computer.State state = room.getUsedComputer(p.getName());
-
         p.addComfort(Manager.CURRENT_STEP, comfort);
+        /*if (comfort > 0) {
+            room.adjustSchedule(100, p);
+        }*/
     }
+
 
     public void assignSpecificAction(Event e) {
         Person p = getPerson(e.getName());

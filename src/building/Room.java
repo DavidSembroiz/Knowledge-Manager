@@ -248,4 +248,8 @@ public class Room {
         }
         return null;
     }
+
+    public void adjustSchedule(int jump, Person p) {
+        schedule.adjustSchedule(jump, p);
+    }
 }

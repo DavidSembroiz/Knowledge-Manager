@@ -61,4 +61,5 @@ public class SchedulesDB extends NoSQLDB<Schedule, List<Schedule>> {
         return dbClient.view("_all_docs").includeDocs(true).query(Schedule.class);
     }
 
+
 }

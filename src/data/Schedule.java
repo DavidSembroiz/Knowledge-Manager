@@ -1,12 +1,13 @@
 package data;
 
+import behaviour.Person;
+import iot.Manager;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
 
 
 public class Schedule {
-
 
     public class Element {
         private String elementType;
@@ -31,6 +32,21 @@ public class Schedule {
             return times;
         }
 
+        void updateTime(int jump) {
+            if (times.size() == 1 && times.get(0).getKey() <= Manager.CURRENT_STEP) {
+                times.set(0, new Pair(times.get(0).getKey() - jump, times.get(0).getValue()));
+            }
+            else {
+                for (int i = 0; i < times.size() - 1; ++i) {
+                    Pair<Integer, String> t1 = times.get(i);
+                    Pair<Integer, String> t2 = times.get(i + 1);
+                    if (t1.getKey() <= Manager.CURRENT_STEP && t2.getKey() > Manager.CURRENT_STEP) {
+                        times.set(i, new Pair(t1.getKey() - jump, t1.getValue()));
+                        return;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -41,6 +57,30 @@ public class Schedule {
     public Schedule(String _id, ArrayList<Element> elements) {
         this.elements = elements;
         this._id = _id;
+    }
+
+    public void adjustSchedule(int jump, Person p) {
+        Element comp = getComputerById(p);
+        Element hvac = getHvac();
+        if (comp != null) comp.updateTime(jump);
+        if (hvac != null) hvac.updateTime(jump);
+
+    }
+
+    private Element getHvac() {
+        for (Element e : elements) {
+            if (e.getElementType().equals("hvac")) return e;
+        }
+        return null;
+    }
+
+    private Element getComputerById(Person p) {
+        for (Element e : elements) {
+            if (e.getElementType().equals("computer") && e.getElementIndex() == p.getParams().getComputerId()) {
+                return e;
+            }
+        }
+        return null;
     }
 
     public void addTimeToSchedule(String elementId, int time, String st) {

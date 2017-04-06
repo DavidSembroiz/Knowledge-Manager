@@ -1,8 +1,8 @@
 package data;
 
-import behaviour.Event;
 import behaviour.Person;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import iot.Manager;
 import javafx.util.Pair;
@@ -11,10 +11,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 
-public class ComfortDB extends NoSQLDB<Person, ArrayList<Event>> {
+public class ComfortDB extends NoSQLDB<Person, HashMap<String, ArrayList<Pair<Integer, Double>>>> {
 
 
     private static ComfortDB instance = new ComfortDB();
@@ -53,12 +55,29 @@ public class ComfortDB extends NoSQLDB<Person, ArrayList<Event>> {
 
     @Override
     public void save(Person p) {
-        dbClient.save(createJsonComforts(p));
+        if (dbClient.contains(p.getName())) {
+            JsonObject c = createJsonComforts(p);
+            c.addProperty("_rev", dbClient.find(JsonObject.class, p.getName()).get("_rev").getAsString());
+            dbClient.update(c);
+        }
+        else dbClient.save(createJsonComforts(p));
     }
 
     @Override
-    public ArrayList<Event> fetchData() {
-        return null;
+    public HashMap<String, ArrayList<Pair<Integer, Double>>> fetchData() {
+        HashMap<String, ArrayList<Pair<Integer, Double>>> comforts = new HashMap<>();
+        List<JsonObject> all_docs = dbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+        for (JsonObject ob : all_docs) {
+            String name = ob.get("_id").getAsString();
+            ArrayList<Pair<Integer, Double>> cs = new ArrayList<>();
+            JsonArray comfs = ob.get("comforts").getAsJsonArray();
+            for (JsonElement o : comfs) {
+                JsonObject elem = o.getAsJsonObject();
+                cs.add(new Pair(elem.get("time").getAsBigInteger(), elem.get("value").getAsDouble()));
+            }
+            comforts.put(name, cs);
+        }
+        return comforts;
     }
 
     private JsonObject createJsonComforts(Person p) {

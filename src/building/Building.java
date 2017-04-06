@@ -17,7 +17,6 @@ import java.util.List;
 
 public class Building {
 
-
     public enum ROOM_TYPE {
         OFFICE(3),
         MEETING_ROOM(20),
@@ -248,12 +247,11 @@ public class Building {
                     }
                 }
             }
-
         }
     }
 
     public boolean isPhysicalRoom(String loc) {
-        return !(loc.equals("inside") || loc.equals("outside") || loc.equals("salon"));
+        return !(loc.equals("") || loc.equals("inside") || loc.equals("outside") || loc.equals("salon"));
     }
 
     public void setRoomElements(Person p, String dest) {
